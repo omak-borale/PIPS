@@ -27,7 +27,7 @@ export default function RoutesPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Route</TableHead>
-                <TableHead>Description</TableHead>
+                <TableHead>Village Routes</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Buses</TableHead>
               </TableRow>

@@ -43,4 +43,5 @@ export type Student = {
     parentName: string;
     parentContact: string;
     address: string;
+    busNumber?: string;
 }

@@ -4,6 +4,15 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
 import { Users, Bus } from 'lucide-react';
 import { students } from '@/lib/data';
 
@@ -12,7 +21,7 @@ export default function BusManagementPage() {
   const studentsNotUsingBus = students.length - studentsUsingBus;
 
   return (
-    <main className="flex-1 p-4 md:p-6 lg:p-8">
+    <main className="flex-1 p-4 md:p-6 lg:p-8 space-y-6">
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -43,6 +52,36 @@ export default function BusManagementPage() {
           </CardContent>
         </Card>
       </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Student Details</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Student Name</TableHead>
+                <TableHead>Uses Bus</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {students.map((student) => (
+                <TableRow key={student.id}>
+                  <TableCell className="font-medium">{student.name}</TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={student.usesBus ? 'default' : 'secondary'}
+                      className={student.usesBus ? 'bg-green-500' : ''}
+                    >
+                      {student.usesBus ? 'Yes' : 'No'}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </main>
   );
 }

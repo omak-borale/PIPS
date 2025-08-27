@@ -15,6 +15,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Users, Bus } from 'lucide-react';
 import { students } from '@/lib/data';
+import Link from 'next/link';
 
 export default function BusManagementPage() {
   const studentsUsingBus = students.filter((student) => student.usesBus).length;
@@ -67,7 +68,11 @@ export default function BusManagementPage() {
             <TableBody>
               {students.map((student) => (
                 <TableRow key={student.id}>
-                  <TableCell className="font-medium">{student.name}</TableCell>
+                  <TableCell className="font-medium">
+                    <Link href={`/dashboard/bus-management/${student.id}`} className="hover:underline text-primary">
+                      {student.name}
+                    </Link>
+                  </TableCell>
                   <TableCell>
                     <Badge
                       variant={student.usesBus ? 'default' : 'secondary'}

@@ -31,4 +31,6 @@ export type BusRoute = {
     description: string;
     status: 'Active' | 'Inactive';
     busNumber: string;
+    fuelLevel: number;
+    lastFueled: string;
 }

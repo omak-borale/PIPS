@@ -36,9 +36,9 @@ export const arrivals: Arrival[] = [
 ];
 
 export const busRoutes: BusRoute[] = [
-    { id: 'route-1', name: 'Route 1', description: 'Transbay Terminal to Ocean Beach', status: 'Active', busNumber: 'B-101' },
-    { id: 'route-2', name: 'Route 2', description: 'Hayes Valley to Golden Gate Park', status: 'Active', busNumber: 'B-102' },
-    { id: 'route-3', name: 'Route 3', description: 'Downtown to Fort Miley', status: 'Inactive', busNumber: 'B-103' },
-    { id: 'route-4', name: 'Route 4', description: 'Judah Line', status: 'Active', busNumber: 'B-104' },
-    { id: 'route-5', name: 'Route 5', description: 'Market & Wharves', status: 'Active', busNumber: 'B-105' },
+    { id: 'route-1', name: 'Route 1', description: 'Transbay Terminal to Ocean Beach', status: 'Active', busNumber: 'B-101', fuelLevel: 75, lastFueled: '2023-10-26T08:00:00Z' },
+    { id: 'route-2', name: 'Route 2', description: 'Hayes Valley to Golden Gate Park', status: 'Active', busNumber: 'B-102', fuelLevel: 45, lastFueled: '2023-10-25T12:30:00Z' },
+    { id: 'route-3', name: 'Route 3', description: 'Downtown to Fort Miley', status: 'Inactive', busNumber: 'B-103', fuelLevel: 95, lastFueled: '2023-10-27T09:15:00Z' },
+    { id: 'route-4', name: 'Route 4', description: 'Judah Line', status: 'Active', busNumber: 'B-104', fuelLevel: 20, lastFueled: '2023-10-26T18:45:00Z' },
+    { id: 'route-5', name: 'Route 5', description: 'Market & Wharves', status: 'Active', busNumber: 'B-105', fuelLevel: 60, lastFueled: '2023-10-27T06:00:00Z' },
 ];

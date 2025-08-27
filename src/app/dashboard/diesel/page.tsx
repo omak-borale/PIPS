@@ -28,7 +28,7 @@ export default function DieselManagementPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Bus Number</TableHead>
-                <TableHead>Bus Name</TableHead>
+                <TableHead>Village name</TableHead>
                 <TableHead>Fuel Level</TableHead>
                 <TableHead>Last Refueled</TableHead>
               </TableRow>

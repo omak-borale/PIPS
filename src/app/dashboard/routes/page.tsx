@@ -17,7 +17,7 @@ import { busRoutes } from '@/lib/data';
 
 export default function RoutesPage() {
   return (
-    <main className="flex-1 overflow-hidden p-4 md:p-6 lg:p-8">
+    <main className="flex-1 p-4 md:p-6 lg:p-8">
       <Card>
         <CardHeader>
           <CardTitle>Bus Routes</CardTitle>

@@ -5,7 +5,7 @@ import { buses, stops, arrivals } from '@/lib/data';
 
 export default function DashboardPage() {
   return (
-    <main className="flex-1 overflow-hidden p-4 md:p-6 lg:p-8">
+    <main className="flex-1 p-4 md:p-6 lg:p-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
         <div className="lg:col-span-2 h-full flex flex-col gap-6">
           <DisruptionAlerts />

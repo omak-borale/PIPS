@@ -29,7 +29,7 @@ import Link from 'next/link';
 
 export default function SettingsPage() {
   return (
-    <main className="flex-1 overflow-hidden p-4 md:p-6 lg:p-8">
+    <main className="flex-1 p-4 md:p-6 lg:p-8">
       <div className="space-y-6">
         <h1 className="text-2xl font-bold">Settings</h1>
 

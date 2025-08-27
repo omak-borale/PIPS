@@ -7,7 +7,7 @@ const Header = () => {
         <div className="p-2 bg-primary text-primary-foreground rounded-lg">
           <Bus className="h-6 w-6" />
         </div>
-        <h1 className="text-2xl font-bold font-headline text-primary">BusWatch</h1>
+        <h1 className="text-2xl font-bold font-headline text-primary">Bus management</h1>
       </div>
     </header>
   );

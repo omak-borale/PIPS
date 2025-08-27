@@ -1,8 +1,12 @@
+"use client";
+
+import { useState } from 'react';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from '@/components/ui/card';
 import {
   Table,
@@ -16,10 +20,30 @@ import { Badge } from '@/components/ui/badge';
 import { Users, Bus } from 'lucide-react';
 import { students } from '@/lib/data';
 import Link from 'next/link';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 
 export default function BusManagementPage() {
+  const [selectedVillage, setSelectedVillage] = useState('all');
+  const [selectedBus, setSelectedBus] = useState('all');
+
   const studentsUsingBus = students.filter((student) => student.usesBus).length;
   const studentsNotUsingBus = students.length - studentsUsingBus;
+
+  const uniqueVillages = ['all', ...Array.from(new Set(students.map(s => s.address)))];
+  const uniqueBuses = ['all', ...Array.from(new Set(students.filter(s => s.busNumber).map(s => s.busNumber!)))];
+
+  const filteredStudents = students.filter(student => {
+    const villageMatch = selectedVillage === 'all' || student.address === selectedVillage;
+    const busMatch = selectedBus === 'all' || student.busNumber === selectedBus;
+    return villageMatch && busMatch;
+  });
 
   return (
     <main className="flex-1 p-4 md:p-6 lg:p-8 space-y-6">
@@ -56,23 +80,62 @@ export default function BusManagementPage() {
       <Card>
         <CardHeader>
           <CardTitle>Student Details</CardTitle>
+          <CardDescription>
+            Filter students by village and bus number.
+          </CardDescription>
         </CardHeader>
         <CardContent>
+          <div className="flex items-center gap-4 mb-6">
+             <div className="flex-1">
+              <label htmlFor="village-filter" className="text-sm font-medium">Filter by Village</label>
+              <Select value={selectedVillage} onValueChange={setSelectedVillage}>
+                <SelectTrigger id="village-filter">
+                  <SelectValue placeholder="Select Village" />
+                </SelectTrigger>
+                <SelectContent>
+                  {uniqueVillages.map(village => (
+                    <SelectItem key={village} value={village}>
+                      {village === 'all' ? 'All Villages' : village}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex-1">
+              <label htmlFor="bus-filter" className="text-sm font-medium">Filter by Bus Number</label>
+              <Select value={selectedBus} onValueChange={setSelectedBus}>
+                <SelectTrigger id="bus-filter">
+                  <SelectValue placeholder="Select Bus" />
+                </SelectTrigger>
+                <SelectContent>
+                  {uniqueBuses.map(bus => (
+                    <SelectItem key={bus} value={bus}>
+                      {bus === 'all' ? 'All Buses' : bus}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Student Name</TableHead>
+                <TableHead>Village</TableHead>
+                <TableHead>Bus Number</TableHead>
                 <TableHead>Uses Bus</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {students.map((student) => (
+              {filteredStudents.map((student) => (
                 <TableRow key={student.id}>
                   <TableCell className="font-medium">
                     <Link href={`/dashboard/bus-management/${student.id}`} className="hover:underline text-primary">
                       {student.name}
                     </Link>
                   </TableCell>
+                  <TableCell>{student.address}</TableCell>
+                  <TableCell>{student.busNumber || 'N/A'}</TableCell>
                   <TableCell>
                     <Badge
                       variant={student.usesBus ? 'default' : 'secondary'}
@@ -83,6 +146,13 @@ export default function BusManagementPage() {
                   </TableCell>
                 </TableRow>
               ))}
+               {filteredStudents.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                    No students found matching your criteria.
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </CardContent>

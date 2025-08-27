@@ -10,7 +10,7 @@ import {
   SidebarContent,
   SidebarFooter,
 } from '@/components/ui/sidebar';
-import { LayoutDashboard, Route, Bus, Settings, Bell, Fuel } from 'lucide-react';
+import { LayoutDashboard, Route, Bus, Settings, Bell, Fuel, PencilLine } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { ReactNode } from 'react';
 import Link from 'next/link';
@@ -59,6 +59,16 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                       <span>
                         <Fuel />
                         Diesel Management
+                      </span>
+                    </SidebarMenuButton>
+                   </Link>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                   <Link href="/dashboard/diesel-entry" passHref>
+                    <SidebarMenuButton asChild tooltip="Diesel Entry">
+                      <span>
+                        <PencilLine />
+                        Diesel Entry
                       </span>
                     </SidebarMenuButton>
                    </Link>

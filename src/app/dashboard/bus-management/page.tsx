@@ -93,9 +93,10 @@ export default function BusManagementPage() {
                   <SelectValue placeholder="Select Village" />
                 </SelectTrigger>
                 <SelectContent>
-                  {uniqueVillages.map(village => (
+                  <SelectItem value="all">All Villages</SelectItem>
+                  {uniqueVillages.filter(v => v !== 'all').map(village => (
                     <SelectItem key={village} value={village}>
-                      {village === 'all' ? 'All Villages' : village}
+                      {village}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -108,9 +109,10 @@ export default function BusManagementPage() {
                   <SelectValue placeholder="Select Bus" />
                 </SelectTrigger>
                 <SelectContent>
-                  {uniqueBuses.map(bus => (
+                  <SelectItem value="all">All Buses</SelectItem>
+                  {uniqueBuses.filter(b => b !== 'all').map(bus => (
                     <SelectItem key={bus} value={bus}>
-                      {bus === 'all' ? 'All Buses' : bus}
+                      {bus}
                     </SelectItem>
                   ))}
                 </SelectContent>

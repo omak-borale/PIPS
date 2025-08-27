@@ -75,7 +75,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     <div className="flex flex-col">
                       <span className="text-sm font-semibold">Admin User</span>
                       <span className="text-xs text-muted-foreground">
-                        admin@buswatch.com
+                        boraleojai@gmail.com
                       </span>
                     </div>
                   </div>

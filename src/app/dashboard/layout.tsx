@@ -36,16 +36,20 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 <SidebarMenuItem>
                   <Link href="/dashboard" passHref>
                     <SidebarMenuButton asChild tooltip="Dashboard">
-                      <LayoutDashboard />
-                      Dashboard
+                      <span>
+                        <LayoutDashboard />
+                        Dashboard
+                      </span>
                     </SidebarMenuButton>
                   </Link>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                    <Link href="/dashboard/routes" passHref>
                     <SidebarMenuButton asChild tooltip="Routes">
+                      <span>
                         <Route />
                         Routes
+                      </span>
                     </SidebarMenuButton>
                    </Link>
                 </SidebarMenuItem>
@@ -68,8 +72,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 <SidebarMenuItem>
                   <Link href="/dashboard/settings" passHref>
                     <SidebarMenuButton asChild tooltip="Settings">
-                      <Settings />
-                      Settings
+                      <span>
+                        <Settings />
+                        Settings
+                      </span>
                     </SidebarMenuButton>
                   </Link>
                 </SidebarMenuItem>

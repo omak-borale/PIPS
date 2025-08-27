@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'BusWatch',
+  title: 'Patri swamy international public school',
   description: 'Real-time bus tracking and alerts.',
 };
 

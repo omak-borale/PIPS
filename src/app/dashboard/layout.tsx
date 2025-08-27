@@ -25,8 +25,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 <div className="p-2 bg-primary text-primary-foreground rounded-lg">
                   <Bus className="h-6 w-6" />
                 </div>
-                <h1 className="text-2xl font-bold font-headline text-primary">
-                  BusWatch
+                <h1 className="text-xl font-bold font-headline text-primary">
+                  Patri swamy international public school
                 </h1>
               </div>
             </SidebarHeader>

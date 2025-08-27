@@ -24,3 +24,11 @@ export type Arrival = {
   time: string;
   status: 'On Time' | 'Delayed' | 'Early';
 };
+
+export type BusRoute = {
+    id: string;
+    name: string;
+    description: string;
+    status: 'Active' | 'Inactive';
+    busesRunning: number;
+}

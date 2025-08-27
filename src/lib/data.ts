@@ -1,4 +1,4 @@
-import type { Bus, BusStop, Arrival } from './types';
+import type { Bus, BusStop, Arrival, BusRoute } from './types';
 
 // Data for GenAI flow
 export const realTimeBusLocations = [
@@ -33,4 +33,12 @@ export const arrivals: Arrival[] = [
   { route: 'N', destination: 'Ocean Beach', time: '12 min', status: 'On Time' },
   { route: '38', destination: 'Fort Miley', time: '15 min', status: 'On Time' },
   { route: 'F', destination: 'Fisherman\'s Wharf', time: '18 min', status: 'Early' },
+];
+
+export const busRoutes: BusRoute[] = [
+    { id: 'route-1', name: '5R', description: 'Transbay Terminal to Ocean Beach', status: 'Active', busesRunning: 5 },
+    { id: 'route-2', name: '21', description: 'Hayes Valley to Golden Gate Park', status: 'Active', busesRunning: 3 },
+    { id: 'route-3', name: '38', description: 'Downtown to Fort Miley', status: 'Inactive', busesRunning: 0 },
+    { id: 'route-4', name: 'N', description: 'Judah Line', status: 'Active', busesRunning: 8 },
+    { id: 'route-5', name: 'F', description: 'Market & Wharves', status: 'Active', busesRunning: 6 },
 ];

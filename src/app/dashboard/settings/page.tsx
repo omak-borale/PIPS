@@ -73,7 +73,7 @@ export default function SettingsPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Village name</TableHead>
+                  <TableHead>Driver Name</TableHead>
                   <TableHead>Village Routes</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Bus Number</TableHead>

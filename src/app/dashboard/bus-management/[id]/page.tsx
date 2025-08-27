@@ -60,7 +60,7 @@ export default function StudentDetailPage({ params }: { params: { id: string } }
                 <div className="flex items-center gap-3">
                   <User className="h-5 w-5 text-muted-foreground" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Parent's Name</p>
+                    <p className="text-sm text-muted-foreground">Father Name</p>
                     <p className="font-medium">{student.parentName}</p>
                   </div>
                 </div>

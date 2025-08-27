@@ -1,4 +1,4 @@
-import type { Bus, BusStop, Arrival, BusRoute } from './types';
+import type { Bus, BusStop, Arrival, BusRoute, Student } from './types';
 
 // Data for GenAI flow
 export const realTimeBusLocations = [
@@ -41,4 +41,22 @@ export const busRoutes: BusRoute[] = [
     { id: 'route-3', name: 'Route 3', description: 'Downtown to Fort Miley', status: 'Inactive', busNumber: 'B-103', fuelLevel: 95, lastFueled: '2023-10-27T09:15:00Z' },
     { id: 'route-4', name: 'Route 4', description: 'Judah Line', status: 'Active', busNumber: 'B-104', fuelLevel: 20, lastFueled: '2023-10-26T18:45:00Z' },
     { id: 'route-5', name: 'Route 5', description: 'Market & Wharves', status: 'Active', busNumber: 'B-105', fuelLevel: 60, lastFueled: '2023-10-27T06:00:00Z' },
+];
+
+export const students: Student[] = [
+  { id: 'student-1', name: 'Alice', usesBus: true },
+  { id: 'student-2', name: 'Bob', usesBus: false },
+  { id: 'student-3', name: 'Charlie', usesBus: true },
+  { id: 'student-4', name: 'David', usesBus: true },
+  { id: 'student-5', name: 'Eve', usesBus: false },
+  { id: 'student-6', name: 'Frank', usesBus: true },
+  { id: 'student-7', name: 'Grace', usesBus: true },
+  { id: 'student-8', name: 'Heidi', usesBus: false },
+  { id: 'student-9', name: 'Ivan', usesBus: true },
+  { id: 'student-10', name: 'Judy', usesBus: true },
+  { id: 'student-11', name: 'Mallory', usesBus: true },
+  { id: 'student-12', name: 'Niaj', usesBus: false },
+  { id: 'student-13', name: 'Olivia', usesBus: true },
+  { id: 'student-14', name: 'Peggy', usesBus: true },
+  { id: 'student-15', name: 'Sybil', usesBus: false },
 ];

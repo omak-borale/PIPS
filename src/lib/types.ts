@@ -34,3 +34,9 @@ export type BusRoute = {
     fuelLevel: number;
     lastFueled: string;
 }
+
+export type Student = {
+    id: string;
+    name: string;
+    usesBus: boolean;
+}

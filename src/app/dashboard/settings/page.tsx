@@ -26,6 +26,15 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import AddRouteForm from '@/components/bus-watch/add-route-form';
 
 export default function SettingsPage() {
   return (
@@ -42,10 +51,24 @@ export default function SettingsPage() {
           </CardHeader>
           <CardContent>
             <div className="flex justify-end mb-4">
-              <Button>
-                <PlusCircle className="mr-2" />
-                Add New Route
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button>
+                    <PlusCircle className="mr-2" />
+                    Add New Route
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Add a New Bus Route</DialogTitle>
+                    <DialogDescription>
+                      Fill in the details below to add a new route to the
+                      system.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <AddRouteForm />
+                </DialogContent>
+              </Dialog>
             </div>
             <Table>
               <TableHeader>

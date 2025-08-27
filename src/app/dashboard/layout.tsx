@@ -61,7 +61,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <SidebarFooter>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <SidebarMenuButton href="#" tooltip="Settings">
+                  <SidebarMenuButton href="/dashboard/settings" tooltip="Settings">
                     <Settings />
                     Settings
                   </SidebarMenuButton>

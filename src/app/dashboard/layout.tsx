@@ -13,6 +13,7 @@ import {
 import { LayoutDashboard, Route, Bus, Settings, Bell } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { ReactNode } from 'react';
+import Link from 'next/link';
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
@@ -33,16 +34,20 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <SidebarContent>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <SidebarMenuButton href="/dashboard" tooltip="Dashboard">
-                    <LayoutDashboard />
-                    Dashboard
-                  </SidebarMenuButton>
+                  <Link href="/dashboard" passHref>
+                    <SidebarMenuButton asChild tooltip="Dashboard">
+                      <LayoutDashboard />
+                      Dashboard
+                    </SidebarMenuButton>
+                  </Link>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                  <SidebarMenuButton href="/dashboard/routes" tooltip="Routes">
-                    <Route />
-                    Routes
-                  </SidebarMenuButton>
+                   <Link href="/dashboard/routes" passHref>
+                    <SidebarMenuButton asChild tooltip="Routes">
+                        <Route />
+                        Routes
+                    </SidebarMenuButton>
+                   </Link>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                   <SidebarMenuButton href="#" tooltip="Buses">
@@ -61,10 +66,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <SidebarFooter>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <SidebarMenuButton href="/dashboard/settings" tooltip="Settings">
-                    <Settings />
-                    Settings
-                  </SidebarMenuButton>
+                  <Link href="/dashboard/settings" passHref>
+                    <SidebarMenuButton asChild tooltip="Settings">
+                      <Settings />
+                      Settings
+                    </SidebarMenuButton>
+                  </Link>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                   <div className="flex items-center gap-2 p-2">

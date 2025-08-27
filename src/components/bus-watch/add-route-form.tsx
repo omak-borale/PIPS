@@ -27,7 +27,7 @@ import { toast } from "@/hooks/use-toast";
 const formSchema = z.object({
   name: z.string().min(1, "Bus name is required."),
   description: z.string().min(1, "Village routes are required."),
-  busesRunning: z.coerce.number().min(0, "Number of buses cannot be negative."),
+  busNumber: z.string().min(1, "Bus number is required."),
   status: z.enum(["Active", "Inactive"]),
 });
 
@@ -37,7 +37,7 @@ export default function AddRouteForm() {
     defaultValues: {
       name: "",
       description: "",
-      busesRunning: 0,
+      busNumber: "",
       status: "Active",
     },
   });
@@ -62,7 +62,7 @@ export default function AddRouteForm() {
             <FormItem>
               <FormLabel>Bus Name</FormLabel>
               <FormControl>
-                <Input placeholder="e.g., 14A" {...field} />
+                <Input placeholder="e.g., Route 1" {...field} />
               </FormControl>
               <FormDescription>The official name of the bus route.</FormDescription>
               <FormMessage />
@@ -85,14 +85,14 @@ export default function AddRouteForm() {
         />
         <FormField
           control={form.control}
-          name="busesRunning"
+          name="busNumber"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Buses</FormLabel>
+              <FormLabel>Bus Number</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="e.g., 5" {...field} />
+                <Input placeholder="e.g., B-42" {...field} />
               </FormControl>
-              <FormDescription>The number of buses currently on this route.</FormDescription>
+              <FormDescription>The number of the bus assigned to this route.</FormDescription>
               <FormMessage />
             </FormItem>
           )}

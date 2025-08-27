@@ -29,7 +29,7 @@ export default function RoutesPage() {
                 <TableHead>Bus Name</TableHead>
                 <TableHead>Village Routes</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Buses</TableHead>
+                <TableHead>Bus Number</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -47,7 +47,7 @@ export default function RoutesPage() {
                       {route.status}
                     </Badge>
                   </TableCell>
-                  <TableCell>{route.busesRunning}</TableCell>
+                  <TableCell>{route.busNumber}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

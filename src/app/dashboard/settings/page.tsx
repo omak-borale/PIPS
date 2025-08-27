@@ -76,7 +76,7 @@ export default function SettingsPage() {
                   <TableHead>Bus Name</TableHead>
                   <TableHead>Village Routes</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Buses</TableHead>
+                  <TableHead>Bus Number</TableHead>
                   <TableHead>
                     <span className="sr-only">Actions</span>
                   </TableHead>
@@ -99,7 +99,7 @@ export default function SettingsPage() {
                         {route.status}
                       </Badge>
                     </TableCell>
-                    <TableCell>{route.busesRunning}</TableCell>
+                    <TableCell>{route.busNumber}</TableCell>
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>

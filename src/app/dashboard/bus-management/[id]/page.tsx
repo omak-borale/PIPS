@@ -51,10 +51,10 @@ export default function StudentDetailPage({ params }: { params: { id: string } }
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <GraduationCap className="h-5 w-5 text-muted-foreground" />
+                  <User className="h-5 w-5 text-muted-foreground" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Grade</p>
-                    <p className="font-medium">{student.grade}</p>
+                    <p className="text-sm text-muted-foreground">Student Name</p>
+                    <p className="font-medium">{student.name}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">

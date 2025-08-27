@@ -76,7 +76,7 @@ export default function StudentDetailPage({ params }: { params: { id: string } }
                 <div className="flex items-center gap-3">
                   <Home className="h-5 w-5 text-muted-foreground" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Address</p>
+                    <p className="text-sm text-muted-foreground">Village</p>
                     <p className="font-medium">{student.address}</p>
                   </div>
                 </div>

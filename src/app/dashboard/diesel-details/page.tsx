@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -28,8 +29,17 @@ import {
 } from '@/components/ui/dialog';
 import DieselEntryForm from '@/components/bus-watch/diesel-entry-form';
 import { PlusCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 export default function DieselDetailsPage() {
+  // To prevent hydration errors, we ensure that the component is mounted on the client
+  // before we try to render the dates.
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+
   return (
     <main className="flex-1 p-4 md:p-6 lg:p-8">
       <Card>
@@ -73,7 +83,7 @@ export default function DieselDetailsPage() {
             <TableBody>
               {dieselEntries.map((entry) => (
                 <TableRow key={entry.id}>
-                  <TableCell>{format(parseISO(entry.date), 'PPP')}</TableCell>
+                  <TableCell>{isClient ? format(parseISO(entry.date), 'PPP') : ''}</TableCell>
                   <TableCell className="font-medium">
                     {entry.busNumber}
                   </TableCell>

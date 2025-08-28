@@ -29,7 +29,7 @@ import { toast } from "@/hooks/use-toast";
 const formSchema = z.object({
   name: z.string().min(1, "Student Name is required."),
   fatherName: z.string().min(1, "Father's Name is required."),
-  parentContact: z.string().min(1, "Parent's Contact is required."),
+  parentContact: z.string().min(1, "Contact number is required."),
   address: z.string().min(1, "Address is required."),
   usesBus: z.boolean().default(false),
   busNumber: z.string().optional(),
@@ -101,7 +101,7 @@ export default function AddStudentForm() {
           name="parentContact"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Parent's Contact</FormLabel>
+              <FormLabel>Contact.No</FormLabel>
               <FormControl>
                 <Input placeholder="e.g., 555-123-4567" {...field} />
               </FormControl>

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,6 +26,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { hashPassword } from "@/lib/crypto";
+
 
 const formSchema = z.object({
   role: z.enum(["admin", "driver"], {
@@ -33,6 +36,9 @@ const formSchema = z.object({
   username: z.string().min(1, "Username is required."),
   password: z.string().min(1, "Password is required."),
 });
+
+// Hashed version of "password"
+const HASHED_PASSWORD = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -48,10 +54,12 @@ export default function LoginForm() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    // This is a mock login. In a real app, you'd call an API.
+    
     setTimeout(() => {
-      const isAdmin = values.role === "admin" && values.username === "admin" && values.password === "password";
-      const isDriver = values.role === "driver" && values.username === "driver" && values.password === "password";
+      const hashedPassword = hashPassword(values.password);
+      
+      const isAdmin = values.role === "admin" && values.username === "admin" && hashedPassword === HASHED_PASSWORD;
+      const isDriver = values.role === "driver" && values.username === "driver" && hashedPassword === HASHED_PASSWORD;
 
       if (isAdmin || isDriver) {
         toast({

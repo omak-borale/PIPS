@@ -18,8 +18,18 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 const formSchema = z.object({
+  role: z.enum(["admin", "driver"], {
+    required_error: "You need to select a login role.",
+  }),
   username: z.string().min(1, "Username is required."),
   password: z.string().min(1, "Password is required."),
 });
@@ -40,17 +50,20 @@ export default function LoginForm() {
     setIsLoading(true);
     // This is a mock login. In a real app, you'd call an API.
     setTimeout(() => {
-      if (values.username === "admin" && values.password === "password") {
+      const isAdmin = values.role === "admin" && values.username === "admin" && values.password === "password";
+      const isDriver = values.role === "driver" && values.username === "driver" && values.password === "password";
+
+      if (isAdmin || isDriver) {
         toast({
           title: "Login Successful",
-          description: "Welcome back!",
+          description: `Welcome back, ${values.role}!`,
         });
         router.push("/dashboard");
       } else {
         toast({
           variant: "destructive",
           title: "Login Failed",
-          description: "Invalid username or password.",
+          description: "Invalid credentials for the selected role.",
         });
         setIsLoading(false);
       }
@@ -62,12 +75,33 @@ export default function LoginForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
+          name="role"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Login as</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a role" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="admin">Admin</SelectItem>
+                  <SelectItem value="driver">Driver</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name="username"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="admin" {...field} />
+                <Input placeholder="Enter your username" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -19,7 +19,6 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Users, Bus } from 'lucide-react';
-import { getStudents } from '@/lib/data';
 import Link from 'next/link';
 import {
   Select,
@@ -28,8 +27,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
 import type { Student } from '@/lib/types';
+import { getStudentsAction } from '@/app/actions';
 
 export default function BusManagementPage() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -38,7 +37,7 @@ export default function BusManagementPage() {
 
   useEffect(() => {
     async function fetchData() {
-        const studentData = await getStudents();
+        const studentData = await getStudentsAction();
         setStudents(studentData);
     }
     fetchData();

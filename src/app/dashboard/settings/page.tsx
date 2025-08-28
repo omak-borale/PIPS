@@ -20,7 +20,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { getBusRoutes } from '@/lib/data';
 import type { BusRoute } from '@/lib/types';
 import { PlusCircle, MoreVertical, KeyRound, User, Shield } from 'lucide-react';
 import {
@@ -30,7 +29,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
-import Link from 'next/link';
 import {
   Dialog,
   DialogContent,
@@ -38,12 +36,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose,
 } from '@/components/ui/dialog';
 import AddRouteForm from '@/components/bus-watch/add-route-form';
 import { Label } from '@/components/ui/label';
 import { toast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { getBusRoutesAction } from '@/app/actions';
 
 export default function SettingsPage() {
   const [busRoutes, setBusRoutes] = useState<BusRoute[]>([]);
@@ -51,7 +49,7 @@ export default function SettingsPage() {
   
   useEffect(() => {
     async function fetchData() {
-        const routes = await getBusRoutes();
+        const routes = await getBusRoutesAction();
         setBusRoutes(routes);
     }
     fetchData();

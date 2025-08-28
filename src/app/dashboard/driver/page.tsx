@@ -24,11 +24,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { getBusRoutes, getStudents } from '@/lib/data';
 import type { Student, BusRoute } from '@/lib/types';
 import { User, Bus, Users, Home } from 'lucide-react';
 import Link from 'next/link';
 import { Label } from '@/components/ui/label';
+import { getBusRoutesAction, getStudentsAction } from '@/app/actions';
 
 export default function DriverDashboardPage() {
   const [busRoutes, setBusRoutes] = useState<BusRoute[]>([]);
@@ -37,8 +37,8 @@ export default function DriverDashboardPage() {
 
   useEffect(() => {
     async function fetchData() {
-        const routesData = await getBusRoutes();
-        const studentsData = await getStudents();
+        const routesData = await getBusRoutesAction();
+        const studentsData = await getStudentsAction();
         setBusRoutes(routesData);
         setStudents(studentsData);
         if (routesData.length > 0) {

@@ -8,37 +8,44 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { getStudents } from '@/lib/data';
 import { notFound, useParams } from 'next/navigation';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Phone, Home, User, GraduationCap, Bus } from 'lucide-react';
+import { Phone, Home, User, Bus } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { Student } from '@/lib/types';
+import { getStudentsAction } from '@/app/actions';
 
 export default function StudentDetailPage() {
   const params = useParams();
   const studentId = typeof params.id === 'string' ? params.id : '';
-  const [student, setStudent] = useState<Student | undefined>(undefined);
-  
+  const [student, setStudent] = useState<Student | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     async function fetchStudent() {
-      const allStudents = await getStudents();
+      if (!studentId) return;
+      setIsLoading(true);
+      const allStudents = await getStudentsAction();
       const currentStudent = allStudents.find((s) => s.id === studentId);
-      setStudent(currentStudent);
+      setStudent(currentStudent || null);
+      setIsLoading(false);
     }
-    if (studentId) {
-      fetchStudent();
-    }
+    fetchStudent();
   }, [studentId]);
 
+  if (isLoading) {
+    return (
+      <main className="flex-1 p-4 md:p-6 lg:p-8 flex justify-center items-center">
+        <div>Loading student details...</div>
+      </main>
+    );
+  }
 
   if (!student) {
-    // You might want to show a loading state here
-    if (student === undefined) return <div>Loading...</div>; 
     notFound();
   }
 

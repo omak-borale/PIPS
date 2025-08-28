@@ -26,7 +26,6 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { getBusRoutes } from '@/lib/data';
 import { format, subDays, parseISO } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -34,6 +33,7 @@ import { Wrench, Phone, CircleDollarSign, NotebookText, Hammer, Banknote, PlusCi
 import { Separator } from '@/components/ui/separator';
 import type { BusRoute, ServiceHistory } from '@/lib/types';
 import AddRepairForm from '@/components/bus-watch/add-repair-form';
+import { getBusRoutesAction } from '@/app/actions';
 
 export default function BusRepairPage() {
   const [busRoutes, setBusRoutes] = useState<BusRoute[]>([]);
@@ -41,7 +41,7 @@ export default function BusRepairPage() {
 
   useEffect(() => {
     async function fetchData() {
-        const routes = await getBusRoutes();
+        const routes = await getBusRoutesAction();
         setBusRoutes(routes);
     }
     fetchData();

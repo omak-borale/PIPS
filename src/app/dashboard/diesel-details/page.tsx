@@ -16,10 +16,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { getDieselEntries } from '@/lib/data';
 import { format, parseISO } from 'date-fns';
 import { useState, useEffect } from 'react';
 import type { DieselEntry } from '@/lib/types';
+import { getDieselEntriesAction } from '@/app/actions';
 
 export default function DieselDetailsPage() {
   const [dieselEntries, setDieselEntries] = useState<DieselEntry[]>([]);
@@ -28,7 +28,7 @@ export default function DieselDetailsPage() {
   useEffect(() => {
     setIsClient(true);
     async function fetchData() {
-        const entries = await getDieselEntries();
+        const entries = await getDieselEntriesAction();
         setDieselEntries(entries);
     }
     fetchData();

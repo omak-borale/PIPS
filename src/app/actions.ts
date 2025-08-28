@@ -5,7 +5,7 @@ import path from 'path';
 
 import { analyzeBusDisruptions } from '@/ai/flows/analyze-bus-disruptions';
 import { hashPassword } from '@/lib/crypto';
-import type { Student } from '@/lib/types';
+import type { Student, BusRoute, DieselEntry } from '@/lib/types';
 import { revalidatePath } from 'next/cache';
 import initialData from '@/lib/data.json';
 
@@ -29,6 +29,22 @@ async function writeData(newData: any) {
         console.error('Error writing data file:', error);
     }
 }
+
+export async function getStudentsAction(): Promise<Student[]> {
+    const data = await readData();
+    return data.students;
+}
+
+export async function getBusRoutesAction(): Promise<BusRoute[]> {
+    const data = await readData();
+    return data.busRoutes;
+}
+
+export async function getDieselEntriesAction(): Promise<DieselEntry[]> {
+    const data = await readData();
+    return data.dieselEntries;
+}
+
 
 export async function getDisruptionAnalysis() {
   try {

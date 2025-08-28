@@ -28,10 +28,9 @@ import { toast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   name: z.string().min(1, "Student Name is required."),
-  parentName: z.string().min(1, "Parent's Name is required."),
+  fatherName: z.string().min(1, "Father's Name is required."),
   parentContact: z.string().min(1, "Parent's Contact is required."),
   address: z.string().min(1, "Address is required."),
-  grade: z.string().min(1, "Grade is required"),
   usesBus: z.boolean().default(false),
   busNumber: z.string().optional(),
 }).refine(data => {
@@ -50,10 +49,9 @@ export default function AddStudentForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      parentName: "",
+      fatherName: "",
       parentContact: "",
       address: "",
-      grade: "",
       usesBus: false,
     },
   });
@@ -87,23 +85,10 @@ export default function AddStudentForm() {
         />
          <FormField
           control={form.control}
-          name="grade"
+          name="fatherName"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Father Name</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g., 5th" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="parentName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Parent's Name</FormLabel>
               <FormControl>
                 <Input placeholder="e.g., John Doe" {...field} />
               </FormControl>

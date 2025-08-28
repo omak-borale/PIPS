@@ -39,8 +39,7 @@ export type Student = {
     id: string;
     name: string;
     usesBus: boolean;
-    grade: string;
-    parentName: string;
+    fatherName: string;
     parentContact: string;
     address: string;
     busNumber?: string;

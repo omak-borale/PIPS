@@ -77,97 +77,101 @@ export default function AddRepairForm({ onAddRepair }: AddRepairFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="busNumber"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Bus Number</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a bus" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {busRoutes.map((route) => (
-                    <SelectItem key={route.id} value={route.busNumber}>
-                      {route.busNumber} ({route.name})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
+        <div className="grid grid-cols-2 gap-4">
+            <FormField
             control={form.control}
-            name="date"
+            name="busNumber"
             render={({ field }) => (
-                <FormItem className="flex flex-col">
-                <FormLabel>Service Date</FormLabel>
-                <Popover>
-                    <PopoverTrigger asChild>
+                <FormItem>
+                <FormLabel>Bus Number</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                        <Button
-                        variant={"outline"}
-                        className={cn(
-                            "w-full pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                        )}
-                        >
-                        {field.value ? (
-                            format(field.value, "PPP")
-                        ) : (
-                            <span>Pick a date</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Select a bus" />
+                    </SelectTrigger>
                     </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
-                        }
-                        initialFocus
-                    />
-                    </PopoverContent>
-                </Popover>
+                    <SelectContent>
+                    {busRoutes.map((route) => (
+                        <SelectItem key={route.id} value={route.busNumber}>
+                        {route.busNumber} ({route.name})
+                        </SelectItem>
+                    ))}
+                    </SelectContent>
+                </Select>
                 <FormMessage />
                 </FormItem>
             )}
             />
-        <FormField
-          control={form.control}
-          name="machineName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Machine Name / Part</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g., Brake Pads, Engine Filter" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="contactNumber"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Mechanic Contact Number</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g., 555-123-4567" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                    <FormLabel>Service Date</FormLabel>
+                    <Popover>
+                        <PopoverTrigger asChild>
+                        <FormControl>
+                            <Button
+                            variant={"outline"}
+                            className={cn(
+                                "w-full pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                            )}
+                            >
+                            {field.value ? (
+                                format(field.value, "PPP")
+                            ) : (
+                                <span>Pick a date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                        </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) =>
+                            date > new Date() || date < new Date("1900-01-01")
+                            }
+                            initialFocus
+                        />
+                        </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                    </FormItem>
+                )}
+                />
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+            <FormField
+            control={form.control}
+            name="machineName"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Machine Name / Part</FormLabel>
+                <FormControl>
+                    <Input placeholder="e.g., Brake Pads" {...field} />
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+            <FormField
+            control={form.control}
+            name="contactNumber"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Mechanic Contact Number</FormLabel>
+                <FormControl>
+                    <Input placeholder="e.g., 555-123-4567" {...field} />
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+        </div>
         <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}

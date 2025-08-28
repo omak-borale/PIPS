@@ -10,7 +10,7 @@ export default function Home() {
         <p className="text-muted-foreground">Welcome to Bus management</p>
         <Button asChild>
           <Link href="/dashboard">
-            Go to Dashboard
+            Login to Dashboard
             <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
         </Button>

@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/table';
 import { busRoutes as initialBusRoutes } from '@/lib/data';
 import type { BusRoute } from '@/lib/types';
-import { PlusCircle, MoreHorizontal } from 'lucide-react';
+import { PlusCircle, MoreHorizontal, KeyRound } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,6 +41,8 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 import AddRouteForm from '@/components/bus-watch/add-route-form';
+import { Label } from '@/components/ui/label';
+import { toast } from '@/hooks/use-toast';
 
 export default function SettingsPage() {
   const [busRoutes, setBusRoutes] = useState<BusRoute[]>(initialBusRoutes);
@@ -59,11 +61,65 @@ export default function SettingsPage() {
     setIsDialogOpen(false);
   }
 
+  const handleChangePassword = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const currentPassword = formData.get('currentPassword');
+    const newPassword = formData.get('newPassword');
+
+    // In a real app, you'd have validation and an API call here.
+    // For now, we'll just show a success message.
+    if (newPassword && newPassword === formData.get('confirmPassword')) {
+         toast({
+            title: 'Password Changed',
+            description: 'Your password has been updated successfully.',
+        });
+        (event.target as HTMLFormElement).reset();
+    } else {
+         toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: 'New passwords do not match.',
+        });
+    }
+  }
+
 
   return (
     <main className="flex-1 p-4 md:p-6 lg:p-8">
-      <div className="space-y-6">
+      <div className="space-y-6 max-w-4xl mx-auto">
         <h1 className="text-2xl font-bold">Settings</h1>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <KeyRound className="h-5 w-5" />
+              Login Settings
+            </CardTitle>
+            <CardDescription>
+              Manage your account password here.
+            </CardDescription>
+          </CardHeader>
+          <form onSubmit={handleChangePassword}>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="currentPassword">Current Password</Label>
+                <Input id="currentPassword" name="currentPassword" type="password" required />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="newPassword">New Password</Label>
+                <Input id="newPassword" name="newPassword" type="password" required />
+              </div>
+               <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                <Input id="confirmPassword" name="confirmPassword" type="password" required />
+              </div>
+            </CardContent>
+            <CardFooter className="border-t pt-6">
+              <Button type="submit">Change Password</Button>
+            </CardFooter>
+          </form>
+        </Card>
 
         <Card>
           <CardHeader>

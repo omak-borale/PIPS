@@ -1,3 +1,7 @@
+
+"use client";
+
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -16,7 +20,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { busRoutes } from '@/lib/data';
+import { busRoutes as initialBusRoutes } from '@/lib/data';
+import type { BusRoute } from '@/lib/types';
 import { PlusCircle, MoreHorizontal } from 'lucide-react';
 import {
   DropdownMenu,
@@ -33,10 +38,28 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from '@/components/ui/dialog';
 import AddRouteForm from '@/components/bus-watch/add-route-form';
 
 export default function SettingsPage() {
+  const [busRoutes, setBusRoutes] = useState<BusRoute[]>(initialBusRoutes);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleAddRoute = (newRoute: Omit<BusRoute, 'id' | 'fuelLevel' | 'lastFueled'>) => {
+    setBusRoutes(prevRoutes => [
+        ...prevRoutes,
+        {
+            ...newRoute,
+            id: `route-${prevRoutes.length + 1}`,
+            fuelLevel: 100, // Default fuel level
+            lastFueled: new Date().toISOString(),
+        }
+    ]);
+    setIsDialogOpen(false);
+  }
+
+
   return (
     <main className="flex-1 p-4 md:p-6 lg:p-8">
       <div className="space-y-6">
@@ -51,7 +74,7 @@ export default function SettingsPage() {
           </CardHeader>
           <CardContent>
             <div className="flex justify-end mb-4">
-              <Dialog>
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
                   <Button>
                     <PlusCircle className="mr-2" />
@@ -66,7 +89,7 @@ export default function SettingsPage() {
                       system.
                     </DialogDescription>
                   </DialogHeader>
-                  <AddRouteForm />
+                  <AddRouteForm onAddRoute={handleAddRoute} />
                 </DialogContent>
               </Dialog>
             </div>

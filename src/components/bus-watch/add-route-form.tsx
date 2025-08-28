@@ -1,3 +1,4 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,6 +24,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
+import type { BusRoute } from "@/lib/types";
+
 
 const formSchema = z.object({
   name: z.string().min(1, "Driver Name is required."),
@@ -31,7 +34,11 @@ const formSchema = z.object({
   status: z.enum(["Active", "Inactive"]),
 });
 
-export default function AddRouteForm() {
+type AddRouteFormProps = {
+    onAddRoute: (data: Omit<BusRoute, 'id' | 'fuelLevel' | 'lastFueled' >) => void;
+}
+
+export default function AddRouteForm({ onAddRoute }: AddRouteFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -43,13 +50,12 @@ export default function AddRouteForm() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    onAddRoute(values);
     toast({
         title: "Route Added",
         description: `Successfully added the ${values.name} route.`
     })
-    // Here you would typically call a server action or API to save the data.
-    // For now, we'll just log it and show a toast.
+    form.reset();
   }
 
   return (

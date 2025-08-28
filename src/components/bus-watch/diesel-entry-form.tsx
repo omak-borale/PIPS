@@ -94,7 +94,7 @@ export default function DieselEntryForm() {
           name="dieselAmount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Diesel (Liters)</FormLabel>
+              <FormLabel>Diesel amount</FormLabel>
               <FormControl>
                 <Input type="number" placeholder="e.g., 50" {...field} />
               </FormControl>

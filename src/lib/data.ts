@@ -91,7 +91,7 @@ export const busRoutes: BusRoute[] = [
         status: 'Active',
         busNumber: 'B-105',
         fuelLevel: 60,
-        lastFueled: '2023-10-27T06:00:0Z',
+        lastFueled: '2023-10-27T06:00:00Z',
          serviceHistory: [
             { date: '2023-07-30T00:00:00Z', machineName: 'AC System', contactNumber: '555-5555', labourCharge: 12000, totalRepairCharge: 8500, remark: 'Repaired AC compressor and recharged freon.' },
         ]

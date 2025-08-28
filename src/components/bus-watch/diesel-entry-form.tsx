@@ -39,6 +39,9 @@ const formSchema = z.object({
   dieselAmount: z.coerce
     .number()
     .min(1, "Diesel amount must be greater than 0."),
+  dieselLiters: z.coerce
+    .number()
+    .min(1, "Diesel liters must be greater than 0."),
   date: z.date({
     required_error: "A date is required.",
   }),
@@ -50,6 +53,7 @@ export default function DieselEntryForm() {
     defaultValues: {
       busNumber: "",
       dieselAmount: 0,
+      dieselLiters: 0,
       date: new Date(),
     },
   });
@@ -58,7 +62,7 @@ export default function DieselEntryForm() {
     console.log(values);
     toast({
         title: "Diesel Entry Logged",
-        description: `Successfully logged ${values.dieselAmount} liters for bus ${values.busNumber}.`
+        description: `Successfully logged ${values.dieselLiters} liters for ₹${values.dieselAmount} for bus ${values.busNumber}.`
     })
     // Here you would typically call a server action or API to save the data.
   }
@@ -95,6 +99,20 @@ export default function DieselEntryForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Diesel Amount</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="e.g., 2500" {...field} />
+              </FormControl>
+              <FormDescription>Enter the total cost of the diesel.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="dieselLiters"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Diesel Liters</FormLabel>
               <FormControl>
                 <Input type="number" placeholder="e.g., 50" {...field} />
               </FormControl>

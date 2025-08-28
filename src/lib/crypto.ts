@@ -1,6 +1,3 @@
-
-'use server';
-
 import { createHash } from 'crypto';
 
 /**

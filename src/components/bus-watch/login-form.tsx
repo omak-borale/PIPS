@@ -26,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { hashPassword } from "@/lib/crypto";
+import { getHashedPassword } from "@/app/actions";
 
 
 const formSchema = z.object({
@@ -52,30 +52,28 @@ export default function LoginForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    
-    setTimeout(() => {
-      const hashedPassword = hashPassword(values.password);
-      
-      const isAdmin = values.role === "admin" && values.username === "admin" && hashedPassword === HASHED_PASSWORD;
-      const isDriver = values.role === "driver" && values.username === "driver" && hashedPassword === HASHED_PASSWORD;
 
-      if (isAdmin || isDriver) {
-        toast({
-          title: "Login Successful",
-          description: `Welcome back, ${values.role}!`,
-        });
-        router.push("/dashboard");
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Login Failed",
-          description: "Invalid credentials for the selected role.",
-        });
-        setIsLoading(false);
-      }
-    }, 1000);
+    const hashedPassword = await getHashedPassword(values.password);
+    
+    const isAdmin = values.role === "admin" && values.username === "admin" && hashedPassword === HASHED_PASSWORD;
+    const isDriver = values.role === "driver" && values.username === "driver" && hashedPassword === HASHED_PASSWORD;
+
+    if (isAdmin || isDriver) {
+      toast({
+        title: "Login Successful",
+        description: `Welcome back, ${values.role}!`,
+      });
+      router.push("/dashboard");
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Login Failed",
+        description: "Invalid credentials for the selected role.",
+      });
+      setIsLoading(false);
+    }
   }
 
   return (

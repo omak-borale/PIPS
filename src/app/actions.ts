@@ -1,6 +1,7 @@
 'use server';
 
 import { analyzeBusDisruptions } from '@/ai/flows/analyze-bus-disruptions';
+import { hashPassword } from '@/lib/crypto';
 import { realTimeBusLocations, historicalData, newsFeed } from '@/lib/data';
 
 export async function getDisruptionAnalysis() {
@@ -15,4 +16,8 @@ export async function getDisruptionAnalysis() {
     console.error(error);
     return { success: false, error: 'Failed to analyze disruptions.' };
   }
+}
+
+export async function getHashedPassword(password: string) {
+    return hashPassword(password);
 }

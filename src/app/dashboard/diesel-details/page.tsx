@@ -15,16 +15,46 @@ import {
 } from '@/components/ui/table';
 import { dieselEntries } from '@/lib/data';
 import { format, parseISO } from 'date-fns';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import DieselEntryForm from '@/components/bus-watch/diesel-entry-form';
+import { PlusCircle } from 'lucide-react';
 
 export default function DieselDetailsPage() {
   return (
     <main className="flex-1 p-4 md:p-6 lg:p-8">
       <Card>
-        <CardHeader>
-          <CardTitle>Diesel Details</CardTitle>
-          <CardDescription>
-            A log of all diesel refueling events.
-          </CardDescription>
+        <CardHeader className="flex flex-row items-start justify-between">
+          <div>
+            <CardTitle>Diesel Details</CardTitle>
+            <CardDescription>
+              A log of all diesel refueling events.
+            </CardDescription>
+          </div>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button>
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Add New Entry
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add Diesel Entry</DialogTitle>
+                <DialogDescription>
+                  Log a new diesel refueling event for a bus.
+                </DialogDescription>
+              </DialogHeader>
+              <DieselEntryForm />
+            </DialogContent>
+          </Dialog>
         </CardHeader>
         <CardContent>
           <Table>
@@ -41,19 +71,22 @@ export default function DieselDetailsPage() {
             <TableBody>
               {dieselEntries.map((entry) => (
                 <TableRow key={entry.id}>
-                   <TableCell>
-                    {format(parseISO(entry.date), 'PPP')}
+                  <TableCell>{format(parseISO(entry.date), 'PPP')}</TableCell>
+                  <TableCell className="font-medium">
+                    {entry.busNumber}
                   </TableCell>
-                  <TableCell className="font-medium">{entry.busNumber}</TableCell>
                   <TableCell>{entry.pumpName}</TableCell>
                   <TableCell>{entry.liters.toFixed(2)}</TableCell>
                   <TableCell>{entry.amount.toLocaleString()}</TableCell>
                   <TableCell>{entry.pageNumber}</TableCell>
                 </TableRow>
               ))}
-               {dieselEntries.length === 0 && (
+              {dieselEntries.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                  <TableCell
+                    colSpan={6}
+                    className="text-center py-8 text-muted-foreground"
+                  >
                     No diesel entries found.
                   </TableCell>
                 </TableRow>

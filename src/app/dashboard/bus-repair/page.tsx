@@ -26,7 +26,8 @@ import { busRoutes } from '@/lib/data';
 import { format, subDays, parseISO } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Wrench, Phone, CircleDollarSign, NotebookText } from 'lucide-react';
+import { Wrench, Phone, CircleDollarSign, NotebookText, Hammer, Banknote } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
 
 export default function BusRepairPage() {
   const getRepairStatus = (lastFueled: string) => {
@@ -93,27 +94,23 @@ export default function BusRepairPage() {
                                 </DialogDescription>
                               </DialogHeader>
                               <div className="space-y-4 py-4">
-                                <div className="flex items-center gap-4">
-                                  <Wrench className="h-5 w-5 text-muted-foreground" />
-                                  <div>
-                                    <p className="text-sm text-muted-foreground">Machine Name</p>
-                                    <p className="font-medium">{lastServiceHistory.machineName}</p>
+                                <div className="grid grid-cols-2 gap-4">
+                                   <div className="flex items-center gap-4">
+                                    <Wrench className="h-5 w-5 text-muted-foreground" />
+                                    <div>
+                                      <p className="text-sm text-muted-foreground">Machine Name</p>
+                                      <p className="font-medium">{lastServiceHistory.machineName}</p>
+                                    </div>
+                                  </div>
+                                   <div className="flex items-center gap-4">
+                                    <Phone className="h-5 w-5 text-muted-foreground" />
+                                    <div>
+                                      <p className="text-sm text-muted-foreground">Contact Number</p>
+                                      <p className="font-medium">{lastServiceHistory.contactNumber}</p>
+                                    </div>
                                   </div>
                                 </div>
-                                 <div className="flex items-center gap-4">
-                                  <Phone className="h-5 w-5 text-muted-foreground" />
-                                  <div>
-                                    <p className="text-sm text-muted-foreground">Contact Number</p>
-                                    <p className="font-medium">{lastServiceHistory.contactNumber}</p>
-                                  </div>
-                                </div>
-                                <div className="flex items-center gap-4">
-                                  <CircleDollarSign className="h-5 w-5 text-muted-foreground" />
-                                  <div>
-                                    <p className="text-sm text-muted-foreground">Labour Charge</p>
-                                    <p className="font-medium">₹{lastServiceHistory.labourCharge.toLocaleString()}</p>
-                                  </div>
-                                </div>
+
                                 <div className="flex items-start gap-4">
                                   <NotebookText className="h-5 w-5 text-muted-foreground mt-1" />
                                    <div>
@@ -121,6 +118,36 @@ export default function BusRepairPage() {
                                     <p className="font-medium">{lastServiceHistory.remark}</p>
                                   </div>
                                 </div>
+
+                                <Separator />
+
+                                <div className="space-y-2">
+                                  <div className="flex justify-between items-center">
+                                      <div className="flex items-center gap-4">
+                                        <CircleDollarSign className="h-5 w-5 text-muted-foreground" />
+                                        <p className="text-sm">Labour Charge</p>
+                                      </div>
+                                      <p className="font-medium">₹{lastServiceHistory.labourCharge.toLocaleString()}</p>
+                                  </div>
+                                  <div className="flex justify-between items-center">
+                                      <div className="flex items-center gap-4">
+                                        <Hammer className="h-5 w-5 text-muted-foreground" />
+                                        <p className="text-sm">Total Repair Charge</p>
+                                      </div>
+                                      <p className="font-medium">₹{lastServiceHistory.totalRepairCharge.toLocaleString()}</p>
+                                  </div>
+                                </div>
+
+                                <Separator />
+                                
+                                <div className="flex justify-between items-center text-lg font-bold text-primary">
+                                    <div className="flex items-center gap-4">
+                                      <Banknote className="h-6 w-6" />
+                                      <p>Total Amount</p>
+                                    </div>
+                                    <p>₹{(lastServiceHistory.labourCharge + lastServiceHistory.totalRepairCharge).toLocaleString()}</p>
+                                </div>
+
                               </div>
                             </DialogContent>
                           </Dialog>

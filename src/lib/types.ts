@@ -30,6 +30,7 @@ export type ServiceHistory = {
     machineName: string;
     contactNumber: string;
     labourCharge: number;
+    totalRepairCharge: number;
     remark: string;
 }
 

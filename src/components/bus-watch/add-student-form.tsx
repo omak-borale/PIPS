@@ -25,6 +25,10 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/hooks/use-toast";
+import { addStudent } from "@/app/actions";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(1, "Student Name is required."),
@@ -45,6 +49,9 @@ const formSchema = z.object({
 
 
 export default function AddStudentForm() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -58,13 +65,25 @@ export default function AddStudentForm() {
 
   const usesBus = form.watch("usesBus");
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    toast({
-        title: "Student Added",
-        description: `Successfully added ${values.name}.`
-    })
-    // Here you would typically call a server action or API to save the data.
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+    const result = await addStudent(values);
+    setIsLoading(false);
+
+    if (result.success) {
+      toast({
+          title: "Student Added",
+          description: `Successfully added ${values.name}.`
+      });
+      form.reset();
+      router.push('/dashboard/bus-management');
+    } else {
+        toast({
+            variant: "destructive",
+            title: "Error",
+            description: result.error,
+        });
+    }
   }
 
   return (
@@ -168,7 +187,10 @@ export default function AddStudentForm() {
           />
         )}
         <div className="flex justify-end">
-          <Button type="submit">Add Student</Button>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Add Student
+          </Button>
         </div>
       </form>
     </Form>

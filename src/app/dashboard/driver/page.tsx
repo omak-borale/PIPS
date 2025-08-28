@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -24,16 +24,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { busRoutes, students } from '@/lib/data';
+import { getBusRoutes, getStudents } from '@/lib/data';
 import type { Student, BusRoute } from '@/lib/types';
 import { User, Bus, Users, Home } from 'lucide-react';
 import Link from 'next/link';
 import { Label } from '@/components/ui/label';
 
 export default function DriverDashboardPage() {
-  const [selectedRouteId, setSelectedRouteId] = useState<string | undefined>(
-    busRoutes[0]?.id
-  );
+  const [busRoutes, setBusRoutes] = useState<BusRoute[]>([]);
+  const [students, setStudents] = useState<Student[]>([]);
+  const [selectedRouteId, setSelectedRouteId] = useState<string | undefined>();
+
+  useEffect(() => {
+    async function fetchData() {
+        const routesData = await getBusRoutes();
+        const studentsData = await getStudents();
+        setBusRoutes(routesData);
+        setStudents(studentsData);
+        if (routesData.length > 0) {
+            setSelectedRouteId(routesData[0].id);
+        }
+    }
+    fetchData();
+  }, []);
 
   const selectedDriver = busRoutes.find(
     (route) => route.id === selectedRouteId

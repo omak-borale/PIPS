@@ -7,7 +7,7 @@ import { analyzeBusDisruptions } from '@/ai/flows/analyze-bus-disruptions';
 import { hashPassword } from '@/lib/crypto';
 import type { Student } from '@/lib/types';
 import { revalidatePath } from 'next/cache';
-import data from '@/lib/data.json';
+import initialData from '@/lib/data.json';
 
 const dataFilePath = path.join(process.cwd(), 'src', 'lib', 'data.json');
 
@@ -18,7 +18,7 @@ async function readData() {
     } catch (error) {
         console.error('Error reading data file:', error);
         // Return the initial data if the file doesn't exist or has an error
-        return data;
+        return initialData;
     }
 }
 

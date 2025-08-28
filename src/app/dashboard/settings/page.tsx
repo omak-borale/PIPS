@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -20,7 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { busRoutes as initialBusRoutes } from '@/lib/data';
+import { getBusRoutes } from '@/lib/data';
 import type { BusRoute } from '@/lib/types';
 import { PlusCircle, MoreVertical, KeyRound, User, Shield } from 'lucide-react';
 import {
@@ -46,19 +46,28 @@ import { toast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function SettingsPage() {
-  const [busRoutes, setBusRoutes] = useState<BusRoute[]>(initialBusRoutes);
+  const [busRoutes, setBusRoutes] = useState<BusRoute[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  
+  useEffect(() => {
+    async function fetchData() {
+        const routes = await getBusRoutes();
+        setBusRoutes(routes);
+    }
+    fetchData();
+  }, []);
 
   const handleAddRoute = (newRoute: Omit<BusRoute, 'id' | 'fuelLevel' | 'lastFueled'>) => {
-    setBusRoutes(prevRoutes => [
-        ...prevRoutes,
-        {
-            ...newRoute,
-            id: `route-${prevRoutes.length + 1}`,
-            fuelLevel: 100, // Default fuel level
-            lastFueled: new Date().toISOString(),
-        }
-    ]);
+    // This part would ideally be a server action to update the data source
+    const updatedRoute: BusRoute = {
+      ...newRoute,
+      id: `route-${busRoutes.length + 1}`,
+      fuelLevel: 100, // Default fuel level
+      lastFueled: new Date().toISOString(),
+    }
+    setBusRoutes(prevRoutes => [ ...prevRoutes, updatedRoute ]);
+    // NOTE: In a real app, you would call a server action here to persist the data
+    // For now, we just update the local state.
     setIsDialogOpen(false);
   }
 

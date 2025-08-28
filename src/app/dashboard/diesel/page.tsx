@@ -1,3 +1,4 @@
+
 import {
   Card,
   CardContent,
@@ -13,10 +14,11 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Progress } from '@/components/ui/progress';
-import { busRoutes } from '@/lib/data';
+import { getBusRoutes } from '@/lib/data';
 import { format, parseISO } from 'date-fns';
 
-export default function DieselManagementPage() {
+export default async function DieselManagementPage() {
+  const busRoutes = await getBusRoutes();
   return (
     <main className="flex-1 p-4 md:p-6 lg:p-8">
       <Card>

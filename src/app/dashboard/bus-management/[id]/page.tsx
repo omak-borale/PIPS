@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { students } from '@/lib/data';
+import { getStudents } from '@/lib/data';
 import { notFound, useParams } from 'next/navigation';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -16,13 +16,29 @@ import { Phone, Home, User, GraduationCap, Bus } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import type { Student } from '@/lib/types';
 
 export default function StudentDetailPage() {
   const params = useParams();
   const studentId = typeof params.id === 'string' ? params.id : '';
-  const student = students.find((s) => s.id === studentId);
+  const [student, setStudent] = useState<Student | undefined>(undefined);
+  
+  useEffect(() => {
+    async function fetchStudent() {
+      const allStudents = await getStudents();
+      const currentStudent = allStudents.find((s) => s.id === studentId);
+      setStudent(currentStudent);
+    }
+    if (studentId) {
+      fetchStudent();
+    }
+  }, [studentId]);
+
 
   if (!student) {
+    // You might want to show a loading state here
+    if (student === undefined) return <div>Loading...</div>; 
     notFound();
   }
 

@@ -1,5 +1,4 @@
 
-"use client";
 import {
   Card,
   CardContent,
@@ -15,7 +14,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { busRoutes, students } from '@/lib/data';
+import { getBusRoutes, getStudents } from '@/lib/data';
 import {
   Dialog,
   DialogContent,
@@ -26,7 +25,10 @@ import {
 } from '@/components/ui/dialog';
 import { Users } from 'lucide-react';
 
-export default function RoutesPage() {
+export default async function RoutesPage() {
+  const busRoutes = await getBusRoutes();
+  const students = await getStudents();
+  
   const getStudentCountForBus = (busNumber: string) => {
     return students.filter(student => student.usesBus && student.busNumber === busNumber).length;
   };

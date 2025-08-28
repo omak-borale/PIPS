@@ -1,9 +1,10 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { busRoutes } from "@/lib/data";
+import { initialBusRoutes } from "@/lib/data";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -175,7 +176,7 @@ export default function AddStudentForm() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {busRoutes.map(route => (
+                    {initialBusRoutes.map(route => (
                       <SelectItem key={route.id} value={route.busNumber}>{route.busNumber} ({route.name})</SelectItem>
                     ))}
                   </SelectContent>

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,7 +32,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { busRoutes } from "@/lib/data";
+import { initialBusRoutes } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { Textarea } from "../ui/textarea";
 
@@ -82,7 +83,7 @@ export default function DailyLogForm() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {busRoutes.map(route => (
+                    {initialBusRoutes.map(route => (
                       <SelectItem key={route.id} value={route.busNumber}>{route.busNumber} ({route.name})</SelectItem>
                     ))}
                   </SelectContent>

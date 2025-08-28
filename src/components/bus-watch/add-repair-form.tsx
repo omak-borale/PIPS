@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
-import { busRoutes } from "@/lib/data";
+import { initialBusRoutes } from "@/lib/data";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -91,7 +91,7 @@ export default function AddRepairForm({ onAddRepair }: AddRepairFormProps) {
                     </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                    {busRoutes.map((route) => (
+                    {initialBusRoutes.map((route) => (
                         <SelectItem key={route.id} value={route.busNumber}>
                         {route.busNumber} ({route.name})
                         </SelectItem>

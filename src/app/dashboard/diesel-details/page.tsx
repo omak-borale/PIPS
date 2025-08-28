@@ -16,16 +16,22 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { dieselEntries } from '@/lib/data';
+import { getDieselEntries } from '@/lib/data';
 import { format, parseISO } from 'date-fns';
 import { useState, useEffect } from 'react';
+import type { DieselEntry } from '@/lib/types';
 
 export default function DieselDetailsPage() {
-  // To prevent hydration errors, we ensure that the component is mounted on the client
-  // before we try to render the dates.
+  const [dieselEntries, setDieselEntries] = useState<DieselEntry[]>([]);
   const [isClient, setIsClient] = useState(false);
+  
   useEffect(() => {
     setIsClient(true);
+    async function fetchData() {
+        const entries = await getDieselEntries();
+        setDieselEntries(entries);
+    }
+    fetchData();
   }, []);
 
 

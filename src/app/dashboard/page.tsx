@@ -1,9 +1,14 @@
+
 import DisruptionAlerts from '@/components/bus-watch/disruption-alerts';
 import MapView from '@/components/bus-watch/map-view';
 import BusInfoTabs from '@/components/bus-watch/bus-info-tabs';
-import { buses, stops, arrivals } from '@/lib/data';
+import { getBuses, getStops, getArrivals } from '@/lib/data';
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const buses = await getBuses();
+  const stops = await getStops();
+  const arrivals = await getArrivals();
+
   return (
     <main className="flex-1 p-4 md:p-6 lg:p-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">

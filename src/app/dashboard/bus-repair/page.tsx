@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -26,7 +26,7 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { busRoutes as initialBusRoutes } from '@/lib/data';
+import { getBusRoutes } from '@/lib/data';
 import { format, subDays, parseISO } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -36,8 +36,16 @@ import type { BusRoute, ServiceHistory } from '@/lib/types';
 import AddRepairForm from '@/components/bus-watch/add-repair-form';
 
 export default function BusRepairPage() {
-  const [busRoutes, setBusRoutes] = useState<BusRoute[]>(initialBusRoutes);
+  const [busRoutes, setBusRoutes] = useState<BusRoute[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  useEffect(() => {
+    async function fetchData() {
+        const routes = await getBusRoutes();
+        setBusRoutes(routes);
+    }
+    fetchData();
+  }, []);
 
   const getRepairStatus = (route: BusRoute) => {
     const lastServiceDate = route.serviceHistory && route.serviceHistory.length > 0

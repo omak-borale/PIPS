@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Users, Bus } from 'lucide-react';
-import { students } from '@/lib/data';
+import { getStudents } from '@/lib/data';
 import Link from 'next/link';
 import {
   Select,
@@ -29,10 +29,20 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
+import type { Student } from '@/lib/types';
 
 export default function BusManagementPage() {
+  const [students, setStudents] = useState<Student[]>([]);
   const [selectedVillage, setSelectedVillage] = useState('all');
   const [selectedBus, setSelectedBus] = useState('all');
+
+  useEffect(() => {
+    async function fetchData() {
+        const studentData = await getStudents();
+        setStudents(studentData);
+    }
+    fetchData();
+  }, []);
 
   const studentsUsingBus = students.filter((student) => student.usesBus).length;
   const studentsNotUsingBus = students.length - studentsUsingBus;

@@ -24,7 +24,7 @@ const getStatusColor = (status: Arrival['status']) => {
 export default function ArrivalTimes({ arrivals }: ArrivalTimesProps) {
   return (
     <div className="space-y-4">
-      <h3 className="font-semibold text-lg">Upcoming Arrivals</h3>
+      <h3 className="font-semibold text-lg">Arrivals Time</h3>
       <p className="text-sm text-muted-foreground">
         Real-time arrivals for your selected stop.
       </p>

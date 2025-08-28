@@ -135,7 +135,7 @@ export default function SettingsPage() {
               <AlertDescription>
                 <p>For this prototype, the following credentials are used:</p>
                 <ul className="list-disc pl-5 mt-2 space-y-1">
-                  <li><b>Admin:</b> username: `admin`, password: `password`</li>
+                  <li><b>Admin:</b> username: `SIDRAM`, password: `123456`</li>
                   <li><b>Driver:</b> username: `driver`, password: `password`</li>
                 </ul>
                  <p className="mt-2 text-xs text-muted-foreground">Password changes are not supported in this demo.</p>

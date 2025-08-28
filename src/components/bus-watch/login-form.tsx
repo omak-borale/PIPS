@@ -37,8 +37,10 @@ const formSchema = z.object({
   password: z.string().min(1, "Password is required."),
 });
 
-// Hashed version of "password"
-const HASHED_PASSWORD = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8";
+// Hashed version of "123456"
+const HASHED_PASSWORD = "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92";
+const HASHED_DRIVER_PASSWORD = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8";
+
 
 export default function LoginForm() {
   const router = useRouter();
@@ -57,8 +59,8 @@ export default function LoginForm() {
 
     const hashedPassword = await getHashedPassword(values.password);
     
-    const isAdmin = values.role === "admin" && values.username === "admin" && hashedPassword === HASHED_PASSWORD;
-    const isDriver = values.role === "driver" && values.username === "driver" && hashedPassword === HASHED_PASSWORD;
+    const isAdmin = values.role === "admin" && values.username === "SIDRAM" && hashedPassword === HASHED_PASSWORD;
+    const isDriver = values.role === "driver" && values.username === "driver" && hashedPassword === HASHED_DRIVER_PASSWORD;
 
     if (isAdmin || isDriver) {
       toast({

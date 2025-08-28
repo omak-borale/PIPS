@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 
 const getTitleFromPath = (path: string) => {
   if (path === '/dashboard') return 'Dashboard';
+  if (path.startsWith('/dashboard/driver')) return 'Driver Dashboard';
   if (path.startsWith('/dashboard/routes')) return 'Routes';
   if (path.startsWith('/dashboard/diesel-entry')) return 'Diesel Entry';
   if (path.startsWith('/dashboard/diesel-details')) return 'Diesel Details';

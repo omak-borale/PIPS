@@ -65,7 +65,11 @@ export default function LoginForm() {
         title: "Login Successful",
         description: `Welcome back, ${values.role}!`,
       });
-      router.push("/dashboard");
+      if (isDriver) {
+        router.push("/dashboard/driver");
+      } else {
+        router.push("/dashboard");
+      }
     } else {
       toast({
         variant: "destructive",

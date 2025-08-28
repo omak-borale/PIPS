@@ -88,6 +88,9 @@ export default function SettingsPage() {
               </AlertDescription>
             </Alert>
           </CardContent>
+           <CardFooter className="border-t px-6 py-4">
+            <Button disabled>Save Changes</Button>
+          </CardFooter>
         </Card>
 
         <Card>

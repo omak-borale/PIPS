@@ -14,6 +14,7 @@ import { LayoutDashboard, Route, Bus, Settings, Bell, Fuel, PencilLine, UserPlus
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { ReactNode } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
@@ -23,9 +24,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <Sidebar>
             <SidebarHeader>
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-primary text-primary-foreground rounded-lg">
-                  <Bus className="h-6 w-6" />
-                </div>
+                <Image
+                  src="https://picsum.photos/40/40"
+                  alt="School Logo"
+                  width={40}
+                  height={40}
+                  className="rounded-lg"
+                  data-ai-hint="computer logo"
+                />
                 <h1 className="text-xl font-bold font-headline text-primary">
                   Patri swamy international public school
                 </h1>

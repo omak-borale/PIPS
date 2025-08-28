@@ -13,16 +13,26 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogDescription,
+} from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { busRoutes } from '@/lib/data';
 import { format, subDays, parseISO } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Wrench, Phone, CircleDollarSign, NotebookText } from 'lucide-react';
 
 export default function BusRepairPage() {
-
   const getRepairStatus = (lastFueled: string) => {
     const lastServiceDate = subDays(parseISO(lastFueled), 20); // Mocking service date
-    const daysSinceService = (new Date().getTime() - lastServiceDate.getTime()) / (1000 * 3600 * 24);
+    const daysSinceService =
+      (new Date().getTime() - lastServiceDate.getTime()) / (1000 * 3600 * 24);
 
     if (daysSinceService > 90) {
       return { text: 'Needs Service', color: 'bg-red-500' };
@@ -40,7 +50,7 @@ export default function BusRepairPage() {
           <CardHeader>
             <CardTitle>Bus Repair Status</CardTitle>
             <CardDescription>
-              Overview of the maintenance status for each bus.
+              Overview of the maintenance status for each bus. Click on a service date to see details.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -56,15 +66,73 @@ export default function BusRepairPage() {
               <TableBody>
                 {busRoutes.map((route) => {
                   const status = getRepairStatus(route.lastFueled);
-                  const lastServiceDate = subDays(parseISO(route.lastFueled), 20);
+                  const lastServiceHistory = route.serviceHistory?.[0];
+                   const lastServiceDate = lastServiceHistory
+                    ? parseISO(lastServiceHistory.date)
+                    : subDays(parseISO(route.lastFueled), 20);
 
                   return (
                     <TableRow key={route.id}>
-                      <TableCell className="font-medium">{route.busNumber}</TableCell>
+                      <TableCell className="font-medium">
+                        {route.busNumber}
+                      </TableCell>
                       <TableCell>{route.name}</TableCell>
-                      <TableCell>{format(lastServiceDate, 'PPP')}</TableCell>
                       <TableCell>
-                        <Badge variant="default" className={cn('text-white', status.color)}>
+                        {lastServiceHistory ? (
+                           <Dialog>
+                            <DialogTrigger asChild>
+                              <Button variant="link" className="p-0 h-auto">
+                                {format(lastServiceDate, 'PPP')}
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>Service Details for {route.busNumber}</DialogTitle>
+                                <DialogDescription>
+                                   Service performed on {format(lastServiceDate, 'PPP')}
+                                </DialogDescription>
+                              </DialogHeader>
+                              <div className="space-y-4 py-4">
+                                <div className="flex items-center gap-4">
+                                  <Wrench className="h-5 w-5 text-muted-foreground" />
+                                  <div>
+                                    <p className="text-sm text-muted-foreground">Machine Name</p>
+                                    <p className="font-medium">{lastServiceHistory.machineName}</p>
+                                  </div>
+                                </div>
+                                 <div className="flex items-center gap-4">
+                                  <Phone className="h-5 w-5 text-muted-foreground" />
+                                  <div>
+                                    <p className="text-sm text-muted-foreground">Contact Number</p>
+                                    <p className="font-medium">{lastServiceHistory.contactNumber}</p>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-4">
+                                  <CircleDollarSign className="h-5 w-5 text-muted-foreground" />
+                                  <div>
+                                    <p className="text-sm text-muted-foreground">Labour Charge</p>
+                                    <p className="font-medium">₹{lastServiceHistory.labourCharge.toLocaleString()}</p>
+                                  </div>
+                                </div>
+                                <div className="flex items-start gap-4">
+                                  <NotebookText className="h-5 w-5 text-muted-foreground mt-1" />
+                                   <div>
+                                    <p className="text-sm text-muted-foreground">Remark</p>
+                                    <p className="font-medium">{lastServiceHistory.remark}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </DialogContent>
+                          </Dialog>
+                        ) : (
+                           format(lastServiceDate, 'PPP')
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant="default"
+                          className={cn('text-white', status.color)}
+                        >
                           {status.text}
                         </Badge>
                       </TableCell>

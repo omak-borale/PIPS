@@ -25,6 +25,14 @@ export type Arrival = {
   status: 'On Time' | 'Delayed' | 'Early';
 };
 
+export type ServiceHistory = {
+    date: string;
+    machineName: string;
+    contactNumber: string;
+    labourCharge: number;
+    remark: string;
+}
+
 export type BusRoute = {
     id: string;
     name: string;
@@ -33,6 +41,7 @@ export type BusRoute = {
     busNumber: string;
     fuelLevel: number;
     lastFueled: string;
+    serviceHistory?: ServiceHistory[];
 }
 
 export type Student = {

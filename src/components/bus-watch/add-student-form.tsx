@@ -90,7 +90,7 @@ export default function AddStudentForm() {
           name="grade"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Grade</FormLabel>
+              <FormLabel>Father Name</FormLabel>
               <FormControl>
                 <Input placeholder="e.g., 5th" {...field} />
               </FormControl>

@@ -54,3 +54,13 @@ export type Student = {
     address: string;
     busNumber?: string;
 }
+
+export type DieselEntry = {
+    id: string;
+    busNumber: string;
+    pumpName: string;
+    liters: number;
+    amount: number;
+    date: string;
+    pageNumber: number;
+}

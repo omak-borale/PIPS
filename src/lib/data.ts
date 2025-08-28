@@ -1,4 +1,4 @@
-import type { Bus, BusStop, Arrival, BusRoute, Student } from './types';
+import type { Bus, BusStop, Arrival, BusRoute, Student, DieselEntry } from './types';
 
 // Data for GenAI flow
 export const realTimeBusLocations = [
@@ -114,4 +114,12 @@ export const students: Student[] = [
   { id: 'student-13', name: 'Olivia', usesBus: true, fatherName: 'William Gonzalez', parentContact: '555-9900', address: '135 Poplar Pl, Anytown, USA', busNumber: 'B-102' },
   { id: 'student-14', name: 'Peggy', usesBus: true, fatherName: 'Richard Wilson', parentContact: '555-2468', address: '791 Sequoia Trail, Anytown, USA', busNumber: 'B-103' },
   { id: 'student-15', name: 'Sybil', usesBus: false, fatherName: 'Joseph Anderson', parentContact: '555-1357', address: '975 Cypress Point, Anytown, USA' },
+];
+
+export const dieselEntries: DieselEntry[] = [
+    { id: 'de-1', busNumber: 'B-101', pumpName: 'City Fuel Center', liters: 50.5, amount: 4545, date: '2023-10-26T08:00:00Z', pageNumber: 1 },
+    { id: 'de-2', busNumber: 'B-102', pumpName: 'Highway Gas', liters: 75.2, amount: 6768, date: '2023-10-25T12:30:00Z', pageNumber: 1 },
+    { id: 'de-3', busNumber: 'B-103', pumpName: 'City Fuel Center', liters: 60.0, amount: 5400, date: '2023-10-27T09:15:00Z', pageNumber: 2 },
+    { id: 'de-4', busNumber: 'B-104', pumpName: 'South Station Fuels', liters: 80.0, amount: 7200, date: '2023-10-26T18:45:00Z', pageNumber: 3 },
+    { id: 'de-5', busNumber: 'B-105', pumpName: 'Highway Gas', liters: 40.7, amount: 3663, date: '2023-10-27T06:00:00Z', pageNumber: 4 },
 ];

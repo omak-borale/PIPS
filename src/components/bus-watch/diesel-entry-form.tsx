@@ -45,6 +45,8 @@ const formSchema = z.object({
   date: z.date({
     required_error: "A date is required.",
   }),
+  pumpName: z.string().min(1, "Diesel pump name is required."),
+  pageNumber: z.coerce.number().min(1, "Page number is required."),
 });
 
 export default function DieselEntryForm() {
@@ -55,6 +57,8 @@ export default function DieselEntryForm() {
       dieselAmount: 0,
       dieselLiters: 0,
       date: new Date(),
+      pumpName: "",
+      pageNumber: 0,
     },
   });
 
@@ -98,7 +102,7 @@ export default function DieselEntryForm() {
           name="dieselAmount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Diesel Amount</FormLabel>
+              <FormLabel>Diesel Amount (₹)</FormLabel>
               <FormControl>
                 <Input type="number" placeholder="e.g., 2500" {...field} />
               </FormControl>
@@ -117,6 +121,34 @@ export default function DieselEntryForm() {
                 <Input type="number" placeholder="e.g., 50" {...field} />
               </FormControl>
               <FormDescription>Enter the amount of diesel added in liters.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+         <FormField
+          control={form.control}
+          name="pumpName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Diesel Pump Name</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g., City Fuel Center" {...field} />
+              </FormControl>
+              <FormDescription>The name of the diesel pump station.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="pageNumber"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Page Number in Book</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="e.g., 12" {...field} />
+              </FormControl>
+              <FormDescription>The page number from the physical log book.</FormDescription>
               <FormMessage />
             </FormItem>
           )}

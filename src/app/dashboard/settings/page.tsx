@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/table';
 import { busRoutes as initialBusRoutes } from '@/lib/data';
 import type { BusRoute } from '@/lib/types';
-import { PlusCircle, MoreHorizontal, KeyRound, User, Shield } from 'lucide-react';
+import { PlusCircle, MoreVertical, KeyRound, User, Shield } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -208,7 +208,7 @@ export default function SettingsPage() {
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" className="h-8 w-8 p-0">
                             <span className="sr-only">Open menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
+                            <MoreVertical className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">

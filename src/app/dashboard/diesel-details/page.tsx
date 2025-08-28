@@ -18,17 +18,6 @@ import {
 } from '@/components/ui/table';
 import { dieselEntries } from '@/lib/data';
 import { format, parseISO } from 'date-fns';
-import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import DieselEntryForm from '@/components/bus-watch/diesel-entry-form';
-import { PlusCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 export default function DieselDetailsPage() {
@@ -50,23 +39,6 @@ export default function DieselDetailsPage() {
               A log of all diesel refueling events.
             </CardDescription>
           </div>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button>
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Add New Entry
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Add Diesel Entry</DialogTitle>
-                <DialogDescription>
-                  Log a new diesel refueling event for a bus.
-                </DialogDescription>
-              </DialogHeader>
-              <DieselEntryForm />
-            </DialogContent>
-          </Dialog>
         </CardHeader>
         <CardContent>
           <Table>

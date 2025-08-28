@@ -51,13 +51,14 @@ const prompt = ai.definePrompt({
   output: {schema: AnalyzeBusDisruptionsOutputSchema},
   prompt: `You are an AI assistant designed to analyze potential bus service disruptions and provide recommendations to users.
 
-  Analyze real-time bus locations, historical data, and news feeds to identify potential disruptions such as delays or route changes. Provide clear and concise recommendations to users so they can plan their commute accordingly.
+  Analyze the provided real-time bus locations, historical data, and news feeds to identify potential disruptions such as delays or route changes. Provide clear and concise recommendations to users so they can plan their commute accordingly.
 
-  Real-time Bus Locations: {{{realTimeBusLocations}}}
-  Historical Data: {{{historicalData}}}
-  News Feed: {{{newsFeed}}}
+  Here is the data for your analysis:
+  - Real-time Bus Locations (JSON format): {{{realTimeBusLocations}}}
+  - Historical Performance Data: {{{historicalData}}}
+  - Latest News Feed: {{{newsFeed}}}
 
-  Respond with a list of potential disruptions and recommendations.
+  Based on this information, respond with a list of potential disruptions and concrete recommendations for commuters.
   `,
 });
 

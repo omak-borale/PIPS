@@ -83,3 +83,25 @@ export async function addStudent(student: Omit<Student, 'id'>) {
         return { success: false, error: 'Failed to add student.' };
     }
 }
+
+export async function addBusRoute(route: Omit<BusRoute, 'id' | 'fuelLevel' | 'lastFueled'>) {
+    try {
+        const currentData = await readData();
+        const newRoute: BusRoute = {
+            id: `route-${Date.now()}`,
+            ...route,
+            fuelLevel: 100, // Default fuel level
+            lastFueled: new Date().toISOString(),
+        };
+        
+        currentData.busRoutes.push(newRoute);
+        await writeData(currentData);
+
+        revalidatePath('/dashboard/settings');
+        revalidatePath('/dashboard/routes');
+        return { success: true, data: newRoute };
+    } catch (error) {
+        console.error(error);
+        return { success: false, error: 'Failed to add bus route.' };
+    }
+}

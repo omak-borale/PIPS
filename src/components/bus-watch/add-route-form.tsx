@@ -4,6 +4,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +27,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import type { BusRoute } from "@/lib/types";
+import { addBusRoute } from "@/app/actions";
 
 
 const formSchema = z.object({
@@ -35,10 +38,11 @@ const formSchema = z.object({
 });
 
 type AddRouteFormProps = {
-    onAddRoute: (data: Omit<BusRoute, 'id' | 'fuelLevel' | 'lastFueled' >) => void;
+    onRouteAdded: (newRoute: BusRoute) => void;
 }
 
-export default function AddRouteForm({ onAddRoute }: AddRouteFormProps) {
+export default function AddRouteForm({ onRouteAdded }: AddRouteFormProps) {
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,13 +53,25 @@ export default function AddRouteForm({ onAddRoute }: AddRouteFormProps) {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    onAddRoute(values);
-    toast({
-        title: "Route Added",
-        description: `Successfully added the ${values.name} route.`
-    })
-    form.reset();
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+    const result = await addBusRoute(values);
+    setIsLoading(false);
+
+    if (result.success) {
+        toast({
+            title: "Route Added",
+            description: `Successfully added the ${values.name} route.`
+        });
+        form.reset();
+        onRouteAdded(result.data);
+    } else {
+        toast({
+            variant: "destructive",
+            title: "Error",
+            description: result.error,
+        });
+    }
   }
 
   return (
@@ -126,7 +142,10 @@ export default function AddRouteForm({ onAddRoute }: AddRouteFormProps) {
           )}
         />
         <div className="flex justify-end">
-          <Button type="submit">Save Details</Button>
+           <Button type="submit" disabled={isLoading}>
+            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Save Details
+          </Button>
         </div>
       </form>
     </Form>

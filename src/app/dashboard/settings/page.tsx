@@ -21,7 +21,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import type { BusRoute } from '@/lib/types';
-import { PlusCircle, MoreVertical, KeyRound, User, Shield } from 'lucide-react';
+import { PlusCircle, MoreVertical, KeyRound, User, Shield, Info } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -38,10 +38,8 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import AddRouteForm from '@/components/bus-watch/add-route-form';
-import { Label } from '@/components/ui/label';
-import { toast } from '@/hooks/use-toast';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getBusRoutesAction } from '@/app/actions';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export default function SettingsPage() {
   const [busRoutes, setBusRoutes] = useState<BusRoute[]>([]);
@@ -55,42 +53,10 @@ export default function SettingsPage() {
     fetchData();
   }, []);
 
-  const handleAddRoute = (newRoute: Omit<BusRoute, 'id' | 'fuelLevel' | 'lastFueled'>) => {
-    // This part would ideally be a server action to update the data source
-    const updatedRoute: BusRoute = {
-      ...newRoute,
-      id: `route-${busRoutes.length + 1}`,
-      fuelLevel: 100, // Default fuel level
-      lastFueled: new Date().toISOString(),
-    }
-    setBusRoutes(prevRoutes => [ ...prevRoutes, updatedRoute ]);
-    // NOTE: In a real app, you would call a server action here to persist the data
-    // For now, we just update the local state.
+  const handleRouteAdded = (newRoute: BusRoute) => {
+    setBusRoutes(prevRoutes => [ ...prevRoutes, newRoute ]);
     setIsDialogOpen(false);
-  }
-
-  const handleChangePassword = (event: React.FormEvent<HTMLFormElement>, role: 'Admin' | 'Driver') => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const username = formData.get('username');
-    const newPassword = formData.get('password');
-
-    // In a real app, you'd have validation and an API call here.
-    // For now, we'll just show a success message.
-    if (username && newPassword) {
-         toast({
-            title: `${role} Credentials Updated`,
-            description: `Credentials for ${username} have been updated.`,
-        });
-        (event.target as HTMLFormElement).reset();
-    } else {
-         toast({
-            variant: 'destructive',
-            title: 'Error',
-            description: 'Please fill out all fields.',
-        });
-    }
-  }
+  };
 
 
   return (
@@ -109,46 +75,18 @@ export default function SettingsPage() {
             </CardDescription>
           </CardHeader>
            <CardContent>
-            <Tabs defaultValue="admin">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="admin">
-                  <Shield className="mr-2" /> Admin
-                </TabsTrigger>
-                <TabsTrigger value="driver">
-                  <User className="mr-2" /> Driver
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="admin" className="pt-4">
-                 <form onSubmit={(e) => handleChangePassword(e, 'Admin')} className="space-y-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="adminUsername">Admin Username</Label>
-                        <Input id="adminUsername" name="username" defaultValue="admin" required />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="adminPassword">Admin Password</Label>
-                        <Input id="adminPassword" name="password" type="password" placeholder="Enter new password" required />
-                    </div>
-                     <div className="flex justify-end pt-2">
-                        <Button type="submit">Update Admin Credentials</Button>
-                    </div>
-                 </form>
-              </TabsContent>
-              <TabsContent value="driver" className="pt-4">
-                  <form onSubmit={(e) => handleChangePassword(e, 'Driver')} className="space-y-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="driverUsername">Driver Username</Label>
-                        <Input id="driverUsername" name="username" defaultValue="driver" required />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="driverPassword">Driver Password</Label>
-                        <Input id="driverPassword" name="password" type="password" placeholder="Enter new password" required />
-                    </div>
-                    <div className="flex justify-end pt-2">
-                        <Button type="submit">Update Driver Credentials</Button>
-                    </div>
-                 </form>
-              </TabsContent>
-            </Tabs>
+            <Alert>
+              <Info className="h-4 w-4" />
+              <AlertTitle>Default Credentials</AlertTitle>
+              <AlertDescription>
+                <p>For this prototype, the following credentials are used:</p>
+                <ul className="list-disc pl-5 mt-2 space-y-1">
+                  <li><b>Admin:</b> username: `admin`, password: `password`</li>
+                  <li><b>Driver:</b> username: `driver`, password: `password`</li>
+                </ul>
+                 <p className="mt-2 text-xs text-muted-foreground">Password changes are not supported in this demo.</p>
+              </AlertDescription>
+            </Alert>
           </CardContent>
         </Card>
 
@@ -176,7 +114,7 @@ export default function SettingsPage() {
                       system.
                     </DialogDescription>
                   </DialogHeader>
-                  <AddRouteForm onAddRoute={handleAddRoute} />
+                  <AddRouteForm onRouteAdded={handleRouteAdded} />
                 </DialogContent>
               </Dialog>
             </div>

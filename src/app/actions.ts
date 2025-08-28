@@ -105,3 +105,46 @@ export async function addBusRoute(route: Omit<BusRoute, 'id' | 'fuelLevel' | 'la
         return { success: false, error: 'Failed to add bus route.' };
     }
 }
+
+export async function updateBusRoute(route: BusRoute) {
+    try {
+        const currentData = await readData();
+        const routeIndex = currentData.busRoutes.findIndex((r: BusRoute) => r.id === route.id);
+
+        if (routeIndex === -1) {
+            return { success: false, error: 'Route not found.' };
+        }
+
+        currentData.busRoutes[routeIndex] = route;
+        await writeData(currentData);
+
+        revalidatePath('/dashboard/settings');
+        revalidatePath('/dashboard/routes');
+        return { success: true, data: route };
+    } catch (error) {
+        console.error(error);
+        return { success: false, error: 'Failed to update bus route.' };
+    }
+}
+
+export async function deleteBusRoute(routeId: string) {
+    try {
+        const currentData = await readData();
+        const updatedRoutes = currentData.busRoutes.filter((r: BusRoute) => r.id !== routeId);
+        
+        if (currentData.busRoutes.length === updatedRoutes.length) {
+             return { success: false, error: 'Route not found.' };
+        }
+
+        currentData.busRoutes = updatedRoutes;
+        await writeData(currentData);
+
+        revalidatePath('/dashboard/settings');
+        revalidatePath('/dashboard/routes');
+        return { success: true, data: { id: routeId } };
+    } catch (error) {
+        console.error(error);
+        return { success: false, error: 'Failed to delete bus route.' };
+    }
+}
+

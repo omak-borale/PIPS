@@ -11,7 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -21,7 +20,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import type { BusRoute } from '@/lib/types';
-import { PlusCircle, MoreVertical, KeyRound, User, Shield, Info } from 'lucide-react';
+import { PlusCircle, MoreVertical, KeyRound, Info, Loader2, Trash } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -37,13 +36,29 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import AddRouteForm from '@/components/bus-watch/add-route-form';
-import { getBusRoutesAction } from '@/app/actions';
+import EditRouteForm from '@/components/bus-watch/edit-route-form';
+import { getBusRoutesAction, deleteBusRoute } from '@/app/actions';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { toast } from '@/hooks/use-toast';
 
 export default function SettingsPage() {
   const [busRoutes, setBusRoutes] = useState<BusRoute[]>([]);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedRoute, setSelectedRoute] = useState<BusRoute | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   
   useEffect(() => {
     async function fetchData() {
@@ -55,7 +70,46 @@ export default function SettingsPage() {
 
   const handleRouteAdded = (newRoute: BusRoute) => {
     setBusRoutes(prevRoutes => [ ...prevRoutes, newRoute ]);
-    setIsDialogOpen(false);
+    setIsAddDialogOpen(false);
+  };
+
+  const handleRouteUpdated = (updatedRoute: BusRoute) => {
+    setBusRoutes(prevRoutes => prevRoutes.map(route => route.id === updatedRoute.id ? updatedRoute : route));
+    setIsEditDialogOpen(false);
+    setSelectedRoute(null);
+  };
+
+  const handleEditClick = (route: BusRoute) => {
+    setSelectedRoute(route);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleDeleteClick = (route: BusRoute) => {
+    setSelectedRoute(route);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!selectedRoute) return;
+    setIsDeleting(true);
+    const result = await deleteBusRoute(selectedRoute.id);
+    setIsDeleting(false);
+
+    if (result.success) {
+      toast({
+        title: "Route Deleted",
+        description: `Successfully deleted the ${selectedRoute.name} route.`,
+      });
+      setBusRoutes(prevRoutes => prevRoutes.filter(route => route.id !== selectedRoute.id));
+      setIsDeleteDialogOpen(false);
+      setSelectedRoute(null);
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: result.error,
+      });
+    }
   };
 
 
@@ -102,7 +156,7 @@ export default function SettingsPage() {
           </CardHeader>
           <CardContent>
             <div className="flex justify-end mb-4">
-              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                 <DialogTrigger asChild>
                   <Button>
                     <PlusCircle className="mr-2" />
@@ -160,9 +214,13 @@ export default function SettingsPage() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem>Edit</DropdownMenuItem>
-                          <DropdownMenuItem>View Details</DropdownMenuItem>
-                          <DropdownMenuItem className="text-destructive">
+                          <DropdownMenuItem onClick={() => handleEditClick(route)}>
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => handleDeleteClick(route)}
+                            className="text-destructive"
+                          >
                             Delete
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -177,6 +235,40 @@ export default function SettingsPage() {
             <Button disabled>Save Changes</Button>
           </CardFooter>
         </Card>
+
+        {/* Edit Route Dialog */}
+        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Bus Route</DialogTitle>
+              <DialogDescription>
+                Update the details for the selected route.
+              </DialogDescription>
+            </DialogHeader>
+            {selectedRoute && <EditRouteForm route={selectedRoute} onRouteUpdated={handleRouteUpdated} />}
+          </DialogContent>
+        </Dialog>
+
+        {/* Delete Route Alert Dialog */}
+        <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        This action cannot be undone. This will permanently delete the bus route
+                        for <span className="font-semibold">{selectedRoute?.name}</span>.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={confirmDelete} disabled={isDeleting} className="bg-destructive hover:bg-destructive/90">
+                        {isDeleting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash className="mr-2 h-4 w-4" />}
+                        Delete
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+
       </div>
     </main>
   );

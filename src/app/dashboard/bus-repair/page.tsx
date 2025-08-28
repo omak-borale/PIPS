@@ -91,7 +91,7 @@ export default function BusRepairPage() {
                   Add Repair Details
                 </Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="max-w-[500px]">
                 <DialogHeader>
                   <DialogTitle>Add New Bus Repair Details</DialogTitle>
                   <DialogDescription>

@@ -9,7 +9,7 @@ export default function Home() {
         <h1 className="text-4xl font-bold">Patri Swamy International Public School Aurad (B)</h1>
         <p className="text-muted-foreground">Welcome to Bus management</p>
         <Button asChild>
-          <Link href="/dashboard">
+          <Link href="/login">
             Login to Dashboard
             <ArrowRight className="ml-2 h-4 w-4" />
           </Link>

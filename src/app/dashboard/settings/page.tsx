@@ -173,6 +173,9 @@ export default function SettingsPage() {
               </TableBody>
             </Table>
           </CardContent>
+          <CardFooter className="border-t px-6 py-4">
+            <Button disabled>Save Changes</Button>
+          </CardFooter>
         </Card>
       </div>
     </main>

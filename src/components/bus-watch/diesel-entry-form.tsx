@@ -73,7 +73,7 @@ export default function DieselEntryForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="busNumber"
@@ -92,39 +92,38 @@ export default function DieselEntryForm() {
                   ))}
                 </SelectContent>
               </Select>
-              <FormDescription>Select the bus that was refueled.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="dieselAmount"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Diesel Amount (₹)</FormLabel>
-              <FormControl>
-                <Input type="number" placeholder="e.g., 2500" {...field} />
-              </FormControl>
-              <FormDescription>Enter the total cost of the diesel.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="dieselLiters"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Diesel Liters</FormLabel>
-              <FormControl>
-                <Input type="number" placeholder="e.g., 50" {...field} />
-              </FormControl>
-              <FormDescription>Enter the amount of diesel added in liters.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-2 gap-4">
+            <FormField
+            control={form.control}
+            name="dieselAmount"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Diesel Amount (₹)</FormLabel>
+                <FormControl>
+                    <Input type="number" placeholder="e.g., 2500" {...field} />
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+            <FormField
+            control={form.control}
+            name="dieselLiters"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Diesel Liters</FormLabel>
+                <FormControl>
+                    <Input type="number" placeholder="e.g., 50" {...field} />
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+        </div>
          <FormField
           control={form.control}
           name="pumpName"
@@ -134,70 +133,67 @@ export default function DieselEntryForm() {
               <FormControl>
                 <Input placeholder="e.g., City Fuel Center" {...field} />
               </FormControl>
-              <FormDescription>The name of the diesel pump station.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="pageNumber"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Page Number in Book</FormLabel>
-              <FormControl>
-                <Input type="number" placeholder="e.g., 12" {...field} />
-              </FormControl>
-              <FormDescription>The page number from the physical log book.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="date"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Refueling Date</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[240px] pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, "PPP")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    disabled={(date) =>
-                      date > new Date() || date < new Date("1900-01-01")
-                    }
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-              <FormDescription>
-                The date the diesel was added.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex justify-end">
+        <div className="grid grid-cols-2 gap-4">
+            <FormField
+            control={form.control}
+            name="pageNumber"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Page Number in Book</FormLabel>
+                <FormControl>
+                    <Input type="number" placeholder="e.g., 12" {...field} />
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+            <FormField
+            control={form.control}
+            name="date"
+            render={({ field }) => (
+                <FormItem className="flex flex-col">
+                <FormLabel>Refueling Date</FormLabel>
+                <Popover>
+                    <PopoverTrigger asChild>
+                    <FormControl>
+                        <Button
+                        variant={"outline"}
+                        className={cn(
+                            "w-full pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                        )}
+                        >
+                        {field.value ? (
+                            format(field.value, "PPP")
+                        ) : (
+                            <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                    </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) =>
+                        date > new Date() || date < new Date("1900-01-01")
+                        }
+                        initialFocus
+                    />
+                    </PopoverContent>
+                </Popover>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+        </div>
+        <div className="flex justify-end pt-4">
           <Button type="submit">Log Entry</Button>
         </div>
       </form>

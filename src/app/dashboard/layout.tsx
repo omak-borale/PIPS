@@ -114,10 +114,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                   </Link>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                  <SidebarMenuButton href="#" tooltip="Alerts">
-                    <Bell />
-                    Alerts
-                  </SidebarMenuButton>
+                  <Link href="/dashboard/alerts" passHref>
+                    <SidebarMenuButton asChild tooltip="Alerts">
+                      <span>
+                        <Bell />
+                        Alerts
+                      </span>
+                    </SidebarMenuButton>
+                  </Link>
                 </SidebarMenuItem>
               </SidebarMenu>
             </SidebarContent>

@@ -1,3 +1,6 @@
+
+"use client";
+
 import {
   Card,
   CardContent,
@@ -6,7 +9,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { students } from '@/lib/data';
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Phone, Home, User, GraduationCap, Bus } from 'lucide-react';
@@ -14,8 +17,10 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 
-export default function StudentDetailPage({ params }: { params: { id: string } }) {
-  const student = students.find((s) => s.id === params.id);
+export default function StudentDetailPage() {
+  const params = useParams();
+  const studentId = typeof params.id === 'string' ? params.id : '';
+  const student = students.find((s) => s.id === studentId);
 
   if (!student) {
     notFound();

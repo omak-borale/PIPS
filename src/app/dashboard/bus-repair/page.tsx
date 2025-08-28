@@ -1,3 +1,7 @@
+
+"use client";
+
+import { useState } from 'react';
 import {
   Card,
   CardContent,
@@ -22,16 +26,24 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { busRoutes } from '@/lib/data';
+import { busRoutes as initialBusRoutes } from '@/lib/data';
 import { format, subDays, parseISO } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Wrench, Phone, CircleDollarSign, NotebookText, Hammer, Banknote } from 'lucide-react';
+import { Wrench, Phone, CircleDollarSign, NotebookText, Hammer, Banknote, PlusCircle } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import type { BusRoute, ServiceHistory } from '@/lib/types';
+import AddRepairForm from '@/components/bus-watch/add-repair-form';
 
 export default function BusRepairPage() {
-  const getRepairStatus = (lastFueled: string) => {
-    const lastServiceDate = subDays(parseISO(lastFueled), 20); // Mocking service date
+  const [busRoutes, setBusRoutes] = useState<BusRoute[]>(initialBusRoutes);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const getRepairStatus = (route: BusRoute) => {
+    const lastServiceDate = route.serviceHistory && route.serviceHistory.length > 0
+      ? parseISO(route.serviceHistory[0].date)
+      : subDays(parseISO(route.lastFueled), 20); // Mocking service date if no history
+
     const daysSinceService =
       (new Date().getTime() - lastServiceDate.getTime()) / (1000 * 3600 * 24);
 
@@ -44,15 +56,51 @@ export default function BusRepairPage() {
     return { text: 'Good', color: 'bg-green-500' };
   };
 
+  const handleAddRepair = (busNumber: string, newService: Omit<ServiceHistory, 'date'> & { date: Date }) => {
+    setBusRoutes(prevRoutes =>
+      prevRoutes.map(route => {
+        if (route.busNumber === busNumber) {
+          const updatedHistory = [
+            { ...newService, date: newService.date.toISOString() },
+            ...(route.serviceHistory || []),
+          ];
+          return { ...route, serviceHistory: updatedHistory };
+        }
+        return route;
+      })
+    );
+    setIsDialogOpen(false);
+  };
+
+
   return (
     <main className="flex-1 p-4 md:p-6 lg:p-8">
       <div className="space-y-6">
         <Card>
-          <CardHeader>
-            <CardTitle>Bus Repair Status</CardTitle>
-            <CardDescription>
-              Overview of the maintenance status for each bus. Click on a service date to see details.
-            </CardDescription>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Bus Repair Status</CardTitle>
+              <CardDescription>
+                Overview of the maintenance status for each bus. Click on a service date to see details.
+              </CardDescription>
+            </div>
+             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button>
+                  <PlusCircle className="mr-2" />
+                  Add Repair Details
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Add New Bus Repair Details</DialogTitle>
+                  <DialogDescription>
+                    Fill out the form below to log a new service event for a bus.
+                  </DialogDescription>
+                </DialogHeader>
+                <AddRepairForm onAddRepair={handleAddRepair} />
+              </DialogContent>
+            </Dialog>
           </CardHeader>
           <CardContent>
             <Table>
@@ -66,7 +114,7 @@ export default function BusRepairPage() {
               </TableHeader>
               <TableBody>
                 {busRoutes.map((route) => {
-                  const status = getRepairStatus(route.lastFueled);
+                  const status = getRepairStatus(route);
                   const lastServiceHistory = route.serviceHistory?.[0];
                    const lastServiceDate = lastServiceHistory
                     ? parseISO(lastServiceHistory.date)

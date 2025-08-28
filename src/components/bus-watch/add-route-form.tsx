@@ -120,7 +120,7 @@ export default function AddRouteForm() {
           )}
         />
         <div className="flex justify-end">
-          <Button type="submit">Add Route</Button>
+          <Button type="submit">Save Details</Button>
         </div>
       </form>
     </Form>

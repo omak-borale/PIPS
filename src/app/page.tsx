@@ -7,7 +7,7 @@ export default function Home() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground">
       <div className="text-center space-y-4">
         <h1 className="text-4xl font-bold">Welcome to Patri swamy international public school</h1>
-        <p className="text-muted-foreground">Your real-time bus tracking and management solution.</p>
+        <p className="text-muted-foreground">Welcome to Bus management</p>
         <Button asChild>
           <Link href="/dashboard">
             Go to Dashboard

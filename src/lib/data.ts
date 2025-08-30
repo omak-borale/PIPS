@@ -5,30 +5,37 @@ import initialData from './data.json';
 // These functions are for server components.
 // They can be used with await syntax.
 export async function getBuses(): Promise<Bus[]> {
-    return initialData.buses;
+    // This is now fetched via actions.ts
+    return [];
 }
 
 export async function getStops(): Promise<BusStop[]> {
+    // This could be migrated to Firestore as well
     return initialData.stops;
 }
 
 export async function getArrivals(): Promise<Arrival[]> {
-    return initialData.arrivals;
+    // This is now fetched via actions.ts
+    return [];
 }
 
 export async function getBusRoutes(): Promise<BusRoute[]> {
-    return initialData.busRoutes;
+    // This is now fetched via actions.ts
+    return [];
 }
 
 export async function getStudents(): Promise<Student[]> {
-    return initialData.students;
+    // This is now fetched via actions.ts
+    return [];
 }
 
 export async function getDieselEntries(): Promise<DieselEntry[]> {
-    return initialData.dieselEntries;
+    // This is now fetched via actions.ts
+    return [];
 }
 
 export async function getRealTimeBusLocations() {
+    // This could be migrated to Firestore as well
     return initialData.realTimeBusLocations;
 }
 

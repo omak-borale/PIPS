@@ -1,11 +1,12 @@
 
 import MapView from '@/components/bus-watch/map-view';
 import BusInfoTabs from '@/components/bus-watch/bus-info-tabs';
-import { getStops, getArrivals, getRealTimeBusLocations } from '@/lib/data';
+import { getStops, getRealTimeBusLocations } from '@/lib/data';
+import { getArrivalsAction } from '@/app/actions';
 
 export default async function DashboardPage() {
   const stops = await getStops();
-  const arrivals = await getArrivals();
+  const arrivals = await getArrivalsAction();
   const realTimeBusLocations = await getRealTimeBusLocations();
 
   return (

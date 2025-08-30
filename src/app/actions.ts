@@ -1,68 +1,68 @@
 
 'use server';
-import fs from 'fs/promises';
-import path from 'path';
-
 import { analyzeBusDisruptions } from '@/ai/flows/analyze-bus-disruptions';
 import { hashPassword } from '@/lib/crypto';
 import type { Student, BusRoute, DieselEntry, DailyLog, Arrival } from '@/lib/types';
 import { revalidatePath } from 'next/cache';
-import initialData from '@/lib/data.json';
+import { db } from '@/lib/firebase';
+import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, query, where, writeBatch } from 'firebase/firestore';
 
-const dataFilePath = path.join(process.cwd(), 'src', 'lib', 'data.json');
-
-async function readData() {
-    try {
-        const jsonData = await fs.readFile(dataFilePath, 'utf-8');
-        return JSON.parse(jsonData);
-    } catch (error) {
-        console.error('Error reading data file:', error);
-        // Return the initial data if the file doesn't exist or has an error
-        return initialData;
-    }
+// Helper function to convert Firestore snapshot to array
+function snapshotToData<T>(snapshot: any): T[] {
+    const data: T[] = [];
+    snapshot.forEach((doc: any) => {
+        data.push({ id: doc.id, ...doc.data() } as unknown as T);
+    });
+    return data;
 }
 
-async function writeData(newData: any) {
-    try {
-        await fs.writeFile(dataFilePath, JSON.stringify(newData, null, 2), 'utf-8');
-    } catch (error) {
-        console.error('Error writing data file:', error);
+// Helper function to convert single doc snapshot to data
+function docToData<T>(docSnap: any): T | null {
+    if (docSnap.exists()) {
+        return { id: docSnap.id, ...docSnap.data() } as unknown as T;
     }
+    return null;
 }
+
 
 export async function getStudentsAction(): Promise<Student[]> {
-    const data = await readData();
-    return data.students;
+    const studentsCollection = collection(db, 'students');
+    const studentSnapshot = await getDocs(studentsCollection);
+    return snapshotToData<Student>(studentSnapshot);
 }
 
 export async function getBusRoutesAction(): Promise<BusRoute[]> {
-    const data = await readData();
-    return data.busRoutes;
+    const routesCollection = collection(db, 'busRoutes');
+    const routeSnapshot = await getDocs(routesCollection);
+    return snapshotToData<BusRoute>(routeSnapshot);
 }
 
 export async function getDieselEntriesAction(): Promise<DieselEntry[]> {
-    const data = await readData();
-    return data.dieselEntries;
+    const entriesCollection = collection(db, 'dieselEntries');
+    const entrySnapshot = await getDocs(entriesCollection);
+    return snapshotToData<DieselEntry>(entrySnapshot);
 }
 
 export async function getDailyLogsAction(): Promise<DailyLog[]> {
-    const data = await readData();
-    return data.dailyLogs;
+    const logsCollection = collection(db, 'dailyLogs');
+    const logSnapshot = await getDocs(logsCollection);
+    return snapshotToData<DailyLog>(logSnapshot);
 }
 
 export async function getArrivalsAction(): Promise<Arrival[]> {
-    const data = await readData();
-    return data.arrivals;
+    const arrivalsCollection = collection(db, 'arrivals');
+    const arrivalSnapshot = await getDocs(arrivalsCollection);
+    return snapshotToData<Arrival>(arrivalSnapshot);
 }
 
 
 export async function getDisruptionAnalysis() {
   try {
-    const currentData = await readData();
+    const routes = await getBusRoutesAction();
     const result = await analyzeBusDisruptions({
-      realTimeBusLocations: JSON.stringify(currentData.realTimeBusLocations),
-      historicalData: currentData.historicalData,
-      newsFeed: currentData.newsFeed,
+      realTimeBusLocations: JSON.stringify(routes.map(r => ({busId: r.busNumber, lat: 0, lon: 0}))), // Placeholder
+      historicalData: 'Historical data not available from Firestore yet.',
+      newsFeed: 'News feed not available from Firestore yet.',
     });
     return { success: true, data: result };
   } catch (error) {
@@ -77,17 +77,9 @@ export async function getHashedPassword(password: string) {
 
 export async function addStudent(student: Omit<Student, 'id'>) {
     try {
-        const currentData = await readData();
-        const newStudent: Student = {
-            id: `student-${Date.now()}`,
-            ...student,
-        };
-        
-        currentData.students.push(newStudent);
-        await writeData(currentData);
-
+        const docRef = await addDoc(collection(db, 'students'), student);
         revalidatePath('/dashboard/bus-management');
-        return { success: true, data: newStudent };
+        return { success: true, data: {id: docRef.id, ...student} };
     } catch (error) {
         console.error(error);
         return { success: false, error: 'Failed to add student.' };
@@ -96,20 +88,16 @@ export async function addStudent(student: Omit<Student, 'id'>) {
 
 export async function addBusRoute(route: Omit<BusRoute, 'id' | 'fuelLevel' | 'lastFueled'>) {
     try {
-        const currentData = await readData();
-        const newRoute: BusRoute = {
-            id: `route-${Date.now()}`,
+        const newRouteData = {
             ...route,
             fuelLevel: 100, // Default fuel level
             lastFueled: new Date().toISOString(),
-        };
-        
-        currentData.busRoutes.push(newRoute);
-        await writeData(currentData);
+        }
+        const docRef = await addDoc(collection(db, 'busRoutes'), newRouteData);
 
         revalidatePath('/dashboard/settings');
         revalidatePath('/dashboard/routes');
-        return { success: true, data: newRoute };
+        return { success: true, data: { id: docRef.id, ...newRouteData } };
     } catch (error) {
         console.error(error);
         return { success: false, error: 'Failed to add bus route.' };
@@ -118,15 +106,9 @@ export async function addBusRoute(route: Omit<BusRoute, 'id' | 'fuelLevel' | 'la
 
 export async function updateBusRoute(route: BusRoute) {
     try {
-        const currentData = await readData();
-        const routeIndex = currentData.busRoutes.findIndex((r: BusRoute) => r.id === route.id);
-
-        if (routeIndex === -1) {
-            return { success: false, error: 'Route not found.' };
-        }
-
-        currentData.busRoutes[routeIndex] = route;
-        await writeData(currentData);
+        const routeRef = doc(db, 'busRoutes', route.id);
+        const { id, ...routeData } = route;
+        await updateDoc(routeRef, routeData);
 
         revalidatePath('/dashboard/settings');
         revalidatePath('/dashboard/routes');
@@ -139,15 +121,7 @@ export async function updateBusRoute(route: BusRoute) {
 
 export async function deleteBusRoute(routeId: string) {
     try {
-        const currentData = await readData();
-        const updatedRoutes = currentData.busRoutes.filter((r: BusRoute) => r.id !== routeId);
-        
-        if (currentData.busRoutes.length === updatedRoutes.length) {
-             return { success: false, error: 'Route not found.' };
-        }
-
-        currentData.busRoutes = updatedRoutes;
-        await writeData(currentData);
+        await deleteDoc(doc(db, 'busRoutes', routeId));
 
         revalidatePath('/dashboard/settings');
         revalidatePath('/dashboard/routes');
@@ -160,22 +134,13 @@ export async function deleteBusRoute(routeId: string) {
 
 export async function addDailyLog(log: Omit<DailyLog, 'id' | 'date'> & { date: Date }) {
     try {
-        const currentData = await readData();
-        const newLog: DailyLog = {
-            id: `log-${Date.now()}`,
+        const newLogData = {
             ...log,
             date: log.date.toISOString(),
         };
-        
-        if (!currentData.dailyLogs) {
-            currentData.dailyLogs = [];
-        }
-
-        currentData.dailyLogs.push(newLog);
-        await writeData(currentData);
-
+        const docRef = await addDoc(collection(db, 'dailyLogs'), newLogData);
         revalidatePath('/dashboard/daily-log-details');
-        return { success: true, data: newLog };
+        return { success: true, data: { id: docRef.id, ...newLogData } };
     } catch (error) {
         console.error(error);
         return { success: false, error: 'Failed to add daily log.' };
@@ -184,22 +149,13 @@ export async function addDailyLog(log: Omit<DailyLog, 'id' | 'date'> & { date: D
 
 export async function addDieselEntry(entry: Omit<DieselEntry, 'id' | 'date'> & { date: Date }) {
     try {
-        const currentData = await readData();
-        const newEntry: DieselEntry = {
-            id: `log-${Date.now()}`,
+         const newEntryData = {
             ...entry,
             date: entry.date.toISOString(),
         };
-        
-        if (!currentData.dieselEntries) {
-            currentData.dieselEntries = [];
-        }
-
-        currentData.dieselEntries.push(newEntry);
-        await writeData(currentData);
-
+        const docRef = await addDoc(collection(db, 'dieselEntries'), newEntryData);
         revalidatePath('/dashboard/diesel-details');
-        return { success: true, data: newEntry };
+        return { success: true, data: {id: docRef.id, ...newEntryData } };
     } catch (error) {
         console.error(error);
         return { success: false, error: 'Failed to add diesel entry.' };
@@ -208,18 +164,10 @@ export async function addDieselEntry(entry: Omit<DieselEntry, 'id' | 'date'> & {
 
 export async function addArrival(arrival: Omit<Arrival, 'id'>) {
     try {
-        const currentData = await readData();
-        const newArrival: Arrival = {
-            id: `arrival-${Date.now()}`,
-            ...arrival,
-        };
-        
-        currentData.arrivals.push(newArrival);
-        await writeData(currentData);
-
+        const docRef = await addDoc(collection(db, 'arrivals'), arrival);
         revalidatePath('/dashboard/settings');
         revalidatePath('/dashboard');
-        return { success: true, data: newArrival };
+        return { success: true, data: { id: docRef.id, ...arrival } };
     } catch (error) {
         console.error(error);
         return { success: false, error: 'Failed to add arrival.' };
@@ -228,15 +176,9 @@ export async function addArrival(arrival: Omit<Arrival, 'id'>) {
 
 export async function updateArrival(arrival: Arrival) {
     try {
-        const currentData = await readData();
-        const arrivalIndex = currentData.arrivals.findIndex((a: Arrival) => a.id === arrival.id);
-
-        if (arrivalIndex === -1) {
-            return { success: false, error: 'Arrival not found.' };
-        }
-
-        currentData.arrivals[arrivalIndex] = arrival;
-        await writeData(currentData);
+        const arrivalRef = doc(db, 'arrivals', arrival.id);
+        const { id, ...arrivalData } = arrival;
+        await updateDoc(arrivalRef, arrivalData);
 
         revalidatePath('/dashboard/settings');
         revalidatePath('/dashboard');
@@ -249,16 +191,7 @@ export async function updateArrival(arrival: Arrival) {
 
 export async function deleteArrival(arrivalId: string) {
     try {
-        const currentData = await readData();
-        const updatedArrivals = currentData.arrivals.filter((a: Arrival) => a.id !== arrivalId);
-        
-        if (currentData.arrivals.length === updatedArrivals.length) {
-             return { success: false, error: 'Arrival not found.' };
-        }
-
-        currentData.arrivals = updatedArrivals;
-        await writeData(currentData);
-
+        await deleteDoc(doc(db, 'arrivals', arrivalId));
         revalidatePath('/dashboard/settings');
         revalidatePath('/dashboard');
         return { success: true, data: { id: arrivalId } };

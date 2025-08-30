@@ -282,7 +282,9 @@
       "fatherName": "John Doe",
       "parentContact": "555-1234",
       "address": "123 Main St, Anytown, USA",
-      "busNumber": "B-101"
+      "busNumber": "B-101",
+      "lat": 37.773,
+      "lon": -122.425
     },
     {
       "id": "student-2",
@@ -290,7 +292,9 @@
       "usesBus": false,
       "fatherName": "Jane Smith",
       "parentContact": "555-5678",
-      "address": "456 Oak Ave, Anytown, USA"
+      "address": "456 Oak Ave, Anytown, USA",
+      "lat": 37.778,
+      "lon": -122.415
     },
     {
       "id": "student-3",
@@ -299,7 +303,9 @@
       "fatherName": "Peter Jones",
       "parentContact": "555-8765",
       "address": "789 Pine Ln, Anytown, USA",
-      "busNumber": "B-102"
+      "busNumber": "B-102",
+      "lat": 37.788,
+      "lon": -122.435
     },
     {
       "id": "student-4",
@@ -308,7 +314,9 @@
       "fatherName": "Mary Brown",
       "parentContact": "555-4321",
       "address": "321 Maple Dr, Anytown, USA",
-      "busNumber": "B-101"
+      "busNumber": "B-101",
+      "lat": 37.769,
+      "lon": -122.428
     },
     {
       "id": "student-5",
@@ -316,7 +324,9 @@
       "usesBus": false,
       "fatherName": "David Williams",
       "parentContact": "555-9876",
-      "address": "654 Elm St, Anytown, USA"
+      "address": "654 Elm St, Anytown, USA",
+      "lat": 37.792,
+      "lon": -122.441
     },
     {
       "id": "student-6",
@@ -325,7 +335,9 @@
       "fatherName": "Susan Garcia",
       "parentContact": "555-3456",
       "address": "987 Birch Rd, Anytown, USA",
-      "busNumber": "B-103"
+      "busNumber": "B-103",
+      "lat": 37.781,
+      "lon": -122.45
     },
     {
       "id": "student-7",
@@ -334,7 +346,9 @@
       "fatherName": "Robert Miller",
       "parentContact": "555-6543",
       "address": "159 Cedar Blvd, Anytown, USA",
-      "busNumber": "B-102"
+      "busNumber": "B-102",
+      "lat": 37.786,
+      "lon": -122.43
     },
     {
       "id": "student-8",
@@ -342,7 +356,9 @@
       "usesBus": false,
       "fatherName": "Patricia Davis",
       "parentContact": "555-7890",
-      "address": "753 Spruce Way, Anytown, USA"
+      "address": "753 Spruce Way, Anytown, USA",
+      "lat": 37.771,
+      "lon": -122.46
     },
     {
       "id": "student-9",
@@ -351,7 +367,9 @@
       "fatherName": "Michael Rodriguez",
       "parentContact": "555-1122",
       "address": "852 Fir Ct, Anytown, USA",
-      "busNumber": "B-104"
+      "busNumber": "B-104",
+      "lat": 37.776,
+      "lon": -122.465
     },
     {
       "id": "student-10",
@@ -360,7 +378,9 @@
       "fatherName": "Linda Martinez",
       "parentContact": "555-3344",
       "address": "951 Redwood Pkwy, Anytown, USA",
-      "busNumber": "B-101"
+      "busNumber": "B-101",
+      "lat": 37.77,
+      "lon": -122.422
     },
     {
       "id": "student-11",
@@ -369,7 +389,9 @@
       "fatherName": "James Hernandez",
       "parentContact": "555-5566",
       "address": "357 Aspen Grove, Anytown, USA",
-      "busNumber": "B-105"
+      "busNumber": "B-105",
+      "lat": 37.78,
+      "lon": -122.41
     },
     {
       "id": "student-12",
@@ -377,7 +399,9 @@
       "usesBus": false,
       "fatherName": "Barbara Lopez",
       "parentContact": "555-7788",
-      "address": "246 Willow Creek, Anytown, USA"
+      "address": "246 Willow Creek, Anytown, USA",
+      "lat": 37.785,
+      "lon": -122.418
     },
     {
       "id": "student-13",
@@ -386,7 +410,9 @@
       "fatherName": "William Gonzalez",
       "parentContact": "555-9900",
       "address": "135 Poplar Pl, Anytown, USA",
-      "busNumber": "B-102"
+      "busNumber": "B-102",
+      "lat": 37.789,
+      "lon": -122.433
     },
     {
       "id": "student-14",
@@ -395,7 +421,9 @@
       "fatherName": "Richard Wilson",
       "parentContact": "555-2468",
       "address": "791 Sequoia Trail, Anytown, USA",
-      "busNumber": "B-103"
+      "busNumber": "B-103",
+      "lat": 37.779,
+      "lon": -122.452
     },
     {
       "id": "student-15",
@@ -403,7 +431,9 @@
       "usesBus": false,
       "fatherName": "Joseph Anderson",
       "parentContact": "555-1357",
-      "address": "975 Cypress Point, Anytown, USA"
+      "address": "975 Cypress Point, Anytown, USA",
+      "lat": 37.795,
+      "lon": -122.438
     },
     {
       "id": "student-1756395279427",
@@ -412,7 +442,9 @@
       "parentContact": "1234567890",
       "address": "Test Address",
       "usesBus": true,
-      "busNumber": "B-101"
+      "busNumber": "B-101",
+      "lat": 37.7749,
+      "lon": -122.4194
     }
   ],
   "dieselEntries": [

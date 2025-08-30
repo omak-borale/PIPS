@@ -56,6 +56,8 @@ export type Student = {
     parentContact: string;
     address: string;
     busNumber?: string;
+    lat?: number;
+    lon?: number;
 }
 
 export type DieselEntry = {

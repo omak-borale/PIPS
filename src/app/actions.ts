@@ -5,7 +5,7 @@ import path from 'path';
 
 import { analyzeBusDisruptions } from '@/ai/flows/analyze-bus-disruptions';
 import { hashPassword } from '@/lib/crypto';
-import type { Student, BusRoute, DieselEntry } from '@/lib/types';
+import type { Student, BusRoute, DieselEntry, DailyLog } from '@/lib/types';
 import { revalidatePath } from 'next/cache';
 import initialData from '@/lib/data.json';
 
@@ -43,6 +43,11 @@ export async function getBusRoutesAction(): Promise<BusRoute[]> {
 export async function getDieselEntriesAction(): Promise<DieselEntry[]> {
     const data = await readData();
     return data.dieselEntries;
+}
+
+export async function getDailyLogsAction(): Promise<DailyLog[]> {
+    const data = await readData();
+    return data.dailyLogs;
 }
 
 
@@ -148,3 +153,26 @@ export async function deleteBusRoute(routeId: string) {
     }
 }
 
+export async function addDailyLog(log: Omit<DailyLog, 'id' | 'date'> & { date: Date }) {
+    try {
+        const currentData = await readData();
+        const newLog: DailyLog = {
+            id: `log-${Date.now()}`,
+            ...log,
+            date: log.date.toISOString(),
+        };
+        
+        if (!currentData.dailyLogs) {
+            currentData.dailyLogs = [];
+        }
+
+        currentData.dailyLogs.push(newLog);
+        await writeData(currentData);
+
+        revalidatePath('/dashboard/daily-log-details');
+        return { success: true, data: newLog };
+    } catch (error) {
+        console.error(error);
+        return { success: false, error: 'Failed to add daily log.' };
+    }
+}

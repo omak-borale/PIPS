@@ -64,3 +64,12 @@ export type DieselEntry = {
     date: string;
     pageNumber: number;
 }
+
+export type DailyLog = {
+    id: string;
+    busNumber: string;
+    date: string;
+    startTime: string;
+    endTime: string;
+    notes?: string;
+}

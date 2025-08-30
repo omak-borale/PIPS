@@ -5,13 +5,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -35,6 +36,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { initialBusRoutes } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { Textarea } from "../ui/textarea";
+import { addDailyLog } from "@/app/actions";
 
 const formSchema = z.object({
   busNumber: z.string().min(1, "Bus number is required."),
@@ -45,6 +47,9 @@ const formSchema = z.object({
 });
 
 export default function DailyLogForm() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -56,14 +61,25 @@ export default function DailyLogForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    toast({
-        title: "Daily Log Saved",
-        description: `Successfully logged daily details for bus ${values.busNumber}.`
-    })
-    // Here you would typically call a server action or API to save the data.
-    form.reset();
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+    const result = await addDailyLog(values);
+    setIsLoading(false);
+
+    if (result.success) {
+        toast({
+            title: "Daily Log Saved",
+            description: `Successfully logged daily details for bus ${values.busNumber}.`
+        });
+        form.reset();
+        router.push("/dashboard/daily-log-details");
+    } else {
+        toast({
+            variant: "destructive",
+            title: "Error",
+            description: result.error,
+        });
+    }
   }
 
   return (
@@ -183,7 +199,10 @@ export default function DailyLogForm() {
         />
 
         <div className="flex justify-end pt-4">
-          <Button type="submit">Save Daily Log</Button>
+           <Button type="submit" disabled={isLoading}>
+            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Save Daily Log
+          </Button>
         </div>
       </form>
     </Form>

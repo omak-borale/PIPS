@@ -10,7 +10,7 @@ import {
   SidebarContent,
   SidebarFooter,
 } from '@/components/ui/sidebar';
-import { LayoutDashboard, Route, Bus, Settings, Bell, Fuel, PencilLine, UserPlus, Wrench, BookText, User, ClipboardList } from 'lucide-react';
+import { LayoutDashboard, Route, Bus, Settings, Bell, Fuel, PencilLine, UserPlus, Wrench, BookText, User, ClipboardList, ListOrdered } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { ReactNode } from 'react';
 import Link from 'next/link';
@@ -105,6 +105,16 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                       <span>
                         <ClipboardList />
                         Daily Log
+                      </span>
+                    </SidebarMenuButton>
+                  </Link>
+                </SidebarMenuItem>
+                 <SidebarMenuItem>
+                  <Link href="/dashboard/daily-log-details" passHref>
+                    <SidebarMenuButton asChild tooltip="Daily Log Details">
+                      <span>
+                        <ListOrdered />
+                        Daily Log Details
                       </span>
                     </SidebarMenuButton>
                   </Link>

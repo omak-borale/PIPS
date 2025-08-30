@@ -76,7 +76,7 @@ export default function LoginForm() {
       toast({
         variant: "destructive",
         title: "Login Failed",
-        description: "Invalid credentials for the selected role.",
+        description: "Something went wrong. Check username and password and selected role",
       });
       setIsLoading(false);
     }

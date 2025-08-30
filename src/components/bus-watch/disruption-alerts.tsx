@@ -6,6 +6,21 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { getDisruptionAnalysis } from '@/app/actions';
 import type { AnalyzeBusDisruptionsOutput } from '@/ai/flows/analyze-bus-disruptions';
+import { Badge } from '../ui/badge';
+import { cn } from '@/lib/utils';
+
+
+const getSeverityColor = (severity: 'Low' | 'Medium' | 'High') => {
+  switch (severity) {
+    case 'High':
+      return 'bg-red-500 text-red-foreground';
+    case 'Medium':
+      return 'bg-yellow-500 text-yellow-foreground';
+    case 'Low':
+    default:
+      return 'bg-blue-500 text-blue-foreground';
+  }
+}
 
 export default function DisruptionAlerts() {
   const [analysis, setAnalysis] = useState<AnalyzeBusDisruptionsOutput | null>(null);
@@ -62,16 +77,24 @@ export default function DisruptionAlerts() {
           <div className="space-y-4">
             <div>
               <h3 className="font-semibold flex items-center gap-2 mb-2"><AlertTriangle className="h-5 w-5 text-destructive" /> Potential Disruptions</h3>
-              <ul className="list-disc list-inside space-y-1 text-sm">
+              <div className="space-y-2 text-sm">
                 {analysis.potentialDisruptions.map((disruption, index) => (
-                  <li key={index}>{disruption}</li>
+                  <div key={index} className="flex items-center gap-3">
+                     <Badge className={cn('text-white', getSeverityColor(disruption.severity))}>{disruption.severity}</Badge>
+                    <p>{disruption.description}</p>
+                  </div>
                 ))}
-              </ul>
+                 {analysis.potentialDisruptions.length === 0 && (
+                    <p className="text-muted-foreground">No potential disruptions detected.</p>
+                )}
+              </div>
             </div>
-            <div>
-              <h3 className="font-semibold flex items-center gap-2 mb-2"><Bell className="h-5 w-5 text-accent" /> Recommendations</h3>
-              <p className="text-sm">{analysis.recommendations}</p>
-            </div>
+             {analysis.recommendations && (
+              <div>
+                <h3 className="font-semibold flex items-center gap-2 mb-2"><Bell className="h-5 w-5 text-accent" /> Recommendations</h3>
+                <p className="text-sm">{analysis.recommendations}</p>
+              </div>
+            )}
           </div>
         )}
       </CardContent>

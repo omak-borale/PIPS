@@ -27,7 +27,12 @@ export type AnalyzeBusDisruptionsInput = z.infer<
 
 const AnalyzeBusDisruptionsOutputSchema = z.object({
   potentialDisruptions: z
-    .array(z.string())
+    .array(
+      z.object({
+        description: z.string().describe('A description of the potential service disruption.'),
+        severity: z.enum(['Low', 'Medium', 'High']).describe('The severity of the disruption.'),
+      })
+    )
     .describe(
       'List of potential service disruptions (e.g., delays, route changes).'
     ),
@@ -51,7 +56,7 @@ const prompt = ai.definePrompt({
   output: {schema: AnalyzeBusDisruptionsOutputSchema},
   prompt: `You are an AI assistant designed to analyze potential bus service disruptions and provide recommendations to users.
 
-  Analyze the provided real-time bus locations, historical data, and news feeds to identify potential disruptions such as delays or route changes. Provide clear and concise recommendations to users so they can plan their commute accordingly.
+  Analyze the provided real-time bus locations, historical data, and news feeds to identify potential disruptions such as delays or route changes. For each disruption, provide a description and a severity level ('Low', 'Medium', or 'High'). Provide clear and concise recommendations to users so they can plan their commute accordingly.
 
   Here is the data for your analysis:
   - Real-time Bus Locations (JSON format): {{{realTimeBusLocations}}}

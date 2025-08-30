@@ -1,4 +1,3 @@
-
 {
   "realTimeBusLocations": [
     {
@@ -160,6 +159,13 @@
       "destination": "Fisherman's Wharf",
       "time": "18 min",
       "status": "Early"
+    },
+    {
+      "id": "arrival-1756556602610",
+      "route": "Maruti",
+      "destination": "Ujini",
+      "time": "9:15",
+      "status": "Delayed"
     }
   ],
   "busRoutes": [

@@ -1,3 +1,4 @@
+
 {
   "realTimeBusLocations": [
     {
@@ -126,30 +127,35 @@
   ],
   "arrivals": [
     {
+      "id": "arrival-1",
       "route": "5R",
       "destination": "Ocean Beach",
       "time": "5 min",
       "status": "On Time"
     },
     {
+      "id": "arrival-2",
       "route": "21",
       "destination": "Golden Gate Park",
       "time": "8 min",
       "status": "Delayed"
     },
     {
+      "id": "arrival-3",
       "route": "N",
       "destination": "Ocean Beach",
       "time": "12 min",
       "status": "On Time"
     },
     {
+      "id": "arrival-4",
       "route": "38",
       "destination": "Fort Miley",
       "time": "15 min",
       "status": "On Time"
     },
     {
+      "id": "arrival-5",
       "route": "F",
       "destination": "Fisherman's Wharf",
       "time": "18 min",
@@ -394,12 +400,12 @@
       "address": "975 Cypress Point, Anytown, USA"
     },
     {
-      "id": "student-16",
+      "id": "student-1756395279427",
       "name": "Test Student",
-      "usesBus": true,
       "fatherName": "Test Father",
-      "parentContact": "555-0000",
-      "address": "123 Test Ave, Testville",
+      "parentContact": "1234567890",
+      "address": "Test Address",
+      "usesBus": true,
       "busNumber": "B-101"
     }
   ],

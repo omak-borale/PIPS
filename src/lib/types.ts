@@ -1,3 +1,4 @@
+
 export type Bus = {
   id: string;
   route: string;
@@ -19,6 +20,7 @@ export type BusStop = {
 };
 
 export type Arrival = {
+  id: string;
   route: string;
   destination: string;
   time: string;

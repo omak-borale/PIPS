@@ -5,7 +5,7 @@ import path from 'path';
 
 import { analyzeBusDisruptions } from '@/ai/flows/analyze-bus-disruptions';
 import { hashPassword } from '@/lib/crypto';
-import type { Student, BusRoute, DieselEntry, DailyLog } from '@/lib/types';
+import type { Student, BusRoute, DieselEntry, DailyLog, Arrival } from '@/lib/types';
 import { revalidatePath } from 'next/cache';
 import initialData from '@/lib/data.json';
 
@@ -48,6 +48,11 @@ export async function getDieselEntriesAction(): Promise<DieselEntry[]> {
 export async function getDailyLogsAction(): Promise<DailyLog[]> {
     const data = await readData();
     return data.dailyLogs;
+}
+
+export async function getArrivalsAction(): Promise<Arrival[]> {
+    const data = await readData();
+    return data.arrivals;
 }
 
 
@@ -198,5 +203,67 @@ export async function addDieselEntry(entry: Omit<DieselEntry, 'id' | 'date'> & {
     } catch (error) {
         console.error(error);
         return { success: false, error: 'Failed to add diesel entry.' };
+    }
+}
+
+export async function addArrival(arrival: Omit<Arrival, 'id'>) {
+    try {
+        const currentData = await readData();
+        const newArrival: Arrival = {
+            id: `arrival-${Date.now()}`,
+            ...arrival,
+        };
+        
+        currentData.arrivals.push(newArrival);
+        await writeData(currentData);
+
+        revalidatePath('/dashboard/settings');
+        revalidatePath('/dashboard');
+        return { success: true, data: newArrival };
+    } catch (error) {
+        console.error(error);
+        return { success: false, error: 'Failed to add arrival.' };
+    }
+}
+
+export async function updateArrival(arrival: Arrival) {
+    try {
+        const currentData = await readData();
+        const arrivalIndex = currentData.arrivals.findIndex((a: Arrival) => a.id === arrival.id);
+
+        if (arrivalIndex === -1) {
+            return { success: false, error: 'Arrival not found.' };
+        }
+
+        currentData.arrivals[arrivalIndex] = arrival;
+        await writeData(currentData);
+
+        revalidatePath('/dashboard/settings');
+        revalidatePath('/dashboard');
+        return { success: true, data: arrival };
+    } catch (error) {
+        console.error(error);
+        return { success: false, error: 'Failed to update arrival.' };
+    }
+}
+
+export async function deleteArrival(arrivalId: string) {
+    try {
+        const currentData = await readData();
+        const updatedArrivals = currentData.arrivals.filter((a: Arrival) => a.id !== arrivalId);
+        
+        if (currentData.arrivals.length === updatedArrivals.length) {
+             return { success: false, error: 'Arrival not found.' };
+        }
+
+        currentData.arrivals = updatedArrivals;
+        await writeData(currentData);
+
+        revalidatePath('/dashboard/settings');
+        revalidatePath('/dashboard');
+        return { success: true, data: { id: arrivalId } };
+    } catch (error) {
+        console.error(error);
+        return { success: false, error: 'Failed to delete arrival.' };
     }
 }

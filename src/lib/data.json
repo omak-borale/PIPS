@@ -392,6 +392,15 @@
       "fatherName": "Joseph Anderson",
       "parentContact": "555-1357",
       "address": "975 Cypress Point, Anytown, USA"
+    },
+    {
+      "id": "student-16",
+      "name": "Test Student",
+      "usesBus": true,
+      "fatherName": "Test Father",
+      "parentContact": "555-0000",
+      "address": "123 Test Ave, Testville",
+      "busNumber": "B-101"
     }
   ],
   "dieselEntries": [

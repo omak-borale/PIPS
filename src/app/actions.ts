@@ -176,3 +176,27 @@ export async function addDailyLog(log: Omit<DailyLog, 'id' | 'date'> & { date: D
         return { success: false, error: 'Failed to add daily log.' };
     }
 }
+
+export async function addDieselEntry(entry: Omit<DieselEntry, 'id' | 'date'> & { date: Date }) {
+    try {
+        const currentData = await readData();
+        const newEntry: DieselEntry = {
+            id: `log-${Date.now()}`,
+            ...entry,
+            date: entry.date.toISOString(),
+        };
+        
+        if (!currentData.dieselEntries) {
+            currentData.dieselEntries = [];
+        }
+
+        currentData.dieselEntries.push(newEntry);
+        await writeData(currentData);
+
+        revalidatePath('/dashboard/diesel-details');
+        return { success: true, data: newEntry };
+    } catch (error) {
+        console.error(error);
+        return { success: false, error: 'Failed to add diesel entry.' };
+    }
+}

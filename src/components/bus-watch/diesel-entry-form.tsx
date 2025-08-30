@@ -5,13 +5,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
 
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -34,13 +36,14 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { initialBusRoutes } from "@/lib/data";
 import { cn } from "@/lib/utils";
+import { addDieselEntry } from "@/app/actions";
 
 const formSchema = z.object({
   busNumber: z.string().min(1, "Bus number is required."),
-  dieselAmount: z.coerce
+  amount: z.coerce
     .number()
     .min(1, "Diesel amount must be greater than 0."),
-  dieselLiters: z.coerce
+  liters: z.coerce
     .number()
     .min(1, "Diesel liters must be greater than 0."),
   date: z.date({
@@ -51,25 +54,39 @@ const formSchema = z.object({
 });
 
 export default function DieselEntryForm() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       busNumber: "",
-      dieselAmount: 0,
-      dieselLiters: 0,
+      amount: 0,
+      liters: 0,
       date: new Date(),
       pumpName: "",
       pageNumber: 0,
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    toast({
-        title: "Diesel Entry Logged",
-        description: `Successfully logged ${values.dieselLiters} liters for ₹${values.dieselAmount} for bus ${values.busNumber}.`
-    })
-    // Here you would typically call a server action or API to save the data.
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+    const result = await addDieselEntry(values);
+    setIsLoading(false);
+
+    if (result.success) {
+        toast({
+            title: "Diesel Entry Logged",
+            description: `Successfully logged ${values.liters} liters for ₹${values.amount} for bus ${values.busNumber}.`
+        });
+        form.reset();
+        router.push("/dashboard/diesel-details");
+    } else {
+        toast({
+            variant: "destructive",
+            title: "Error",
+            description: result.error,
+        });
+    }
   }
 
   return (
@@ -100,7 +117,7 @@ export default function DieselEntryForm() {
         <div className="grid grid-cols-2 gap-4">
             <FormField
             control={form.control}
-            name="dieselAmount"
+            name="amount"
             render={({ field }) => (
                 <FormItem>
                 <FormLabel>Diesel Amount (₹)</FormLabel>
@@ -113,7 +130,7 @@ export default function DieselEntryForm() {
             />
             <FormField
             control={form.control}
-            name="dieselLiters"
+            name="liters"
             render={({ field }) => (
                 <FormItem>
                 <FormLabel>Diesel Liters</FormLabel>
@@ -195,7 +212,10 @@ export default function DieselEntryForm() {
             />
         </div>
         <div className="flex justify-end pt-4">
-          <Button type="submit">Log Entry</Button>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Log Entry
+          </Button>
         </div>
       </form>
     </Form>

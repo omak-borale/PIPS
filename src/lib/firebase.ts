@@ -10,7 +10,7 @@ const firebaseConfig = {
   "storageBucket": "pips-app-vnphg.firebasestorage.app",
   "apiKey": "AIzaSyBx_qH9_2wFEvX5JR9aQFDMDfRyp-cZRuU",
   "authDomain": "pips-app-vnphg.firebaseapp.com",
-  "measurementId": "",
+  "measurementId": "G-SDBGD9C24J",
   "messagingSenderId": "844945116973"
 };
 

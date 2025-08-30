@@ -1,13 +1,14 @@
+
 'use client';
 
 import { APIProvider, Map, AdvancedMarker } from '@vis.gl/react-google-maps';
-import type { Bus, BusStop } from '@/lib/types';
+import type { RealTimeBusLocation, BusStop } from '@/lib/types';
 import BusIcon from '@/components/icons/bus-icon';
 import { MapPin } from 'lucide-react';
 import { Card } from '../ui/card';
 
 type MapViewProps = {
-  buses: Bus[];
+  buses: RealTimeBusLocation[];
   stops: BusStop[];
 };
 
@@ -29,18 +30,23 @@ const MapView = ({ buses, stops }: MapViewProps) => {
       </div>
     );
   }
+  
+  const defaultCenter = buses && buses.length > 0 
+    ? { lat: buses[0].lat, lng: buses[0].lon } 
+    : { lat: 37.7749, lng: -122.4194 };
+
 
   return (
     <APIProvider apiKey={apiKey}>
       <Map
-        defaultCenter={{ lat: 37.7749, lng: -122.4194 }}
+        defaultCenter={defaultCenter}
         defaultZoom={13}
         mapId="buswatch_map"
         gestureHandling={'greedy'}
         disableDefaultUI={true}
       >
         {buses.map((bus) => (
-          <AdvancedMarker key={bus.id} position={bus.position}>
+          <AdvancedMarker key={bus.busId} position={{ lat: bus.lat, lng: bus.lon }}>
             <Card className="p-1 rounded-full bg-primary text-primary-foreground shadow-lg">
                 <BusIcon className="w-5 h-5" />
             </Card>
@@ -49,7 +55,7 @@ const MapView = ({ buses, stops }: MapViewProps) => {
 
         {stops.map((stop) => (
           <AdvancedMarker key={stop.id} position={stop.position} title={stop.name}>
-             <MapPin className="w-6 h-6 text-accent fill-accent-foreground" />
+             <MapPin className="w-6 h-6 text-accent fill-accent" />
           </AdvancedMarker>
         ))}
       </Map>

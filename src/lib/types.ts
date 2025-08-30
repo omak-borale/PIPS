@@ -1,4 +1,5 @@
 
+
 export type Bus = {
   id: string;
   route: string;
@@ -74,4 +75,11 @@ export type DailyLog = {
     startTime: string;
     endTime: string;
     notes?: string;
+}
+
+export type RealTimeBusLocation = {
+    busId: string;
+    lat: number;
+    lon: number;
+    timestamp: string;
 }

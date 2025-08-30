@@ -10,7 +10,7 @@ import {
   SidebarContent,
   SidebarFooter,
 } from '@/components/ui/sidebar';
-import { LayoutDashboard, Route, Bus, Settings, Bell, Fuel, PencilLine, UserPlus, Wrench, BookText, User, ClipboardList, ListOrdered } from 'lucide-react';
+import { LayoutDashboard, Route, Bus, Settings, Bell, Fuel, PencilLine, UserPlus, Wrench, BookText, User, ClipboardList, ListOrdered, Bot } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { ReactNode } from 'react';
 import Link from 'next/link';
@@ -145,6 +145,16 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                       <span>
                         <Wrench />
                         Bus Repair
+                      </span>
+                    </SidebarMenuButton>
+                  </Link>
+                </SidebarMenuItem>
+                 <SidebarMenuItem>
+                  <Link href="/dashboard/disruption-analysis" passHref>
+                    <SidebarMenuButton asChild tooltip="Disruption Analysis">
+                      <span>
+                        <Bot />
+                        AI Analysis
                       </span>
                     </SidebarMenuButton>
                   </Link>

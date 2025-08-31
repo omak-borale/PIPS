@@ -76,72 +76,72 @@ export default function AddRouteForm({ onRouteAdded }: AddRouteFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Driver Name</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g., John Doe" {...field} />
-              </FormControl>
-              <FormDescription>The name of the driver.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Village Routes</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g., Town Hall to West Village" {...field} />
-              </FormControl>
-              <FormDescription>A brief description of the route's path.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="busNumber"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Bus Number</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g., B-42" {...field} />
-              </FormControl>
-              <FormDescription>The number of the bus assigned to this route.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="status"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Status</FormLabel>
-               <Select onValueChange={field.onChange} defaultValue={field.value}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <div className="grid md:grid-cols-2 gap-4">
+            <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Driver Name</FormLabel>
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a status" />
-                  </SelectTrigger>
+                    <Input placeholder="e.g., John Doe" {...field} />
                 </FormControl>
-                <SelectContent>
-                  <SelectItem value="Active">Active</SelectItem>
-                  <SelectItem value="Inactive">Inactive</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormDescription>Set whether the route is currently active or not.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex justify-end">
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+            <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Village Routes</FormLabel>
+                <FormControl>
+                    <Input placeholder="e.g., Town Hall to West Village" {...field} />
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+        </div>
+        <div className="grid md:grid-cols-2 gap-4">
+            <FormField
+            control={form.control}
+            name="busNumber"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Bus Number</FormLabel>
+                <FormControl>
+                    <Input placeholder="e.g., B-42" {...field} />
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+            <FormField
+            control={form.control}
+            name="status"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Status</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Select a status" />
+                    </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                    <SelectItem value="Active">Active</SelectItem>
+                    <SelectItem value="Inactive">Inactive</SelectItem>
+                    </SelectContent>
+                </Select>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+        </div>
+        <div className="flex justify-end pt-4">
            <Button type="submit" disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Save Details

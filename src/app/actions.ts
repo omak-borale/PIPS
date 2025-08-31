@@ -40,25 +40,9 @@ export async function seedDatabaseAction() {
         // Seed bus routes
         const busRoutesCollection = collection(db, 'busRoutes');
         initialData.busRoutes.forEach(route => {
-            const { id, ...routeData } = route;
+            const { id, serviceHistory, ...routeData } = route;
             const docRef = doc(busRoutesCollection, id);
-            batch.set(docRef, { ...routeData, serviceHistory: route.serviceHistory || [] });
-        });
-
-        // Seed diesel entries
-        const dieselEntriesCollection = collection(db, 'dieselEntries');
-        initialData.dieselEntries.forEach(entry => {
-            const { id, ...entryData } = entry;
-            const docRef = doc(dieselEntriesCollection, id);
-            batch.set(docRef, entryData);
-        });
-        
-        // Seed arrivals
-        const arrivalsCollection = collection(db, 'arrivals');
-        initialData.arrivals.forEach(arrival => {
-            const { id, ...arrivalData } = arrival;
-            const docRef = doc(arrivalsCollection, id);
-            batch.set(docRef, arrivalData);
+            batch.set(docRef, { ...routeData, serviceHistory: [] });
         });
 
         await batch.commit();

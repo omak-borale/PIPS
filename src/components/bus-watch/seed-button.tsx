@@ -19,15 +19,15 @@ export default function SeedButton() {
 
     if (result && result.success) {
       toast({
-        title: "Database Seeded",
-        description: result.message,
+        title: 'Database Seeded',
+        description: 'The database has been populated with initial data.',
       });
       router.refresh();
     } else {
       toast({
-        variant: "destructive",
-        title: "Seeding Failed",
-        description: result.error,
+        variant: 'destructive',
+        title: 'Seeding Failed',
+        description: result?.error || 'An unknown error occurred.',
       });
     }
     setIsSeeding(false);
@@ -35,8 +35,14 @@ export default function SeedButton() {
 
   return (
     <Button onClick={handleSeedDatabase} disabled={isSeeding}>
-      {isSeeding && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-      {isSeeding ? 'Seeding...' : 'Seed Database'}
+      {isSeeding ? (
+        <>
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          Seeding...
+        </>
+      ) : (
+        'Seed Database'
+      )}
     </Button>
   );
 }

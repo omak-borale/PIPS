@@ -192,10 +192,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                   <Link href="/dashboard/excel-exporter">
-                    <SidebarMenuButton asChild tooltip="Excel Exporter">
+                    <SidebarMenuButton asChild tooltip="Excel Workbook">
                       <span>
                         <FileSpreadsheet />
-                        Excel Exporter
+                        Excel Workbook
                       </span>
                     </SidebarMenuButton>
                   </Link>

@@ -129,7 +129,7 @@ export default function ExcelExporterClient() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <FileSpreadsheet className="h-6 w-6" />
-          Excel Data Exporter
+          Excel Workbook
         </CardTitle>
         <CardDescription>
           Select a data type and click export to download a CSV file.

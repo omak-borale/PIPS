@@ -151,10 +151,7 @@ export async function addBusRoute(route: Omit<BusRoute, 'id' | 'fuelLevel' | 'la
 
         const returnData: BusRoute = {
             id: docRef.id,
-            ...route,
-            fuelLevel: 100,
-            lastFueled: now.toISOString(),
-            serviceHistory: [],
+            ...newRouteData,
         };
         
         return { success: true, data: returnData };
@@ -279,5 +276,7 @@ export async function addServiceHistory(busId: string, serviceHistory: ServiceHi
         return { success: false, error: 'Failed to add service history.' };
     }
 }
+
+    
 
     

@@ -18,13 +18,13 @@ const MapView = ({ buses, stops }: MapViewProps) => {
   // NEXT_PUBLIC_GOOGLE_MAPS_API_KEY="YOUR_API_KEY"
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
-  if (!apiKey) {
+  if (!apiKey || apiKey === 'YOUR_API_KEY') {
     return (
       <div className="flex items-center justify-center h-full bg-muted">
         <div className="text-center p-4">
           <h3 className="text-lg font-semibold">Map not available</h3>
           <p className="text-muted-foreground">
-            Please provide a Google Maps API key in your environment variables.
+            Please provide a Google Maps API key in your .env.local file.
           </p>
         </div>
       </div>

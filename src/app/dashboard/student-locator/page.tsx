@@ -21,13 +21,13 @@ const StudentLocatorPage = () => {
     fetchStudents();
   }, []);
 
-  if (!apiKey) {
+  if (!apiKey || apiKey === 'YOUR_API_KEY') {
     return (
       <main className="flex-1 p-4 md:p-6 lg:p-8 flex items-center justify-center">
         <div className="text-center p-4 bg-muted rounded-lg">
           <h3 className="text-lg font-semibold">Map not available</h3>
           <p className="text-muted-foreground">
-            Please provide a Google Maps API key in your environment variables.
+            Please provide a Google Maps API key in your .env.local file.
           </p>
         </div>
       </main>

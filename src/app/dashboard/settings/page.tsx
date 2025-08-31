@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import type { BusRoute, Arrival } from '@/lib/types';
+import type { Arrival } from '@/lib/types';
 import { PlusCircle, MoreVertical, KeyRound, Info, Loader2, Trash, Clock } from 'lucide-react';
 import {
   DropdownMenu,
@@ -46,26 +46,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import AddRouteForm from '@/components/bus-watch/add-route-form';
-import EditRouteForm from '@/components/bus-watch/edit-route-form';
 import AddArrivalForm from '@/components/bus-watch/add-arrival-form';
 import EditArrivalForm from '@/components/bus-watch/edit-arrival-form';
-import { getBusRoutesAction, deleteBusRoute, getArrivalsAction, deleteArrival } from '@/app/actions';
+import { getArrivalsAction, deleteArrival } from '@/app/actions';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
 
 export default function SettingsPage() {
-  const [busRoutes, setBusRoutes] = useState<BusRoute[]>([]);
   const [arrivals, setArrivals] = useState<Arrival[]>([]);
-
-  // Dialog states for Routes
-  const [isAddRouteDialogOpen, setIsAddRouteDialogOpen] = useState(false);
-  const [isEditRouteDialogOpen, setIsEditRouteDialogOpen] = useState(false);
-  const [isDeleteRouteDialogOpen, setIsDeleteRouteDialogOpen] = useState(false);
-  const [selectedRoute, setSelectedRoute] = useState<BusRoute | null>(null);
-  const [isDeletingRoute, setIsDeletingRoute] = useState(false);
   
   // Dialog states for Arrivals
   const [isAddArrivalDialogOpen, setIsAddArrivalDialogOpen] = useState(false);
@@ -77,52 +67,12 @@ export default function SettingsPage() {
 
   useEffect(() => {
     async function fetchData() {
-        const routes = await getBusRoutesAction();
-        setBusRoutes(routes);
         const arrivalsData = await getArrivalsAction();
         setArrivals(arrivalsData);
     }
     fetchData();
   }, []);
 
-  const handleRouteUpdated = (updatedRoute: BusRoute) => {
-    setBusRoutes(prevRoutes => prevRoutes.map(route => route.id === updatedRoute.id ? updatedRoute : route));
-    setIsEditRouteDialogOpen(false);
-    setSelectedRoute(null);
-  };
-
-  const handleEditRouteClick = (route: BusRoute) => {
-    setSelectedRoute(route);
-    setIsEditRouteDialogOpen(true);
-  };
-
-  const handleDeleteRouteClick = (route: BusRoute) => {
-    setSelectedRoute(route);
-    setIsDeleteRouteDialogOpen(true);
-  };
-
-  const confirmDeleteRoute = async () => {
-    if (!selectedRoute) return;
-    setIsDeletingRoute(true);
-    const result = await deleteBusRoute(selectedRoute.id);
-    setIsDeletingRoute(false);
-
-    if (result.success) {
-      toast({
-        title: "Route Deleted",
-        description: `Successfully deleted the ${selectedRoute.name} route.`,
-      });
-      setBusRoutes(prevRoutes => prevRoutes.filter(route => route.id !== selectedRoute.id));
-      setIsDeleteRouteDialogOpen(false);
-      setSelectedRoute(null);
-    } else {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: result.error,
-      });
-    }
-  };
 
   // Handlers for Arrivals
   const handleArrivalAdded = (newArrival: Arrival) => {
@@ -216,92 +166,6 @@ export default function SettingsPage() {
             <Button disabled>Save Changes</Button>
           </CardFooter>
         </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Bus Routes</CardTitle>
-            <CardDescription>
-              Manage your bus routes here. You can add, edit, or remove routes.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex justify-end mb-4">
-              <Dialog open={isAddRouteDialogOpen} onOpenChange={setIsAddRouteDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button>
-                    <PlusCircle className="mr-2" />
-                    Add New Route
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[600px]">
-                  <DialogHeader>
-                    <DialogTitle>Add a New Bus Route</DialogTitle>
-                    <DialogDescription>
-                      Fill in the details below to add a new route to the
-                      system.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <AddRouteForm onRouteAdded={() => setIsAddRouteDialogOpen(false)} />
-                </DialogContent>
-              </Dialog>
-            </div>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Driver Name</TableHead>
-                  <TableHead>Village Routes</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Bus Number</TableHead>
-                  <TableHead>
-                    <span className="sr-only">Actions</span>
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {busRoutes.map((route) => (
-                  <TableRow key={route.id}>
-                    <TableCell className="font-medium">{route.name}</TableCell>
-                    <TableCell>{route.description}</TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          route.status === 'Active' ? 'default' : 'destructive'
-                        }
-                        className={
-                          route.status === 'Active' ? 'bg-green-500' : ''
-                        }
-                      >
-                        {route.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{route.busNumber}</TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <MoreVertical className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => handleEditRouteClick(route)}>
-                            Edit
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleDeleteRouteClick(route)}
-                            className="text-destructive"
-                          >
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
         
         <Card>
           <CardHeader>
@@ -386,20 +250,6 @@ export default function SettingsPage() {
             </Table>
           </CardContent>
         </Card>
-
-
-        {/* Edit Route Dialog */}
-        <Dialog open={isEditRouteDialogOpen} onOpenChange={setIsEditRouteDialogOpen}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Edit Bus Route</DialogTitle>
-              <DialogDescription>
-                Update the details for the selected route.
-              </DialogDescription>
-            </DialogHeader>
-            {selectedRoute && <EditRouteForm route={selectedRoute} onRouteUpdated={handleRouteUpdated} />}
-          </DialogContent>
-        </Dialog>
         
         {/* Edit Arrival Dialog */}
         <Dialog open={isEditArrivalDialogOpen} onOpenChange={setIsEditArrivalDialogOpen}>
@@ -413,26 +263,6 @@ export default function SettingsPage() {
             {selectedArrival && <EditArrivalForm arrival={selectedArrival} onArrivalUpdated={handleArrivalUpdated} />}
           </DialogContent>
         </Dialog>
-
-        {/* Delete Route Alert Dialog */}
-        <AlertDialog open={isDeleteRouteDialogOpen} onOpenChange={setIsDeleteRouteDialogOpen}>
-            <AlertDialogContent>
-                <AlertDialogHeader>
-                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                        This action cannot be undone. This will permanently delete the bus route
-                        for <span className="font-semibold">{selectedRoute?.name}</span>.
-                    </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={confirmDeleteRoute} disabled={isDeletingRoute} className="bg-destructive hover:bg-destructive/90">
-                        {isDeletingRoute ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash className="mr-2 h-4 w-4" />}
-                        Delete
-                    </AlertDialogAction>
-                </AlertDialogFooter>
-            </AlertDialogContent>
-        </AlertDialog>
         
         {/* Delete Arrival Alert Dialog */}
         <AlertDialog open={isDeleteArrivalDialogOpen} onOpenChange={setIsDeleteArrivalDialogOpen}>

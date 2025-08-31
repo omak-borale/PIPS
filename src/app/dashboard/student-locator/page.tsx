@@ -21,7 +21,7 @@ const StudentLocatorPage = () => {
     fetchStudents();
   }, []);
 
-  if (!apiKey) {
+  if (!apiKey || apiKey === "YOUR_API_KEY_HERE") {
     return (
       <main className="flex-1 p-4 md:p-6 lg:p-8 flex items-center justify-center">
         <div className="text-center p-4 bg-muted rounded-lg">

@@ -18,7 +18,7 @@ const MapView = ({ buses, stops }: MapViewProps) => {
   // NEXT_PUBLIC_GOOGLE_MAPS_API_KEY="YOUR_API_KEY"
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
-  if (!apiKey) {
+  if (!apiKey || apiKey === "YOUR_API_KEY_HERE") {
     return (
       <div className="flex items-center justify-center h-full bg-muted">
         <div className="text-center p-4">

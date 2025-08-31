@@ -1,0 +1,14 @@
+diff --git a/node_modules/@genkit-ai/next/package.json b/node_modules/@genkit-ai/next/package.json
+index 57fc1d5995e868a86a74e508823d47a8342d1f14..7208d3d9229e69c4c59a584992524a87a2a07e0b 100644
+--- a/node_modules/@genkit-ai/next/package.json
++++ b/node_modules/@genkit-ai/next/package.json
+@@ -34,6 +34,6 @@
+     "typescript": "^5.0.0",
+     "zod": "^3.22.4"
+   },
+-  "peerDependencies": {
+-    "next": "^15.0.0"
++  "peerDependencies": { 
++    "next": ">=14"
+   }
+ }

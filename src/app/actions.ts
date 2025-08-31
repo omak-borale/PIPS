@@ -40,9 +40,33 @@ export async function seedDatabaseAction() {
         // Seed bus routes
         const busRoutesCollection = collection(db, 'busRoutes');
         initialData.busRoutes.forEach(route => {
-            const { id, serviceHistory, ...routeData } = route;
+            const { id, ...routeData } = route;
             const docRef = doc(busRoutesCollection, id);
-            batch.set(docRef, { ...routeData, serviceHistory: [] });
+            batch.set(docRef, routeData);
+        });
+
+        // Seed diesel entries
+        const dieselEntriesCollection = collection(db, 'dieselEntries');
+        initialData.dieselEntries.forEach(entry => {
+            const { id, ...entryData } = entry;
+            const docRef = doc(dieselEntriesCollection, id);
+            batch.set(docRef, entryData);
+        });
+
+        // Seed daily logs
+        const dailyLogsCollection = collection(db, 'dailyLogs');
+        initialData.dailyLogs.forEach(log => {
+            const { id, ...logData } = log;
+            const docRef = doc(dailyLogsCollection, id);
+            batch.set(docRef, logData);
+        });
+
+        // Seed arrivals
+        const arrivalsCollection = collection(db, 'arrivals');
+        initialData.arrivals.forEach(arrival => {
+            const { id, ...arrivalData } = arrival;
+            const docRef = doc(arrivalsCollection, id);
+            batch.set(docRef, arrivalData);
         });
 
         await batch.commit();
@@ -258,9 +282,3 @@ export async function addServiceHistory(busId: string, serviceHistory: ServiceHi
         return { success: false, error: 'Failed to add service history.' };
     }
 }
-
-    
-
-    
-
-    

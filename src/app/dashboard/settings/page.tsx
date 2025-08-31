@@ -85,10 +85,14 @@ export default function SettingsPage() {
     fetchData();
   }, []);
 
-  // Handlers for Bus Routes
-  const handleRouteAdded = (newRoute: BusRoute) => {
-    setBusRoutes(prevRoutes => [ ...prevRoutes, newRoute ]);
+  const handleRouteAdded = () => {
     setIsAddRouteDialogOpen(false);
+    // Re-fetch routes to show the new one
+    async function fetchData() {
+        const routes = await getBusRoutesAction();
+        setBusRoutes(routes);
+    }
+    fetchData();
   };
 
   const handleRouteUpdated = (updatedRoute: BusRoute) => {
@@ -239,7 +243,7 @@ export default function SettingsPage() {
                     Add New Route
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-2xl">
+                <DialogContent className="sm:max-w-md">
                   <DialogHeader>
                     <DialogTitle>Add a New Bus Route</DialogTitle>
                     <DialogDescription>

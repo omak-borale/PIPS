@@ -6,12 +6,12 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -26,7 +26,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
-import type { BusRoute } from "@/lib/types";
 import { addBusRoute } from "@/app/actions";
 
 
@@ -38,10 +37,11 @@ const formSchema = z.object({
 });
 
 type AddRouteFormProps = {
-    onRouteAdded: (newRoute: BusRoute) => void;
+    onRouteAdded: () => void;
 }
 
 export default function AddRouteForm({ onRouteAdded }: AddRouteFormProps) {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -64,7 +64,8 @@ export default function AddRouteForm({ onRouteAdded }: AddRouteFormProps) {
             description: `Successfully added the ${values.name} route.`
         });
         form.reset();
-        onRouteAdded(result.data);
+        onRouteAdded();
+        router.push('/dashboard/settings');
     } else {
         toast({
             variant: "destructive",

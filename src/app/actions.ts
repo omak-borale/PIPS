@@ -141,7 +141,7 @@ export async function addBusRoute(route: Omit<BusRoute, 'id' | 'fuelLevel' | 'la
             ...route,
             fuelLevel: 100, // Default fuel level
             lastFueled: new Date().toISOString(),
-            serviceHistory: [], // Ensure serviceHistory is always present
+            serviceHistory: [],
         }
         const docRef = await addDoc(collection(db, 'busRoutes'), newRouteData);
 

@@ -64,7 +64,7 @@ export default function AddBusRoutePage() {
     if (result && result.success) {
       toast({
         title: "Route Added",
-        description: `Successfully added the ${values.name} route`,
+        description: `Successfully added the ${values.name} route.`,
       });
       form.reset();
       router.push('/dashboard/routes');

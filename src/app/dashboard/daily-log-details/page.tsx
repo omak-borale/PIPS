@@ -1,5 +1,4 @@
 
-"use client";
 
 import {
   Card,
@@ -17,23 +16,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { format, parseISO } from 'date-fns';
-import { useState, useEffect } from 'react';
-import type { DailyLog } from '@/lib/types';
 import { getDailyLogsAction } from '@/app/actions';
 
-export default function DailyLogDetailsPage() {
-  const [dailyLogs, setDailyLogs] = useState<DailyLog[]>([]);
-  const [isClient, setIsClient] = useState(false);
-  
-  useEffect(() => {
-    setIsClient(true);
-    async function fetchData() {
-        const logs = await getDailyLogsAction();
-        setDailyLogs(logs);
-    }
-    fetchData();
-  }, []);
-
+export default async function DailyLogDetailsPage() {
+  const dailyLogs = await getDailyLogsAction();
 
   return (
     <main className="flex-1 p-4 md:p-6 lg:p-8">
@@ -60,7 +46,7 @@ export default function DailyLogDetailsPage() {
             <TableBody>
               {dailyLogs.map((entry) => (
                 <TableRow key={entry.id}>
-                  <TableCell>{isClient ? format(parseISO(entry.date), 'PPP') : ''}</TableCell>
+                  <TableCell>{format(parseISO(entry.date), 'PPP')}</TableCell>
                   <TableCell className="font-medium">
                     {entry.busNumber}
                   </TableCell>

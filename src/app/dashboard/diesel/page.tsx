@@ -1,5 +1,4 @@
 
-"use client";
 
 import {
   Card,
@@ -17,20 +16,10 @@ import {
 } from '@/components/ui/table';
 import { Progress } from '@/components/ui/progress';
 import { format, parseISO } from 'date-fns';
-import { useEffect, useState } from 'react';
-import type { BusRoute } from '@/lib/types';
 import { getBusRoutesAction } from '@/app/actions';
 
-export default function DieselManagementPage() {
-  const [busRoutes, setBusRoutes] = useState<BusRoute[]>([]);
-  
-  useEffect(() => {
-    async function fetchData() {
-        const routes = await getBusRoutesAction();
-        setBusRoutes(routes);
-    }
-    fetchData();
-  }, [])
+export default async function DieselManagementPage() {
+  const busRoutes = await getBusRoutesAction();
 
   return (
     <main className="flex-1 p-4 md:p-6 lg:p-8">

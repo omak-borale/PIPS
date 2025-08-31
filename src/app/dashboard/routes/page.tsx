@@ -1,5 +1,4 @@
 
-"use client";
 
 import {
   Card,
@@ -25,23 +24,11 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Users } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import { getBusRoutesAction, getStudentsAction } from '@/app/actions';
-import type { BusRoute, Student } from '@/lib/types';
 
-export default function RoutesPage() {
-  const [busRoutes, setBusRoutes] = useState<BusRoute[]>([]);
-  const [students, setStudents] = useState<Student[]>([]);
-
-  useEffect(() => {
-    async function fetchData() {
-        const routes = await getBusRoutesAction();
-        const studentData = await getStudentsAction();
-        setBusRoutes(routes);
-        setStudents(studentData);
-    }
-    fetchData();
-  }, []);
+export default async function RoutesPage() {
+  const busRoutes = await getBusRoutesAction();
+  const students = await getStudentsAction();
   
   const getStudentCountForBus = (busNumber: string) => {
     return students.filter(student => student.usesBus && student.busNumber === busNumber).length;

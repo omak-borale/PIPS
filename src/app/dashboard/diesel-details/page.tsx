@@ -1,5 +1,4 @@
 
-"use client";
 
 import {
   Card,
@@ -17,23 +16,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { format, parseISO } from 'date-fns';
-import { useState, useEffect } from 'react';
-import type { DieselEntry } from '@/lib/types';
 import { getDieselEntriesAction } from '@/app/actions';
 
-export default function DieselDetailsPage() {
-  const [dieselEntries, setDieselEntries] = useState<DieselEntry[]>([]);
-  const [isClient, setIsClient] = useState(false);
-  
-  useEffect(() => {
-    setIsClient(true);
-    async function fetchData() {
-        const entries = await getDieselEntriesAction();
-        setDieselEntries(entries);
-    }
-    fetchData();
-  }, []);
-
+export default async function DieselDetailsPage() {
+  const dieselEntries = await getDieselEntriesAction();
 
   return (
     <main className="flex-1 p-4 md:p-6 lg:p-8">
@@ -61,7 +47,7 @@ export default function DieselDetailsPage() {
             <TableBody>
               {dieselEntries.map((entry) => (
                 <TableRow key={entry.id}>
-                  <TableCell>{isClient ? format(parseISO(entry.date), 'PPP') : ''}</TableCell>
+                  <TableCell>{format(parseISO(entry.date), 'PPP')}</TableCell>
                   <TableCell className="font-medium">
                     {entry.busNumber}
                   </TableCell>

@@ -56,7 +56,7 @@ export default function AddRouteForm({ onRouteAdded }: AddRouteFormProps) {
     const result = await addBusRoute(values);
     setIsLoading(false);
 
-    if (result.success) {
+    if (result && result.success) {
         toast({
             title: "Route Added",
             description: `Successfully added the ${values.name} route.`
@@ -67,7 +67,7 @@ export default function AddRouteForm({ onRouteAdded }: AddRouteFormProps) {
         toast({
             variant: "destructive",
             title: "Error",
-            description: result.error,
+            description: result?.error || "Failed to add route. Please try again.",
         });
     }
   }

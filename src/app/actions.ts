@@ -40,9 +40,9 @@ export async function seedDatabaseAction() {
         // Seed bus routes
         const busRoutesCollection = collection(db, 'busRoutes');
         initialData.busRoutes.forEach(route => {
-            const { id, serviceHistory, ...routeData } = route;
+            const { id, ...routeData } = route;
             const docRef = doc(busRoutesCollection, id);
-            batch.set(docRef, { ...routeData, serviceHistory: [] });
+            batch.set(docRef, { ...routeData, serviceHistory: route.serviceHistory || [] });
         });
 
         // Seed diesel entries
@@ -269,3 +269,5 @@ export async function addServiceHistory(busId: string, serviceHistory: ServiceHi
         return { success: false, error: 'Failed to add service history.' };
     }
 }
+
+    

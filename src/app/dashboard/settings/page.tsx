@@ -85,16 +85,6 @@ export default function SettingsPage() {
     fetchData();
   }, []);
 
-  const handleRouteAdded = () => {
-    setIsAddRouteDialogOpen(false);
-    // Re-fetch routes to show the new one
-    async function fetchData() {
-        const routes = await getBusRoutesAction();
-        setBusRoutes(routes);
-    }
-    fetchData();
-  };
-
   const handleRouteUpdated = (updatedRoute: BusRoute) => {
     setBusRoutes(prevRoutes => prevRoutes.map(route => route.id === updatedRoute.id ? updatedRoute : route));
     setIsEditRouteDialogOpen(false);
@@ -243,7 +233,7 @@ export default function SettingsPage() {
                     Add New Route
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
+                <DialogContent className="sm:max-w-[600px]">
                   <DialogHeader>
                     <DialogTitle>Add a New Bus Route</DialogTitle>
                     <DialogDescription>
@@ -251,7 +241,7 @@ export default function SettingsPage() {
                       system.
                     </DialogDescription>
                   </DialogHeader>
-                  <AddRouteForm onRouteAdded={handleRouteAdded} />
+                  <AddRouteForm onRouteAdded={() => setIsAddRouteDialogOpen(false)} />
                 </DialogContent>
               </Dialog>
             </div>

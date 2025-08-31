@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -41,7 +40,6 @@ type AddRouteFormProps = {
 }
 
 export default function AddRouteForm({ onRouteAdded }: AddRouteFormProps) {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -65,7 +63,6 @@ export default function AddRouteForm({ onRouteAdded }: AddRouteFormProps) {
         });
         form.reset();
         onRouteAdded();
-        router.push('/dashboard/settings');
     } else {
         toast({
             variant: "destructive",

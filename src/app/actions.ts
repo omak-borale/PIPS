@@ -46,7 +46,7 @@ export async function seedDatabaseAction() {
         });
 
         await batch.commit();
-        revalidatePath('/dashboard');
+        revalidatePath('/'); // Revalidate all paths to be safe
         return { success: true, message: "Database seeded successfully!" };
     } catch (error) {
         console.error("Error seeding database:", error);
@@ -128,19 +128,17 @@ export async function addBusRoute(route: Omit<BusRoute, 'id' | 'fuelLevel' | 'la
             lastFueled: now.toISOString(),
             serviceHistory: [],
         }
-        const docRef = await addDoc(collection(db, 'busRoutes'), newRouteData);
+        await addDoc(collection(db, 'busRoutes'), newRouteData);
 
         revalidatePath('/dashboard/settings');
         revalidatePath('/dashboard/routes');
 
-        const returnData: BusRoute = {
-            id: docRef.id,
-            ...newRouteData,
-        };
-        
-        return { success: true, data: returnData };
+        return { success: true };
     } catch (error) {
         console.error(error);
+        if (error instanceof Error) {
+            return { success: false, error: error.message };
+        }
         return { success: false, error: 'Failed to add bus route.' };
     }
 }

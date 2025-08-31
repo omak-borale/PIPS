@@ -42,7 +42,7 @@ export async function seedDatabaseAction() {
         initialData.busRoutes.forEach(route => {
             const { id, serviceHistory, ...routeData } = route;
             const docRef = doc(busRoutesCollection, id);
-            batch.set(docRef, routeData);
+            batch.set(docRef, { ...routeData, serviceHistory: [] });
         });
 
         // Seed diesel entries
@@ -141,12 +141,13 @@ export async function addBusRoute(route: Omit<BusRoute, 'id' | 'fuelLevel' | 'la
             ...route,
             fuelLevel: 100, // Default fuel level
             lastFueled: new Date().toISOString(),
+            serviceHistory: [], // Ensure serviceHistory is always present
         }
         const docRef = await addDoc(collection(db, 'busRoutes'), newRouteData);
 
         revalidatePath('/dashboard/settings');
         revalidatePath('/dashboard/routes');
-        return { success: true, data: { id: docRef.id, ...newRouteData, serviceHistory: [] } };
+        return { success: true, data: { id: docRef.id, ...newRouteData } };
     } catch (error) {
         console.error(error);
         return { success: false, error: 'Failed to add bus route.' };
@@ -178,7 +179,7 @@ export async function deleteBusRoute(routeId: string) {
         return { success: true, data: { id: routeId } };
     } catch (error) {
         console.error(error);
-        return { success: false, error: 'Failed to delete bus route.' };
+        return { success: false, error: 'Failed to delete a bus route.' };
     }
 }
 

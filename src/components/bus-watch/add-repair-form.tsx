@@ -6,13 +6,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
-import { initialBusRoutes } from "@/lib/data";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -34,11 +31,10 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { toast } from "@/hooks/use-toast";
-import type { ServiceHistory } from "@/lib/types";
+import type { ServiceHistory, BusRoute } from "@/lib/types";
 
 const formSchema = z.object({
-  busNumber: z.string().min(1, "Bus number is required."),
+  busId: z.string().min(1, "Bus is required."),
   date: z.date({ required_error: "A service date is required." }),
   machineName: z.string().min(1, "Machine name is required."),
   contactNumber: z.string().min(1, "Contact number is required."),
@@ -48,14 +44,15 @@ const formSchema = z.object({
 });
 
 type AddRepairFormProps = {
-  onAddRepair: (busNumber: string, data: Omit<ServiceHistory, 'date'> & { date: Date }) => void;
+  onAddRepair: (busId: string, data: Omit<ServiceHistory, 'date'> & { date: Date }) => void;
+  busRoutes: BusRoute[];
 };
 
-export default function AddRepairForm({ onAddRepair }: AddRepairFormProps) {
+export default function AddRepairForm({ onAddRepair, busRoutes }: AddRepairFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      busNumber: "",
+      busId: "",
       date: new Date(),
       machineName: "",
       contactNumber: "",
@@ -66,11 +63,8 @@ export default function AddRepairForm({ onAddRepair }: AddRepairFormProps) {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    onAddRepair(values.busNumber, values);
-    toast({
-      title: "Repair Logged",
-      description: `Successfully logged a repair for bus ${values.busNumber}.`,
-    });
+    const { busId, ...repairData } = values;
+    onAddRepair(busId, repairData);
     form.reset();
   }
 
@@ -80,7 +74,7 @@ export default function AddRepairForm({ onAddRepair }: AddRepairFormProps) {
         <div className="grid grid-cols-2 gap-4">
             <FormField
             control={form.control}
-            name="busNumber"
+            name="busId"
             render={({ field }) => (
                 <FormItem>
                 <FormLabel>Bus Number</FormLabel>
@@ -91,8 +85,8 @@ export default function AddRepairForm({ onAddRepair }: AddRepairFormProps) {
                     </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                    {initialBusRoutes.map((route) => (
-                        <SelectItem key={route.id} value={route.busNumber}>
+                    {busRoutes.map((route) => (
+                        <SelectItem key={route.id} value={route.id}>
                         {route.busNumber} ({route.name})
                         </SelectItem>
                     ))}

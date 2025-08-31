@@ -2,7 +2,7 @@
 'use server';
 import { analyzeBusDisruptions } from '@/ai/flows/analyze-bus-disruptions';
 import { hashPassword } from '@/lib/crypto';
-import type { Student, BusRoute, DieselEntry, DailyLog, Arrival } from '@/lib/types';
+import type { Student, BusRoute, DieselEntry, DailyLog, Arrival, ServiceHistory } from '@/lib/types';
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, query, where, writeBatch } from 'firebase/firestore';
@@ -40,7 +40,7 @@ export async function seedDatabaseAction() {
         // Seed bus routes
         const busRoutesCollection = collection(db, 'busRoutes');
         initialData.busRoutes.forEach(route => {
-            const { id, ...routeData } = route;
+            const { id, serviceHistory, ...routeData } = route;
             const docRef = doc(busRoutesCollection, id);
             batch.set(docRef, routeData);
         });
@@ -135,7 +135,7 @@ export async function addStudent(student: Omit<Student, 'id'>) {
     }
 }
 
-export async function addBusRoute(route: Omit<BusRoute, 'id' | 'fuelLevel' | 'lastFueled'>) {
+export async function addBusRoute(route: Omit<BusRoute, 'id' | 'fuelLevel' | 'lastFueled' | 'serviceHistory'>) {
     try {
         const newRouteData = {
             ...route,
@@ -146,7 +146,7 @@ export async function addBusRoute(route: Omit<BusRoute, 'id' | 'fuelLevel' | 'la
 
         revalidatePath('/dashboard/settings');
         revalidatePath('/dashboard/routes');
-        return { success: true, data: { id: docRef.id, ...newRouteData } };
+        return { success: true, data: { id: docRef.id, ...newRouteData, serviceHistory: [] } };
     } catch (error) {
         console.error(error);
         return { success: false, error: 'Failed to add bus route.' };
@@ -167,6 +167,7 @@ export async function updateBusRoute(route: BusRoute) {
         return { success: false, error: 'Failed to update bus route.' };
     }
 }
+
 
 export async function deleteBusRoute(routeId: string) {
     try {
@@ -247,5 +248,23 @@ export async function deleteArrival(arrivalId: string) {
     } catch (error) {
         console.error(error);
         return { success: false, error: 'Failed to delete arrival.' };
+    }
+}
+
+export async function addServiceHistory(busId: string, serviceHistory: ServiceHistory) {
+    try {
+        const busRef = doc(db, 'busRoutes', busId);
+        const busDoc = await getDoc(busRef);
+        if (busDoc.exists()) {
+            const busData = busDoc.data() as BusRoute;
+            const updatedHistory = [serviceHistory, ...(busData.serviceHistory || [])];
+            await updateDoc(busRef, { serviceHistory: updatedHistory });
+            revalidatePath('/dashboard/bus-repair');
+            return { success: true, data: updatedHistory };
+        }
+        return { success: false, error: 'Bus not found.' };
+    } catch (error) {
+        console.error(error);
+        return { success: false, error: 'Failed to add service history.' };
     }
 }

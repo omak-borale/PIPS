@@ -46,10 +46,3 @@ export async function getHistoricalData(): Promise<string> {
 export async function getNewsFeed(): Promise<string> {
     return initialData.newsFeed;
 }
-
-
-// Export the initial data for components that might not need dynamic updates
-// or for use in client components where async can be tricky.
-export const initialBusRoutes: BusRoute[] = initialData.busRoutes;
-export const initialStudents: Student[] = initialData.students;
-export const initialDieselEntries: DieselEntry[] = initialData.dieselEntries;

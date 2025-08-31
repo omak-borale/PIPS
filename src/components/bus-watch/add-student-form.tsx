@@ -4,7 +4,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { initialBusRoutes } from "@/lib/data";
+import { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -26,10 +28,9 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/hooks/use-toast";
-import { addStudent } from "@/app/actions";
-import { useState } from "react";
-import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { addStudent, getBusRoutesAction } from "@/app/actions";
+import type { BusRoute } from "@/lib/types";
+
 
 const formSchema = z.object({
   name: z.string().min(1, "Student Name is required."),
@@ -52,6 +53,15 @@ const formSchema = z.object({
 export default function AddStudentForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [busRoutes, setBusRoutes] = useState<BusRoute[]>([]);
+
+  useEffect(() => {
+    async function fetchRoutes() {
+      const routes = await getBusRoutesAction();
+      setBusRoutes(routes);
+    }
+    fetchRoutes();
+  }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -176,7 +186,7 @@ export default function AddStudentForm() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {initialBusRoutes.map(route => (
+                    {busRoutes.map(route => (
                       <SelectItem key={route.id} value={route.busNumber}>{route.busNumber} ({route.name})</SelectItem>
                     ))}
                   </SelectContent>

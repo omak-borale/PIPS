@@ -33,7 +33,8 @@ import { Wrench, Phone, CircleDollarSign, NotebookText, Hammer, Banknote, PlusCi
 import { Separator } from '@/components/ui/separator';
 import type { BusRoute, ServiceHistory } from '@/lib/types';
 import AddRepairForm from '@/components/bus-watch/add-repair-form';
-import { getBusRoutesAction } from '@/app/actions';
+import { getBusRoutesAction, addServiceHistory } from '@/app/actions';
+import { toast } from '@/hooks/use-toast';
 
 export default function BusRepairPage() {
   const [busRoutes, setBusRoutes] = useState<BusRoute[]>([]);
@@ -50,7 +51,7 @@ export default function BusRepairPage() {
   const getRepairStatus = (route: BusRoute) => {
     const lastServiceDate = route.serviceHistory && route.serviceHistory.length > 0
       ? parseISO(route.serviceHistory[0].date)
-      : subDays(parseISO(route.lastFueled), 20); // Mocking service date if no history
+      : subDays(new Date(), 91); // Mock old date if no history
 
     const daysSinceService =
       (new Date().getTime() - lastServiceDate.getTime()) / (1000 * 3600 * 24);
@@ -64,20 +65,33 @@ export default function BusRepairPage() {
     return { text: 'Good', color: 'bg-green-500' };
   };
 
-  const handleAddRepair = (busNumber: string, newService: Omit<ServiceHistory, 'date'> & { date: Date }) => {
-    setBusRoutes(prevRoutes =>
-      prevRoutes.map(route => {
-        if (route.busNumber === busNumber) {
-          const updatedHistory = [
-            { ...newService, date: newService.date.toISOString() },
-            ...(route.serviceHistory || []),
-          ];
-          return { ...route, serviceHistory: updatedHistory };
-        }
-        return route;
-      })
-    );
-    setIsDialogOpen(false);
+  const handleAddRepair = async (busId: string, newService: Omit<ServiceHistory, 'date'> & { date: Date }) => {
+    const serviceToAdd: ServiceHistory = {
+        ...newService,
+        date: newService.date.toISOString(),
+    }
+    const result = await addServiceHistory(busId, serviceToAdd);
+    if(result.success) {
+        setBusRoutes(prevRoutes =>
+            prevRoutes.map(route => {
+                if (route.id === busId) {
+                    return { ...route, serviceHistory: result.data };
+                }
+                return route;
+            })
+        );
+        toast({
+            title: "Repair Logged",
+            description: `Successfully logged a repair for bus.`
+        });
+        setIsDialogOpen(false);
+    } else {
+        toast({
+            variant: "destructive",
+            title: "Error",
+            description: result.error,
+        });
+    }
   };
 
 
@@ -106,7 +120,7 @@ export default function BusRepairPage() {
                     Fill out the form below to log a new service event for a bus.
                   </DialogDescription>
                 </DialogHeader>
-                <AddRepairForm onAddRepair={handleAddRepair} />
+                <AddRepairForm onAddRepair={handleAddRepair} busRoutes={busRoutes} />
               </DialogContent>
             </Dialog>
           </CardHeader>
@@ -126,7 +140,7 @@ export default function BusRepairPage() {
                   const lastServiceHistory = route.serviceHistory?.[0];
                    const lastServiceDate = lastServiceHistory
                     ? parseISO(lastServiceHistory.date)
-                    : subDays(parseISO(route.lastFueled), 20);
+                    : null;
 
                   return (
                     <TableRow key={route.id}>
@@ -135,7 +149,7 @@ export default function BusRepairPage() {
                       </TableCell>
                       <TableCell>{route.name}</TableCell>
                       <TableCell>
-                        {lastServiceHistory ? (
+                        {lastServiceHistory && lastServiceDate ? (
                            <Dialog>
                             <DialogTrigger asChild>
                               <Button variant="link" className="p-0 h-auto">
@@ -208,7 +222,7 @@ export default function BusRepairPage() {
                             </DialogContent>
                           </Dialog>
                         ) : (
-                           format(lastServiceDate, 'PPP')
+                           'No service history'
                         )}
                       </TableCell>
                       <TableCell>

@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 
@@ -34,9 +34,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { initialBusRoutes } from "@/lib/data";
 import { cn } from "@/lib/utils";
-import { addDieselEntry } from "@/app/actions";
+import { addDieselEntry, getBusRoutesAction } from "@/app/actions";
+import type { BusRoute } from "@/lib/types";
 
 const formSchema = z.object({
   busNumber: z.string().min(1, "Bus number is required."),
@@ -56,6 +56,16 @@ const formSchema = z.object({
 export default function DieselEntryForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [busRoutes, setBusRoutes] = useState<BusRoute[]>([]);
+
+  useEffect(() => {
+    async function fetchRoutes() {
+      const routes = await getBusRoutesAction();
+      setBusRoutes(routes);
+    }
+    fetchRoutes();
+  }, []);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -105,7 +115,7 @@ export default function DieselEntryForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {initialBusRoutes.map(route => (
+                  {busRoutes.map(route => (
                     <SelectItem key={route.id} value={route.busNumber}>{route.busNumber} ({route.name})</SelectItem>
                   ))}
                 </SelectContent>

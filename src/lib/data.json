@@ -494,5 +494,21 @@
       "pageNumber": 4
     }
   ],
-  "dailyLogs": []
+  "dailyLogs": [],
+  "settings": {
+    "general": {
+      "appTheme": "light",
+      "notifications": true,
+      "currency": "INR"
+    },
+    "busFees": {
+      "monthlyFee": 1500,
+      "lateFee": 100
+    },
+    "profile": {
+      "schoolName": "Patri Swamy International Public School",
+      "contactNumber": "+91 9876543210",
+      "address": "Aurad (B), Karnataka"
+    }
+  }
 }

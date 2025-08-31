@@ -2,7 +2,7 @@
 'use server';
 import { analyzeBusDisruptions } from '@/ai/flows/analyze-bus-disruptions';
 import { hashPassword } from '@/lib/crypto';
-import type { Student, BusRoute, DieselEntry, DailyLog, Arrival, ServiceHistory } from '@/lib/types';
+import type { Student, BusRoute, DieselEntry, DailyLog, Arrival, ServiceHistory, GeneralSettings, BusFeesSettings, ProfileSettings } from '@/lib/types';
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, query, where, writeBatch } from 'firebase/firestore';
@@ -68,6 +68,14 @@ export async function seedDatabaseAction() {
             const docRef = doc(arrivalsCollection, id);
             batch.set(docRef, arrivalData);
         });
+
+        // Seed settings
+        const settingsCollection = collection(db, 'settings');
+        Object.entries(initialData.settings).forEach(([key, value]) => {
+            const docRef = doc(settingsCollection, key);
+            batch.set(docRef, value);
+        });
+
 
         await batch.commit();
         revalidatePath('/'); // Revalidate all paths to be safe
@@ -156,6 +164,8 @@ export async function addBusRoute(route: Omit<BusRoute, 'id' | 'fuelLevel' | 'la
 
         revalidatePath('/dashboard/settings');
         revalidatePath('/dashboard/routes');
+        revalidatePath('/dashboard/add-route');
+
 
         return { success: true };
     } catch (error) {
@@ -231,6 +241,8 @@ export async function addArrival(arrival: Omit<Arrival, 'id'>) {
         const docRef = await addDoc(collection(db, 'arrivals'), arrival);
         revalidatePath('/dashboard/settings');
         revalidatePath('/dashboard');
+        revalidatePath('/dashboard/arrival-times');
+
         return { success: true, data: { id: docRef.id, ...arrival } };
     } catch (error) {
         console.error(error);
@@ -246,6 +258,8 @@ export async function updateArrival(arrival: Arrival) {
 
         revalidatePath('/dashboard/settings');
         revalidatePath('/dashboard');
+        revalidatePath('/dashboard/arrival-times');
+
         return { success: true, data: arrival };
     } catch (error) {
         console.error(error);
@@ -258,6 +272,7 @@ export async function deleteArrival(arrivalId: string) {
         await deleteDoc(doc(db, 'arrivals', arrivalId));
         revalidatePath('/dashboard/settings');
         revalidatePath('/dashboard');
+        revalidatePath('/dashboard/arrival-times');
         return { success: true, data: { id: arrivalId } };
     } catch (error) {
         console.error(error);
@@ -282,3 +297,23 @@ export async function addServiceHistory(busId: string, serviceHistory: ServiceHi
         return { success: false, error: 'Failed to add service history.' };
     }
 }
+
+
+export async function getGeneralSettingsAction(): Promise<GeneralSettings | null> {
+    const docRef = doc(db, 'settings', 'general');
+    const docSnap = await getDoc(docRef);
+    return docToData<GeneralSettings>(docSnap);
+}
+
+export async function getBusFeesSettingsAction(): Promise<BusFeesSettings | null> {
+    const docRef = doc(db, 'settings', 'busFees');
+    const docSnap = await getDoc(docRef);
+    return docToData<BusFeesSettings>(docSnap);
+}
+
+export async function getProfileSettingsAction(): Promise<ProfileSettings | null> {
+    const docRef = doc(db, 'settings', 'profile');
+    const docSnap = await getDoc(docRef);
+    return docToData<ProfileSettings>(docSnap);
+}
+

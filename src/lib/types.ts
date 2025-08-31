@@ -85,3 +85,23 @@ export type RealTimeBusLocation = {
     lon: number;
     timestamp: string;
 }
+
+export type GeneralSettings = {
+  id: string;
+  appTheme: "light" | "dark";
+  notifications: boolean;
+  currency: string;
+}
+
+export type BusFeesSettings = {
+  id: string;
+  monthlyFee: number;
+  lateFee: number;
+}
+
+export type ProfileSettings = {
+  id: string;
+  schoolName: string;
+  contactNumber: string;
+  address: string;
+}

@@ -321,4 +321,44 @@ export async function getProfileSettingsAction(): Promise<ProfileSettings | null
     return docToData<ProfileSettings>(docSnap);
 }
 
+export async function getAllDataAsJsonAction() {
+    try {
+        const students = await getStudentsAction();
+        const busRoutes = await getBusRoutesAction();
+        const dieselEntries = await getDieselEntriesAction();
+        const dailyLogs = await getDailyLogsAction();
+        const arrivals = await getArrivalsAction();
+
+        const generalSettings = await getGeneralSettingsAction();
+        const busFeesSettings = await getBusFeesSettingsAction();
+        const profileSettings = await getProfileSettingsAction();
+        
+        const settings = {
+            general: generalSettings,
+            busFees: busFeesSettings,
+            profile: profileSettings,
+        }
+
+        const allData = {
+            students,
+            busRoutes,
+            dieselEntries,
+            dailyLogs,
+            arrivals,
+            settings,
+            // Include other data from the original data.json if needed
+            realTimeBusLocations: initialData.realTimeBusLocations,
+            stops: initialData.stops,
+
+        };
+
+        return { success: true, data: JSON.stringify(allData, null, 2) };
+    } catch (error) {
+        console.error('Error exporting all data to JSON:', error);
+        if (error instanceof Error) {
+            return { success: false, error: error.message };
+        }
+        return { success: false, error: 'An unknown error occurred while exporting data.' };
+    }
+}
     

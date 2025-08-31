@@ -6,6 +6,7 @@ import type { Student, BusRoute, DieselEntry, DailyLog, Arrival } from '@/lib/ty
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, query, where, writeBatch } from 'firebase/firestore';
+import initialData from '@/lib/data.json';
 
 // Helper function to convert Firestore snapshot to array
 function snapshotToData<T>(snapshot: any): T[] {
@@ -22,6 +23,54 @@ function docToData<T>(docSnap: any): T | null {
         return { id: docSnap.id, ...docSnap.data() } as unknown as T;
     }
     return null;
+}
+
+export async function seedDatabaseAction() {
+    try {
+        const batch = writeBatch(db);
+
+        // Seed students
+        const studentsCollection = collection(db, 'students');
+        initialData.students.forEach(student => {
+            const { id, ...studentData } = student;
+            const docRef = doc(studentsCollection, id);
+            batch.set(docRef, studentData);
+        });
+
+        // Seed bus routes
+        const busRoutesCollection = collection(db, 'busRoutes');
+        initialData.busRoutes.forEach(route => {
+            const { id, ...routeData } = route;
+            const docRef = doc(busRoutesCollection, id);
+            batch.set(docRef, routeData);
+        });
+
+        // Seed diesel entries
+        const dieselEntriesCollection = collection(db, 'dieselEntries');
+        initialData.dieselEntries.forEach(entry => {
+            const { id, ...entryData } = entry;
+            const docRef = doc(dieselEntriesCollection, id);
+            batch.set(docRef, entryData);
+        });
+        
+        // Seed arrivals
+        const arrivalsCollection = collection(db, 'arrivals');
+        initialData.arrivals.forEach(arrival => {
+            const { id, ...arrivalData } = arrival;
+            const docRef = doc(arrivalsCollection, id);
+            batch.set(docRef, arrivalData);
+        });
+
+        await batch.commit();
+        revalidatePath('/dashboard');
+        return { success: true, message: "Database seeded successfully!" };
+    } catch (error) {
+        console.error("Error seeding database:", error);
+        if (error instanceof Error) {
+            return { success: false, error: error.message };
+        }
+        return { success: false, error: "An unknown error occurred while seeding the database." };
+    }
 }
 
 

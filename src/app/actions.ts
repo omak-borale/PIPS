@@ -32,9 +32,9 @@ export async function seedDatabaseAction() {
         // Seed students
         const studentsCollection = collection(db, 'students');
         initialData.students.forEach(student => {
-            const { id, address, ...studentData } = student as Omit<Student, 'id' | 'village'> & {id: string, address: string};
+            const { id, ...studentData } = student;
             const docRef = doc(studentsCollection, id);
-            batch.set(docRef, { ...studentData, village: address });
+            batch.set(docRef, { ...studentData, village: studentData.address });
         });
 
         // Seed bus routes
@@ -320,7 +320,5 @@ export async function getProfileSettingsAction(): Promise<ProfileSettings | null
     const docSnap = await getDoc(docRef);
     return docToData<ProfileSettings>(docSnap);
 }
-
-    
 
     

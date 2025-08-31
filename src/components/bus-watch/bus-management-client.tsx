@@ -92,6 +92,8 @@ export default function BusManagementClient({ students }: BusManagementClientPro
           <TableHeader>
             <TableRow>
               <TableHead>Student Name</TableHead>
+              <TableHead>Class</TableHead>
+              <TableHead>Section</TableHead>
               <TableHead>Village</TableHead>
               <TableHead>Bus Number</TableHead>
               <TableHead>Uses Bus</TableHead>
@@ -105,6 +107,8 @@ export default function BusManagementClient({ students }: BusManagementClientPro
                     {student.name}
                   </Link>
                 </TableCell>
+                <TableCell>{student.class}</TableCell>
+                <TableCell>{student.section}</TableCell>
                 <TableCell>{student.village}</TableCell>
                 <TableCell>{student.busNumber || 'N/A'}</TableCell>
                 <TableCell>
@@ -119,7 +123,7 @@ export default function BusManagementClient({ students }: BusManagementClientPro
             ))}
              {filteredStudents.length === 0 && (
               <TableRow>
-                <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                   No students found matching your criteria.
                 </TableCell>
               </TableRow>

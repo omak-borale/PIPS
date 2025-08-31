@@ -35,6 +35,8 @@ import type { BusRoute } from "@/lib/types";
 const formSchema = z.object({
   name: z.string().min(1, "Student Name is required."),
   fatherName: z.string().min(1, "Father's Name is required."),
+  class: z.string().min(1, "Class is required."),
+  section: z.string().min(1, "Section is required."),
   parentContact: z.string().min(1, "Contact number is required."),
   village: z.string().min(1, "Village is required."),
   route: z.string().min(1, "Route is required."),
@@ -70,6 +72,8 @@ export default function AddStudentForm() {
     defaultValues: {
       name: "",
       fatherName: "",
+      class: "",
+      section: "",
       parentContact: "",
       village: "",
       route: "",
@@ -103,33 +107,65 @@ export default function AddStudentForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Student Name</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g., Jane Doe" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-         <FormField
-          control={form.control}
-          name="fatherName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Father Name</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g., John Doe" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <div className="grid md:grid-cols-2 gap-4">
+            <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Student Name</FormLabel>
+                <FormControl>
+                    <Input placeholder="e.g., Jane Doe" {...field} />
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+            <FormField
+            control={form.control}
+            name="fatherName"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Father Name</FormLabel>
+                <FormControl>
+                    <Input placeholder="e.g., John Doe" {...field} />
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-4">
+             <FormField
+            control={form.control}
+            name="class"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Class</FormLabel>
+                <FormControl>
+                    <Input placeholder="e.g., 10" {...field} />
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+             <FormField
+            control={form.control}
+            name="section"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Section</FormLabel>
+                <FormControl>
+                    <Input placeholder="e.g., A" {...field} />
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+        </div>
+        
         <FormField
           control={form.control}
           name="parentContact"
@@ -236,7 +272,7 @@ export default function AddStudentForm() {
             )}
           />
         )}
-        <div className="flex justify-end">
+        <div className="flex justify-end pt-4">
           <Button type="submit" disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Add Student

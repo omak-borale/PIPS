@@ -10,7 +10,7 @@ import {
 import { notFound } from 'next/navigation';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Phone, Home, User, Bus, Route, IndianRupee } from 'lucide-react';
+import { Phone, Home, User, Bus, Route, IndianRupee, School, BookOpen } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
@@ -69,6 +69,22 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
                     <p className="font-medium">{student.fatherName}</p>
                   </div>
                 </div>
+                <div className="flex items-center gap-3">
+                  <School className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm text-muted-foreground">Class</p>
+                    <p className="font-medium">{student.class || 'N/A'}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <BookOpen className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm text-muted-foreground">Section</p>
+                    <p className="font-medium">{student.section || 'N/A'}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-4">
                  <div className="flex items-center gap-3">
                   <Phone className="h-5 w-5 text-muted-foreground" />
                   <div>
@@ -83,8 +99,6 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
                     <p className="font-medium">{student.village}</p>
                   </div>
                 </div>
-              </div>
-              <div className="space-y-4">
                  <div className="flex items-center gap-3">
                   <Route className="h-5 w-5 text-muted-foreground" />
                   <div>

@@ -55,6 +55,8 @@ export type Student = {
     fatherName: string;
     parentContact: string;
     village: string;
+    class: string;
+    section: string;
     route?: string;
     amount?: number;
     busNumber?: string;

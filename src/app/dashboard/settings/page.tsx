@@ -239,7 +239,7 @@ export default function SettingsPage() {
                     Add New Route
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent className="max-w-md">
                   <DialogHeader>
                     <DialogTitle>Add a New Bus Route</DialogTitle>
                     <DialogDescription>

@@ -40,7 +40,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <SidebarContent>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <Link href="/dashboard" passHref>
+                  <Link href="/dashboard">
                     <SidebarMenuButton asChild tooltip="Dashboard">
                       <span>
                         <LayoutDashboard />
@@ -50,7 +50,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                   </Link>
                 </SidebarMenuItem>
                  <SidebarMenuItem>
-                   <Link href="/dashboard/driver" passHref>
+                   <Link href="/dashboard/driver">
                     <SidebarMenuButton asChild tooltip="Driver Dashboard">
                       <span>
                         <User />
@@ -60,7 +60,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                    </Link>
                 </SidebarMenuItem>
                  <SidebarMenuItem>
-                   <Link href="/dashboard/student-locator" passHref>
+                   <Link href="/dashboard/student-locator">
                     <SidebarMenuButton asChild tooltip="Student Locator">
                       <span>
                         <Contact />
@@ -70,7 +70,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                    </Link>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                   <Link href="/dashboard/routes" passHref>
+                   <Link href="/dashboard/routes">
                     <SidebarMenuButton asChild tooltip="Routes">
                       <span>
                         <Route />
@@ -80,7 +80,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                    </Link>
                 </SidebarMenuItem>
                  <SidebarMenuItem>
-                   <Link href="/dashboard/diesel" passHref>
+                   <Link href="/dashboard/diesel">
                     <SidebarMenuButton asChild tooltip="Diesel">
                       <span>
                         <Fuel />
@@ -90,7 +90,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                    </Link>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                   <Link href="/dashboard/diesel-entry" passHref>
+                   <Link href="/dashboard/diesel-entry">
                     <SidebarMenuButton asChild tooltip="Diesel Entry">
                       <span>
                         <PencilLine />
@@ -100,7 +100,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                    </Link>
                 </SidebarMenuItem>
                  <SidebarMenuItem>
-                  <Link href="/dashboard/diesel-details" passHref>
+                  <Link href="/dashboard/diesel-details">
                     <SidebarMenuButton asChild tooltip="Diesel Details">
                       <span>
                         <BookText />
@@ -110,7 +110,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                   </Link>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                  <Link href="/dashboard/daily-log" passHref>
+                  <Link href="/dashboard/daily-log">
                     <SidebarMenuButton asChild tooltip="Daily Log">
                       <span>
                         <ClipboardList />
@@ -120,7 +120,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                   </Link>
                 </SidebarMenuItem>
                  <SidebarMenuItem>
-                  <Link href="/dashboard/daily-log-details" passHref>
+                  <Link href="/dashboard/daily-log-details">
                     <SidebarMenuButton asChild tooltip="Daily Log Details">
                       <span>
                         <ListOrdered />
@@ -130,7 +130,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                   </Link>
                 </SidebarMenuItem>
                  <SidebarMenuItem>
-                  <Link href="/dashboard/student-entry" passHref>
+                  <Link href="/dashboard/student-entry">
                     <SidebarMenuButton asChild tooltip="Student Entry">
                       <span>
                         <UserPlus />
@@ -140,7 +140,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                   </Link>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                  <Link href="/dashboard/bus-management" passHref>
+                  <Link href="/dashboard/bus-management">
                     <SidebarMenuButton asChild tooltip="Bus management">
                       <span>
                         <Bus />
@@ -150,7 +150,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                   </Link>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                  <Link href="/dashboard/bus-repair" passHref>
+                  <Link href="/dashboard/bus-repair">
                     <SidebarMenuButton asChild tooltip="Bus Repair">
                       <span>
                         <Wrench />
@@ -160,7 +160,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                   </Link>
                 </SidebarMenuItem>
                  <SidebarMenuItem>
-                  <Link href="/dashboard/disruption-analysis" passHref>
+                  <Link href="/dashboard/disruption-analysis">
                     <SidebarMenuButton asChild tooltip="Disruption Analysis">
                       <span>
                         <Bot />
@@ -170,7 +170,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                   </Link>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                  <Link href="/dashboard/alerts" passHref>
+                  <Link href="/dashboard/alerts">
                     <SidebarMenuButton asChild tooltip="Alerts">
                       <span>
                         <Bell />
@@ -184,7 +184,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <SidebarFooter>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <Link href="/dashboard/settings" passHref>
+                  <Link href="/dashboard/settings">
                     <SidebarMenuButton asChild tooltip="Settings">
                       <span>
                         <Settings />

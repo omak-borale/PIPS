@@ -65,9 +65,9 @@ export default function AddRouteForm({ onRouteAdded }: AddRouteFormProps) {
         onRouteAdded();
     } else {
         toast({
-            variant: "destructive",
             title: "Error",
-            description: result?.error || "Failed to add route. Please try again.",
+            description: "Failed to add route. Please try again.",
+            variant: "destructive", 
         });
     }
   }

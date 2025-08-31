@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -23,6 +22,13 @@ const nextConfig = {
       },
     ],
   },
+  experimental: {
+    allowedDevOrigins: [
+      "http://localhost:3001",
+      "http://localhost:3002",
+      "http://localhost:9003"
+    ]
+  }
 };
 
 export default nextConfig;

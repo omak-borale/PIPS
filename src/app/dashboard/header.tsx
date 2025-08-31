@@ -8,6 +8,7 @@ const getTitleFromPath = (path: string) => {
   if (path.startsWith('/dashboard/driver')) return 'Driver Dashboard';
   if (path.startsWith('/dashboard/routes')) return 'Bus Routes';
   if (path.startsWith('/dashboard/add-route')) return 'Add Bus Route';
+  if (path.startsWith('/dashboard/arrival-times')) return 'Arrival Times';
   if (path.startsWith('/dashboard/diesel-entry')) return 'Diesel Entry';
   if (path.startsWith('/dashboard/diesel-details')) return 'Diesel Details';
   if (path.startsWith('/dashboard/student-entry')) return 'Student Entry';

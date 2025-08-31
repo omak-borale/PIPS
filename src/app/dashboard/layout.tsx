@@ -10,7 +10,7 @@ import {
   SidebarContent,
   SidebarFooter,
 } from '@/components/ui/sidebar';
-import { LayoutDashboard, Route, Bus, Settings, Bell, Fuel, PencilLine, UserPlus, Wrench, BookText, User, ClipboardList, ListOrdered, Bot, Contact, PlusCircle } from 'lucide-react';
+import { LayoutDashboard, Route, Bus, Settings, Bell, Fuel, PencilLine, UserPlus, Wrench, BookText, User, ClipboardList, ListOrdered, Bot, Contact, PlusCircle, Clock } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { ReactNode } from 'react';
 import Link from 'next/link';
@@ -88,6 +88,16 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                       </span>
                     </SidebarMenuButton>
                    </Link>
+                </SidebarMenuItem>
+                 <SidebarMenuItem>
+                  <Link href="/dashboard/arrival-times">
+                    <SidebarMenuButton asChild tooltip="Arrival Times">
+                      <span>
+                        <Clock />
+                        Arrival Times
+                      </span>
+                    </SidebarMenuButton>
+                  </Link>
                 </SidebarMenuItem>
                  <SidebarMenuItem>
                    <Link href="/dashboard/diesel">

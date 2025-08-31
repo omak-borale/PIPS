@@ -10,7 +10,7 @@ import {
 import { notFound } from 'next/navigation';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Phone, Home, User, Bus } from 'lucide-react';
+import { Phone, Home, User, Bus, Route, IndianRupee } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
@@ -76,13 +76,27 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
                     <p className="font-medium">{student.parentContact}</p>
                   </div>
                 </div>
-              </div>
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
+                 <div className="flex items-center gap-3">
                   <Home className="h-5 w-5 text-muted-foreground" />
                   <div>
                     <p className="text-sm text-muted-foreground">Village</p>
-                    <p className="font-medium">{student.address}</p>
+                    <p className="font-medium">{student.village}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-4">
+                 <div className="flex items-center gap-3">
+                  <Route className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm text-muted-foreground">Route</p>
+                    <p className="font-medium">{student.route || 'N/A'}</p>
+                  </div>
+                </div>
+                 <div className="flex items-center gap-3">
+                  <IndianRupee className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm text-muted-foreground">Amount (₹)</p>
+                    <p className="font-medium">{student.amount?.toLocaleString() || 'N/A'}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">

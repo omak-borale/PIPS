@@ -32,9 +32,9 @@ export async function seedDatabaseAction() {
         // Seed students
         const studentsCollection = collection(db, 'students');
         initialData.students.forEach(student => {
-            const { id, ...studentData } = student;
+            const { id, address, ...studentData } = student as Omit<Student, 'id' | 'village'> & {id: string, address: string};
             const docRef = doc(studentsCollection, id);
-            batch.set(docRef, studentData);
+            batch.set(docRef, { ...studentData, village: address });
         });
 
         // Seed bus routes
@@ -144,9 +144,13 @@ export async function addStudent(student: Omit<Student, 'id'>) {
     try {
         const docRef = await addDoc(collection(db, 'students'), student);
         revalidatePath('/dashboard/bus-management');
+        revalidatePath('/dashboard/student-entry');
         return { success: true, data: {id: docRef.id, ...student} };
     } catch (error) {
         console.error(error);
+        if (error instanceof Error) {
+            return { success: false, error: error.message };
+        }
         return { success: false, error: 'Failed to add student.' };
     }
 }

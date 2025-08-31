@@ -36,11 +36,11 @@ export default function BusManagementClient({ students }: BusManagementClientPro
   const [selectedVillage, setSelectedVillage] = useState('all');
   const [selectedBus, setSelectedBus] = useState('all');
 
-  const uniqueVillages = ['all', ...Array.from(new Set(students.map(s => s.address)))];
+  const uniqueVillages = ['all', ...Array.from(new Set(students.map(s => s.village)))];
   const uniqueBuses = ['all', ...Array.from(new Set(students.filter(s => s.busNumber).map(s => s.busNumber!)))];
 
   const filteredStudents = students.filter(student => {
-    const villageMatch = selectedVillage === 'all' || student.address === selectedVillage;
+    const villageMatch = selectedVillage === 'all' || student.village === selectedVillage;
     const busMatch = selectedBus === 'all' || student.busNumber === selectedBus;
     return villageMatch && busMatch;
   });
@@ -105,7 +105,7 @@ export default function BusManagementClient({ students }: BusManagementClientPro
                     {student.name}
                   </Link>
                 </TableCell>
-                <TableCell>{student.address}</TableCell>
+                <TableCell>{student.village}</TableCell>
                 <TableCell>{student.busNumber || 'N/A'}</TableCell>
                 <TableCell>
                   <Badge

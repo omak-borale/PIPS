@@ -36,7 +36,9 @@ const formSchema = z.object({
   name: z.string().min(1, "Student Name is required."),
   fatherName: z.string().min(1, "Father's Name is required."),
   parentContact: z.string().min(1, "Contact number is required."),
-  address: z.string().min(1, "Address is required."),
+  village: z.string().min(1, "Village is required."),
+  route: z.string().min(1, "Route is required."),
+  amount: z.coerce.number().min(0, "Amount must be a positive number."),
   usesBus: z.boolean().default(false),
   busNumber: z.string().optional(),
 }).refine(data => {
@@ -69,7 +71,9 @@ export default function AddStudentForm() {
       name: "",
       fatherName: "",
       parentContact: "",
-      address: "",
+      village: "",
+      route: "",
+      amount: 0,
       usesBus: false,
     },
   });
@@ -141,16 +145,51 @@ export default function AddStudentForm() {
         />
         <FormField
           control={form.control}
-          name="address"
+          name="village"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Village / Address</FormLabel>
+              <FormLabel>Village</FormLabel>
               <FormControl>
                 <Input placeholder="e.g., Sunnyvale" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
+        />
+         <FormField
+            control={form.control}
+            name="route"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Route</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a route" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {busRoutes.map(route => (
+                      <SelectItem key={route.id} value={route.description}>{route.description}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        <FormField
+            control={form.control}
+            name="amount"
+            render={({ field }) => (
+            <FormItem>
+                <FormLabel>Amount (₹)</FormLabel>
+                <FormControl>
+                <Input type="number" placeholder="e.g., 1500" {...field} />
+                </FormControl>
+                <FormMessage />
+            </FormItem>
+            )}
         />
         <FormField
           control={form.control}

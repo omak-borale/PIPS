@@ -141,7 +141,7 @@ export default function DriverDashboardClient({ busRoutes, students }: DriverDas
                 <TableHeader>
                   <TableRow>
                     <TableHead>Student Name</TableHead>
-                    <TableHead>Village / Address</TableHead>
+                    <TableHead>Village</TableHead>
                     <TableHead>Parent's Contact</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -156,7 +156,7 @@ export default function DriverDashboardClient({ busRoutes, students }: DriverDas
                           {student.name}
                         </Link>
                       </TableCell>
-                      <TableCell>{student.address}</TableCell>
+                      <TableCell>{student.village}</TableCell>
                       <TableCell>{student.parentContact}</TableCell>
                     </TableRow>
                   ))}

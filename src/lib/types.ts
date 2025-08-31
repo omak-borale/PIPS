@@ -54,7 +54,9 @@ export type Student = {
     usesBus: boolean;
     fatherName: string;
     parentContact: string;
-    address: string;
+    village: string;
+    route?: string;
+    amount?: number;
     busNumber?: string;
     lat?: number;
     lon?: number;

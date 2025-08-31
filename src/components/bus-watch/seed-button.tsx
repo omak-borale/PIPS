@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { seedDatabaseAction } from '@/app/actions';
 import { useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 
 export default function SeedButton() {
   const [isSeeding, setIsSeeding] = useState(false);
@@ -15,7 +16,8 @@ export default function SeedButton() {
   const handleSeedDatabase = async () => {
     setIsSeeding(true);
     const result = await seedDatabaseAction();
-    if (result.success) {
+
+    if (result && result.success) {
       toast({
         title: "Database Seeded",
         description: result.message,
@@ -33,6 +35,7 @@ export default function SeedButton() {
 
   return (
     <Button onClick={handleSeedDatabase} disabled={isSeeding}>
+      {isSeeding && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
       {isSeeding ? 'Seeding...' : 'Seed Database'}
     </Button>
   );

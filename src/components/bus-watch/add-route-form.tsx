@@ -36,11 +36,7 @@ const formSchema = z.object({
   status: z.enum(["Active", "Inactive"]),
 });
 
-type AddRouteFormProps = {
-    onRouteAdded: () => void;
-}
-
-export default function AddRouteForm({ onRouteAdded }: AddRouteFormProps) {
+export default function AddRouteForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -64,7 +60,6 @@ export default function AddRouteForm({ onRouteAdded }: AddRouteFormProps) {
         description: `Successfully added the ${values.name} route`,
       });
       form.reset();
-      onRouteAdded();
       router.push('/dashboard/routes');
     } else {
       toast({
@@ -126,7 +121,7 @@ export default function AddRouteForm({ onRouteAdded }: AddRouteFormProps) {
             render={({ field }) => (
                 <FormItem>
                 <FormLabel>Status</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select onValuechange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                     <SelectTrigger>
                         <SelectValue placeholder="Select a status" />

@@ -6,8 +6,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import AddRouteForm from '@/components/bus-watch/add-route-form';
-import { useRouter } from 'next/navigation';
-
 
 export default function AddBusRoutePage() {
   
@@ -22,10 +20,7 @@ export default function AddBusRoutePage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <AddRouteForm onRouteAdded={() => {
-                // useRouter is a client hook, so we can't use it directly here.
-                // The form itself will handle redirection.
-            }} />
+            <AddRouteForm />
           </CardContent>
         </Card>
       </div>

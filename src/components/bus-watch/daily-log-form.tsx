@@ -109,7 +109,7 @@ export default function DailyLogForm() {
                   </FormControl>
                   <SelectContent>
                     {busRoutes.map(route => (
-                      <SelectItem key={route.id} value={route.busNumber}>{route.busNumber} ({route.name})</SelectItem>
+                      <SelectItem key={route.id} value={route.busNumber}>{route.busNumber} ({route.driverName})</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>

@@ -97,7 +97,7 @@ export default function BusManagementClient({ students }: BusManagementClientPro
                     {student.name}
                   </Link>
                 </TableCell>
-                <TableCell>{student.class}</TableCell>
+                <TableCell>{student.class} '{student.section}'</TableCell>
                 <TableCell>{student.busNumber || 'N/A'}</TableCell>
                 <TableCell>{student.fees?.toLocaleString()}</TableCell>
               </TableRow>

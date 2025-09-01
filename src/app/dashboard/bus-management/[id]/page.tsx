@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/card';
 import { notFound } from 'next/navigation';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Phone, User, Bus, School, IndianRupee } from 'lucide-react';
+import { Phone, User, Bus, School, IndianRupee, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
@@ -52,37 +52,47 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <User className="h-5 w-5 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Student Name</p>
-                    <p className="font-medium">{student.name}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <School className="h-5 w-5 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Class</p>
-                    <p className="font-medium">{student.class || 'N/A'}</p>
-                  </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8">
+              <div className="flex items-center gap-3">
+                <User className="h-5 w-5 text-muted-foreground" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Student Name</p>
+                  <p className="font-medium">{student.name}</p>
                 </div>
               </div>
-              <div className="space-y-4">
-                 <div className="flex items-center gap-3">
-                  <Bus className="h-5 w-5 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Bus Number</p>
-                    <p className="font-medium">{student.busNumber || 'N/A'}</p>
-                  </div>
+              <div className="flex items-center gap-3">
+                <School className="h-5 w-5 text-muted-foreground" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Class</p>
+                  <p className="font-medium">{student.class} '{student.section}'</p>
                 </div>
-                 <div className="flex items-center gap-3">
-                  <IndianRupee className="h-5 w-5 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Fees (₹)</p>
-                    <p className="font-medium">{student.fees?.toLocaleString() || 'N/A'}</p>
-                  </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Bus className="h-5 w-5 text-muted-foreground" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Bus Number</p>
+                  <p className="font-medium">{student.busNumber || 'N/A'}</p>
+                </div>
+              </div>
+               <div className="flex items-center gap-3">
+                <IndianRupee className="h-5 w-5 text-muted-foreground" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Fees (₹)</p>
+                  <p className="font-medium">{student.fees?.toLocaleString() || 'N/A'}</p>
+                </div>
+              </div>
+               <div className="flex items-center gap-3">
+                <MapPin className="h-5 w-5 text-muted-foreground" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Village</p>
+                  <p className="font-medium">{student.village || 'N/A'}</p>
+                </div>
+              </div>
+               <div className="flex items-center gap-3">
+                <Phone className="h-5 w-5 text-muted-foreground" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Parent's Contact</p>
+                  <p className="font-medium">{student.parentContact || 'N/A'}</p>
                 </div>
               </div>
             </div>

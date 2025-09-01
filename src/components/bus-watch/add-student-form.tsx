@@ -36,6 +36,8 @@ const formSchema = z.object({
   section: z.string().min(1, "Section is required."),
   busNumber: z.string().min(1, "Bus Number is required"),
   fees: z.coerce.number().min(0, "Fees must be a positive number."),
+  village: z.string().min(1, "Village is required."),
+  parentContact: z.string().min(1, "Parent's contact is required."),
 });
 
 
@@ -60,6 +62,8 @@ export default function AddStudentForm() {
       section: "",
       busNumber: "",
       fees: 0,
+      village: "",
+      parentContact: "",
     },
   });
 
@@ -165,7 +169,32 @@ export default function AddStudentForm() {
             </FormItem>
             )}
         />
-       
+       <FormField
+          control={form.control}
+          name="village"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Village</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g., Ujani" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="parentContact"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Parent's Contact Number</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g., 9876543210" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <div className="flex justify-end pt-4">
           <Button type="submit" disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

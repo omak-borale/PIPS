@@ -1,3 +1,4 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,22 +25,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import { addBusRoute } from "@/app/actions";
 
 
 const formSchema = z.object({
-  name: z.string().min(1, "Driver Name is required."),
-  description: z.string().min(1, "Village routes are required."),
+  driverName: z.string().min(1, "Driver Name is required."),
+  route: z.string().min(1, "Route is required."),
   busNumber: z.string().min(1, "Bus number is required."),
-  status: z.enum(["Active", "Inactive"]),
+  contact: z.string().min(1, "Contact is required."),
 });
 
 
@@ -49,10 +43,10 @@ export default function AddBusRoutePage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      description: "",
+      driverName: "",
+      route: "",
       busNumber: "",
-      status: "Active",
+      contact: "",
     },
   });
 
@@ -64,7 +58,7 @@ export default function AddBusRoutePage() {
     if (result && result.success) {
       toast({
         title: "Route Added",
-        description: `Successfully added the ${values.name} route.`,
+        description: `Successfully added the route for ${values.driverName}.`,
       });
       form.reset();
       router.push('/dashboard/routes');
@@ -90,70 +84,58 @@ export default function AddBusRoutePage() {
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <div className="grid md:grid-cols-2 gap-4">
-                    <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>Driver Name</FormLabel>
-                        <FormControl>
-                            <Input placeholder="e.g., John Doe" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                    />
-                    <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>Village Routes</FormLabel>
-                        <FormControl>
-                            <Input placeholder="e.g., Town Hall to West Village" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                    />
-                </div>
-                <div className="grid md:grid-cols-2 gap-4">
-                    <FormField
-                    control={form.control}
-                    name="busNumber"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>Bus Number</FormLabel>
-                        <FormControl>
-                            <Input placeholder="e.g., B-42" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                    />
-                    <FormField
-                    control={form.control}
-                    name="status"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>Status</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Select a status" />
-                            </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                            <SelectItem value="Active">Active</SelectItem>
-                            <SelectItem value="Inactive">Inactive</SelectItem>
-                            </SelectContent>
-                        </Select>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                    />
-                </div>
+                 <FormField
+                  control={form.control}
+                  name="busNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Bus Number</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., MH12AB1234" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="driverName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Driver Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., Ramesh" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="route"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Route</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., Village A - School" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                 <FormField
+                  control={form.control}
+                  name="contact"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Contact</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., 9876543210" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <div className="flex justify-end pt-4">
                    <Button type="submit" disabled={isLoading}>
                     {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

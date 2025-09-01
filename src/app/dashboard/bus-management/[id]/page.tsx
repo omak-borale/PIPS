@@ -9,8 +9,7 @@ import {
 } from '@/components/ui/card';
 import { notFound } from 'next/navigation';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Phone, Home, User, Bus, Route, IndianRupee, School, BookOpen } from 'lucide-react';
+import { Phone, User, Bus, School, IndianRupee } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
@@ -63,77 +62,28 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <User className="h-5 w-5 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Father Name</p>
-                    <p className="font-medium">{student.fatherName}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
                   <School className="h-5 w-5 text-muted-foreground" />
                   <div>
                     <p className="text-sm text-muted-foreground">Class</p>
                     <p className="font-medium">{student.class || 'N/A'}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <BookOpen className="h-5 w-5 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Section</p>
-                    <p className="font-medium">{student.section || 'N/A'}</p>
-                  </div>
-                </div>
               </div>
               <div className="space-y-4">
                  <div className="flex items-center gap-3">
-                  <Phone className="h-5 w-5 text-muted-foreground" />
+                  <Bus className="h-5 w-5 text-muted-foreground" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Parent's Contact</p>
-                    <p className="font-medium">{student.parentContact}</p>
-                  </div>
-                </div>
-                 <div className="flex items-center gap-3">
-                  <Home className="h-5 w-5 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Village</p>
-                    <p className="font-medium">{student.village}</p>
-                  </div>
-                </div>
-                 <div className="flex items-center gap-3">
-                  <Route className="h-5 w-5 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Route</p>
-                    <p className="font-medium">{student.route || 'N/A'}</p>
+                    <p className="text-sm text-muted-foreground">Bus Number</p>
+                    <p className="font-medium">{student.busNumber || 'N/A'}</p>
                   </div>
                 </div>
                  <div className="flex items-center gap-3">
                   <IndianRupee className="h-5 w-5 text-muted-foreground" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Amount (₹)</p>
-                    <p className="font-medium">{student.amount?.toLocaleString() || 'N/A'}</p>
+                    <p className="text-sm text-muted-foreground">Fees (₹)</p>
+                    <p className="font-medium">{student.fees?.toLocaleString() || 'N/A'}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <Bus className="h-5 w-5 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Uses Bus Service</p>
-                     <Badge
-                      variant={student.usesBus ? 'default' : 'secondary'}
-                      className={student.usesBus ? 'bg-green-500 text-white' : ''}
-                    >
-                      {student.usesBus ? 'Yes' : 'No'}
-                    </Badge>
-                  </div>
-                </div>
-                {student.usesBus && student.busNumber && (
-                   <div className="flex items-center gap-3">
-                    <Bus className="h-5 w-5 text-muted-foreground" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">Bus Name</p>
-                      <p className="font-medium">{student.busNumber}</p>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </CardContent>

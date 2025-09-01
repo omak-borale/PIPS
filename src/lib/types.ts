@@ -1,5 +1,4 @@
 
-
 export type Bus = {
   id: string;
   route: string;
@@ -39,27 +38,24 @@ export type ServiceHistory = {
 
 export type BusRoute = {
     id: string;
-    name: string;
-    description: string;
-    status: 'Active' | 'Inactive';
+    driverName: string;
+    route: string;
     busNumber: string;
-    fuelLevel: number;
-    lastFueled: string;
-    serviceHistory?: ServiceHistory[];
+    contact: string;
 }
 
 export type Student = {
     id: string;
     name: string;
-    usesBus: boolean;
-    fatherName: string;
-    parentContact: string;
-    village: string;
     class: string;
-    section: string;
-    route?: string;
-    amount?: number;
-    busNumber?: string;
+    busNumber: string;
+    fees: number;
+    // Deprecated fields from old spec
+    fatherName?: string;
+    parentContact?: string;
+    village?: string;
+    section?: string;
+    usesBus?: boolean;
     lat?: number;
     lon?: number;
 }

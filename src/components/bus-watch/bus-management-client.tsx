@@ -42,7 +42,9 @@ export default function BusManagementClient({ students }: BusManagementClientPro
 
   const filteredStudents = students.filter(student => {
     const busMatch = selectedBus === 'all' || student.busNumber === selectedBus;
-    const searchMatch = searchTerm === '' || student.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const searchMatch = searchTerm === '' || 
+        student.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+        (student.fatherName && student.fatherName.toLowerCase().includes(searchTerm.toLowerCase()));
     return busMatch && searchMatch;
   });
 
@@ -57,10 +59,10 @@ export default function BusManagementClient({ students }: BusManagementClientPro
       <CardContent>
         <div className="flex items-center gap-4 mb-6">
            <div className="flex-1">
-            <label htmlFor="search-filter" className="text-sm font-medium">Search by Name</label>
+            <label htmlFor="search-filter" className="text-sm font-medium">Search by Name or Father's Name</label>
             <Input 
               id="search-filter"
-              placeholder="Enter student name..."
+              placeholder="Enter student or father name..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -86,6 +88,7 @@ export default function BusManagementClient({ students }: BusManagementClientPro
           <TableHeader>
             <TableRow>
               <TableHead>Student Name</TableHead>
+              <TableHead>Father's Name</TableHead>
               <TableHead>Class</TableHead>
               <TableHead>Bus Number</TableHead>
               <TableHead>Fees (₹)</TableHead>
@@ -101,6 +104,7 @@ export default function BusManagementClient({ students }: BusManagementClientPro
                     {student.name}
                   </Link>
                 </TableCell>
+                <TableCell>{student.fatherName}</TableCell>
                 <TableCell>{student.class} '{student.section}'</TableCell>
                 <TableCell>{student.busNumber || 'N/A'}</TableCell>
                 <TableCell>{student.fees?.toLocaleString() || 'N/A'}</TableCell>
@@ -114,7 +118,7 @@ export default function BusManagementClient({ students }: BusManagementClientPro
             ))}
              {filteredStudents.length === 0 && (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                   No students found matching your criteria.
                 </TableCell>
               </TableRow>

@@ -141,6 +141,7 @@ export default function DriverDashboardClient({ busRoutes, students }: DriverDas
                 <TableHeader>
                   <TableRow>
                     <TableHead>Student Name</TableHead>
+                    <TableHead>Father's Name</TableHead>
                     <TableHead>Village</TableHead>
                     <TableHead>Parent's Contact</TableHead>
                   </TableRow>
@@ -156,6 +157,7 @@ export default function DriverDashboardClient({ busRoutes, students }: DriverDas
                           {student.name}
                         </Link>
                       </TableCell>
+                      <TableCell>{student.fatherName}</TableCell>
                       <TableCell>{student.village}</TableCell>
                       <TableCell>{student.parentContact}</TableCell>
                     </TableRow>
@@ -163,7 +165,7 @@ export default function DriverDashboardClient({ busRoutes, students }: DriverDas
                   {assignedStudents.length === 0 && (
                     <TableRow>
                       <TableCell
-                        colSpan={3}
+                        colSpan={4}
                         className="text-center py-8 text-muted-foreground"
                       >
                         No students assigned to this bus.

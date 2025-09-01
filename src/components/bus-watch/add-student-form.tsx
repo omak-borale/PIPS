@@ -34,6 +34,7 @@ import { Switch } from "@/components/ui/switch";
 
 const formSchema = z.object({
   name: z.string().min(1, "Student Name is required."),
+  fatherName: z.string().min(1, "Father's Name is required."),
   class: z.string().min(1, "Class is required."),
   section: z.string().min(1, "Section is required."),
   village: z.string().min(1, "Village is required."),
@@ -77,6 +78,7 @@ export default function AddStudentForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      fatherName: "",
       class: "",
       section: "",
       village: "",
@@ -118,19 +120,34 @@ export default function AddStudentForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Student Name</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g., Amit" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Student Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., Amit" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="fatherName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Father's Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., Suresh" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         <div className="grid grid-cols-2 gap-4">
             <FormField
             control={form.control}

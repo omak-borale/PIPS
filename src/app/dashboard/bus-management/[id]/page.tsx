@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/card';
 import { notFound } from 'next/navigation';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Phone, User, Bus, School, IndianRupee, MapPin, Banknote } from 'lucide-react';
+import { Phone, User, Bus, School, IndianRupee, MapPin, Banknote, UserSquare } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
@@ -73,6 +73,13 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
                 <div>
                   <p className="text-sm text-muted-foreground">Student Name</p>
                   <p className="font-medium">{student.name}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <UserSquare className="h-5 w-5 text-muted-foreground" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Father's Name</p>
+                  <p className="font-medium">{student.fatherName}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">

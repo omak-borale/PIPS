@@ -47,6 +47,7 @@ export type BusRoute = {
 export type Student = {
     id: string;
     name: string;
+    fatherName: string;
     class: string;
     section: string;
     busNumber?: string;
@@ -54,8 +55,6 @@ export type Student = {
     village: string;
     parentContact: string;
     usesBus: boolean;
-    // Deprecated fields from old spec
-    fatherName?: string;
     lat?: number;
     lon?: number;
 }

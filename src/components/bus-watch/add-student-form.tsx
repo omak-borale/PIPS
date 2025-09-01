@@ -35,9 +35,9 @@ const formSchema = z.object({
   class: z.string().min(1, "Class is required."),
   section: z.string().min(1, "Section is required."),
   busNumber: z.string().min(1, "Bus Number is required"),
-  fees: z.coerce.number().min(0, "Fees must be a positive number."),
   village: z.string().min(1, "Village is required."),
   parentContact: z.string().min(1, "Parent's contact is required."),
+  fees: z.coerce.number().min(0, "Fees must be a positive number."),
 });
 
 
@@ -61,9 +61,9 @@ export default function AddStudentForm() {
       class: "",
       section: "",
       busNumber: "",
-      fees: 0,
       village: "",
       parentContact: "",
+      fees: 0,
     },
   });
 
@@ -156,19 +156,6 @@ export default function AddStudentForm() {
             )}
           />
 
-        <FormField
-            control={form.control}
-            name="fees"
-            render={({ field }) => (
-            <FormItem>
-                <FormLabel>Fees (₹)</FormLabel>
-                <FormControl>
-                <Input type="number" placeholder="e.g., 1200" {...field} />
-                </FormControl>
-                <FormMessage />
-            </FormItem>
-            )}
-        />
        <FormField
           control={form.control}
           name="village"
@@ -194,6 +181,19 @@ export default function AddStudentForm() {
               <FormMessage />
             </FormItem>
           )}
+        />
+         <FormField
+            control={form.control}
+            name="fees"
+            render={({ field }) => (
+            <FormItem>
+                <FormLabel>Fees (₹)</FormLabel>
+                <FormControl>
+                <Input type="number" placeholder="e.g., 1200" {...field} />
+                </FormControl>
+                <FormMessage />
+            </FormItem>
+            )}
         />
         <div className="flex justify-end pt-4">
           <Button type="submit" disabled={isLoading}>

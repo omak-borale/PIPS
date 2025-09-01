@@ -197,9 +197,18 @@ export default function AddStudentForm({ villageFees }: AddStudentFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Village</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g., Ujani" {...field} />
-              </FormControl>
+               <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a village" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {villageFees.map(fee => (
+                    <SelectItem key={fee.id} value={fee.villageName}>{fee.villageName}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}

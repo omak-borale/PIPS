@@ -25,11 +25,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { Student } from '@/lib/types';
+import type { StudentWithPaidFees } from '@/app/dashboard/bus-management/page';
 import { Input } from '../ui/input';
 
 type BusManagementClientProps = {
-  students: Student[];
+  students: StudentWithPaidFees[];
 };
 
 export default function BusManagementClient({ students }: BusManagementClientProps) {
@@ -87,6 +87,7 @@ export default function BusManagementClient({ students }: BusManagementClientPro
               <TableHead>Class</TableHead>
               <TableHead>Bus Number</TableHead>
               <TableHead>Fees (₹)</TableHead>
+              <TableHead>Total Paid (₹)</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -100,11 +101,14 @@ export default function BusManagementClient({ students }: BusManagementClientPro
                 <TableCell>{student.class} '{student.section}'</TableCell>
                 <TableCell>{student.busNumber || 'N/A'}</TableCell>
                 <TableCell>{student.fees?.toLocaleString()}</TableCell>
+                 <TableCell className="font-semibold">
+                  {student.totalPaid.toLocaleString()}
+                </TableCell>
               </TableRow>
             ))}
              {filteredStudents.length === 0 && (
               <TableRow>
-                <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                   No students found matching your criteria.
                 </TableCell>
               </TableRow>

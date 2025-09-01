@@ -157,11 +157,10 @@ export async function addStudent(student: Omit<Student, 'id'>) {
 
 export async function addBusRoute(route: Omit<BusRoute, 'id'>) {
     try {
-        await addDoc(collection(db, 'busRoutes'), route);
-        revalidatePath('/dashboard/settings');
+        const docRef = await addDoc(collection(db, 'busRoutes'), route);
         revalidatePath('/dashboard/routes');
         revalidatePath('/dashboard/add-route');
-        return { success: true, data: route };
+        return { success: true, data: {id: docRef.id, ...route } };
     } catch (error) {
         console.error(error);
         if (error instanceof Error) {

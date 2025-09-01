@@ -50,11 +50,11 @@ export type Student = {
     class: string;
     busNumber: string;
     fees: number;
+    section?: string;
     // Deprecated fields from old spec
     fatherName?: string;
     parentContact?: string;
     village?: string;
-    section?: string;
     usesBus?: boolean;
     lat?: number;
     lon?: number;

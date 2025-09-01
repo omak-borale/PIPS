@@ -33,6 +33,7 @@ import type { BusRoute } from "@/lib/types";
 const formSchema = z.object({
   name: z.string().min(1, "Student Name is required."),
   class: z.string().min(1, "Class is required."),
+  section: z.string().min(1, "Section is required."),
   busNumber: z.string().min(1, "Bus Number is required"),
   fees: z.coerce.number().min(0, "Fees must be a positive number."),
 });
@@ -56,6 +57,7 @@ export default function AddStudentForm() {
     defaultValues: {
       name: "",
       class: "",
+      section: "",
       busNumber: "",
       fees: 0,
     },
@@ -98,20 +100,34 @@ export default function AddStudentForm() {
             </FormItem>
           )}
         />
-
-        <FormField
-          control={form.control}
-          name="class"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Class</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g., 5th" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-2 gap-4">
+            <FormField
+            control={form.control}
+            name="class"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Class</FormLabel>
+                <FormControl>
+                    <Input placeholder="e.g., 5th" {...field} />
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+            <FormField
+            control={form.control}
+            name="section"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Section</FormLabel>
+                <FormControl>
+                    <Input placeholder="e.g., A" {...field} />
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+        </div>
         
         <FormField
             control={form.control}

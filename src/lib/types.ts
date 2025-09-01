@@ -79,6 +79,14 @@ export type DailyLog = {
     notes?: string;
 }
 
+export type BusFeePayment = {
+    id: string;
+    studentId: string;
+    amountPaid: number;
+    paymentDate: string;
+    notes?: string;
+}
+
 export type RealTimeBusLocation = {
     busId: string;
     lat: number;

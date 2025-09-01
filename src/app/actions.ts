@@ -2,7 +2,7 @@
 'use server';
 import { analyzeBusDisruptions } from '@/ai/flows/analyze-bus-disruptions';
 import { hashPassword } from '@/lib/crypto';
-import type { Student, BusRoute, DieselEntry, DailyLog, Arrival, ServiceHistory, GeneralSettings, BusFeesSettings, ProfileSettings } from '@/lib/types';
+import type { Student, BusRoute, DieselEntry, DailyLog, Arrival, ServiceHistory, GeneralSettings, BusFeesSettings, ProfileSettings, BusFeePayment } from '@/lib/types';
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/firebase';
 import { ref, get, set, push, remove, update } from 'firebase/database';
@@ -268,6 +268,30 @@ export async function addServiceHistory(busId: string, serviceHistory: ServiceHi
     } catch (error) {
         console.error(error);
         return { success: false, error: 'Failed to add service history.' };
+    }
+}
+
+export async function addBusFeePayment(payment: Omit<BusFeePayment, 'id' | 'paymentDate'> & { paymentDate: Date }) {
+    try {
+        const newPaymentData = {
+            ...payment,
+            paymentDate: payment.paymentDate.toISOString(),
+        };
+        const paymentsRef = ref(db, 'busFeePayments');
+        const newPaymentRef = push(paymentsRef);
+        await set(newPaymentRef, newPaymentData);
+
+        revalidatePath('/dashboard/bus-fees-paid');
+        // In the future, we might have a page to show payment history
+        // revalidatePath('/dashboard/bus-fees-history');
+        
+        return { success: true, data: { id: newPaymentRef.key!, ...newPaymentData } };
+    } catch (error) {
+        console.error(error);
+        if (error instanceof Error) {
+            return { success: false, error: error.message };
+        }
+        return { success: false, error: 'Failed to log bus fee payment.' };
     }
 }
 

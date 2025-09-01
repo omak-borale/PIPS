@@ -81,6 +81,12 @@ export async function getVillageFeesAction(): Promise<VillageFee[]> {
     return snapshotToData<VillageFee>(snapshot);
 }
 
+export async function getBusFeePaymentsAction(): Promise<BusFeePayment[]> {
+    const paymentsRef = ref(db, 'busFeePayments');
+    const snapshot = await get(paymentsRef);
+    return snapshotToData<BusFeePayment>(snapshot);
+}
+
 
 export async function getDisruptionAnalysis() {
   try {

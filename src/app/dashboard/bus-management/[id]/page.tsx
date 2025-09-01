@@ -9,21 +9,36 @@ import {
 } from '@/components/ui/card';
 import { notFound } from 'next/navigation';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Phone, User, Bus, School, IndianRupee, MapPin } from 'lucide-react';
+import { Phone, User, Bus, School, IndianRupee, MapPin, Banknote } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import type { Student } from '@/lib/types';
-import { getStudentsAction } from '@/app/actions';
+import { getStudentsAction, getBusFeePaymentsAction } from '@/app/actions';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { format, parseISO } from 'date-fns';
+import { Separator } from '@/components/ui/separator';
 
 export default async function StudentDetailPage({ params }: { params: { id: string } }) {
   const studentId = params.id;
   const allStudents = await getStudentsAction();
+  const allPayments = await getBusFeePaymentsAction();
+  
   const student = allStudents.find((s) => s.id === studentId);
 
   if (!student) {
     notFound();
   }
+
+  const studentPayments = allPayments.filter(p => p.studentId === studentId);
+  const totalPaid = studentPayments.reduce((acc, p) => acc + p.amountPaid, 0);
 
   return (
     <main className="flex-1 p-4 md:p-6 lg:p-8">
@@ -32,7 +47,7 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
           <Button asChild variant="outline" size="icon">
             <Link href="/dashboard/bus-management">
               <ArrowLeft className="h-4 w-4" />
-              <span className="sr-only">Back to Bus Management</span>
+              <span className="sr-only">Back to Student Details</span>
             </Link>
           </Button>
           <h1 className="text-2xl font-bold">Student Details</h1>
@@ -96,6 +111,57 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
                 </div>
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Banknote className="h-5 w-5 text-primary" />
+              Fee Payment History
+            </CardTitle>
+            <CardDescription>A record of all bus fee payments made by {student.name}.</CardDescription>
+          </CardHeader>
+          <CardContent>
+             <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Payment Date</TableHead>
+                    <TableHead>Amount Paid (₹)</TableHead>
+                    <TableHead>Notes</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {studentPayments.map((payment) => (
+                    <TableRow key={payment.id}>
+                      <TableCell>{format(parseISO(payment.paymentDate), 'PPP')}</TableCell>
+                      <TableCell className="font-medium">
+                        {payment.amountPaid.toLocaleString()}
+                      </TableCell>
+                      <TableCell>{payment.notes || 'N/A'}</TableCell>
+                    </TableRow>
+                  ))}
+                  {studentPayments.length === 0 && (
+                    <TableRow>
+                      <TableCell
+                        colSpan={3}
+                        className="text-center py-8 text-muted-foreground"
+                      >
+                        No payment history found for this student.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+              {studentPayments.length > 0 && (
+                <>
+                    <Separator className="my-4" />
+                    <div className="flex justify-end items-center font-bold text-lg pr-4">
+                        <span className="text-muted-foreground mr-2">Total Paid:</span>
+                        <span>₹{totalPaid.toLocaleString()}</span>
+                    </div>
+                </>
+              )}
           </CardContent>
         </Card>
       </div>

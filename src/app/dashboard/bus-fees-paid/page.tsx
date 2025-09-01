@@ -7,12 +7,13 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import BusFeesPaidForm from '@/components/bus-watch/bus-fees-paid-form';
-import { getStudentsAction, getBusRoutesAction, getBusFeesSettingsAction } from '@/app/actions';
+import { getStudentsAction, getBusRoutesAction, getBusFeesSettingsAction, getVillageFeesAction } from '@/app/actions';
 
 export default async function BusFeesPaidPage() {
   const students = await getStudentsAction();
   const busRoutes = await getBusRoutesAction();
   const feeSettings = await getBusFeesSettingsAction();
+  const villageFees = await getVillageFeesAction();
   const studentsWithBus = students.filter(s => s.usesBus);
 
   return (
@@ -30,6 +31,7 @@ export default async function BusFeesPaidPage() {
               students={studentsWithBus} 
               busRoutes={busRoutes}
               feeSettings={feeSettings}
+              villageFees={villageFees}
             />
           </CardContent>
         </Card>

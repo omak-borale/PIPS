@@ -5,8 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Loader2, IndianRupee, User, Bus, Map, NotebookText, Home } from "lucide-react";
-import { useState, useMemo } from "react";
+import { Calendar as CalendarIcon, Loader2, IndianRupee, User, Bus, Map, NotebookText, Home, MapPin } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -35,7 +35,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { addBusFeePayment } from "@/app/actions";
-import type { Student, BusRoute, BusFeesSettings } from "@/lib/types";
+import type { Student, BusRoute, BusFeesSettings, VillageFee } from "@/lib/types";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Separator } from "../ui/separator";
 
@@ -50,9 +50,10 @@ type BusFeesPaidFormProps = {
   students: Student[];
   busRoutes: BusRoute[];
   feeSettings: BusFeesSettings | null;
+  villageFees: VillageFee[];
 };
 
-export default function BusFeesPaidForm({ students, busRoutes, feeSettings }: BusFeesPaidFormProps) {
+export default function BusFeesPaidForm({ students, busRoutes, feeSettings, villageFees }: BusFeesPaidFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   
@@ -60,7 +61,7 @@ export default function BusFeesPaidForm({ students, busRoutes, feeSettings }: Bu
     resolver: zodResolver(formSchema),
     defaultValues: {
       studentId: "",
-      amountPaid: feeSettings?.monthlyFee || 0,
+      amountPaid: 0,
       paymentDate: new Date(),
       notes: "",
     },
@@ -73,11 +74,21 @@ export default function BusFeesPaidForm({ students, busRoutes, feeSettings }: Bu
     if (!student) return null;
     
     const route = busRoutes.find(r => r.busNumber === student.busNumber);
+    const villageFee = villageFees.find(vf => vf.villageName.toLowerCase() === student.village.toLowerCase());
     return {
       ...student,
       route: route?.route || 'N/A',
+      villageFeeAmount: villageFee?.feeAmount
     };
-  }, [selectedStudentId, students, busRoutes]);
+  }, [selectedStudentId, students, busRoutes, villageFees]);
+
+  useEffect(() => {
+    if (selectedStudentDetails?.villageFeeAmount) {
+        form.setValue("amountPaid", selectedStudentDetails.villageFeeAmount);
+    } else if (feeSettings?.monthlyFee) {
+        form.setValue("amountPaid", feeSettings.monthlyFee);
+    }
+  }, [selectedStudentDetails, feeSettings, form]);
 
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -91,8 +102,7 @@ export default function BusFeesPaidForm({ students, busRoutes, feeSettings }: Bu
             description: `Successfully logged payment for student.`
         });
         form.reset();
-        // Maybe redirect to a payments history page in the future
-        // router.push("/dashboard/bus-fees-history"); 
+        router.push(`/dashboard/bus-management/${values.studentId}`); 
     } else {
         toast({
             variant: "destructive",
@@ -141,10 +151,15 @@ export default function BusFeesPaidForm({ students, busRoutes, feeSettings }: Bu
                         <span className="text-muted-foreground">Class:</span>
                         <span className="font-medium">{selectedStudentDetails.class} '{selectedStudentDetails.section}'</span>
                    </div>
-                   <div className="flex items-center gap-2">
-                        <Home className="h-4 w-4 text-muted-foreground" />
+                    <div className="flex items-center gap-2 col-span-2">
+                        <MapPin className="h-4 w-4 text-muted-foreground" />
                         <span className="text-muted-foreground">Village:</span>
                         <span className="font-medium">{selectedStudentDetails.village}</span>
+                         {selectedStudentDetails.villageFeeAmount !== undefined && (
+                            <span className="flex items-center gap-1 font-semibold text-primary ml-auto">
+                                (Fee: <IndianRupee className="h-3.5 w-3.5" />{selectedStudentDetails.villageFeeAmount.toLocaleString()})
+                            </span>
+                        )}
                    </div>
                    <div className="flex items-center gap-2">
                         <Bus className="h-4 w-4 text-muted-foreground" />
@@ -173,7 +188,7 @@ export default function BusFeesPaidForm({ students, busRoutes, feeSettings }: Bu
                         <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input type="number" placeholder="e.g., 1200" className="pl-8" {...field} />
                     </div>
-                    {feeSettings && <p className="text-xs text-muted-foreground pt-1">Standard monthly fee is ₹{feeSettings.monthlyFee.toLocaleString()}</p>}
+                    {feeSettings && !selectedStudentDetails?.villageFeeAmount && <p className="text-xs text-muted-foreground pt-1">Default fee is ₹{feeSettings.monthlyFee.toLocaleString()}</p>}
                     <FormMessage />
                     </FormItem>
                 )}

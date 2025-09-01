@@ -194,6 +194,9 @@ export async function addDieselEntry(entry: Omit<DieselEntry, 'id' | 'date'> & {
         return { success: true, data: {id: newDieselEntryRef.key!, ...newEntryData } };
     } catch (error) {
         console.error(error);
+        if (error instanceof Error) {
+            return { success: false, error: error.message };
+        }
         return { success: false, error: 'Failed to add diesel entry.' };
     }
 }

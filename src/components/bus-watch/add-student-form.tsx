@@ -40,7 +40,7 @@ const formSchema = z.object({
   parentContact: z.string().min(1, "Parent's contact is required."),
   usesBus: z.boolean().default(false),
   busNumber: z.string().optional(),
-  fees: z.coerce.number().min(0, "Fees must be a positive number."),
+  fees: z.coerce.number().optional(),
 }).refine(data => {
     if (data.usesBus) {
         return !!data.busNumber;
@@ -49,6 +49,14 @@ const formSchema = z.object({
 }, {
     message: "Bus Number is required when student uses the bus.",
     path: ["busNumber"],
+}).refine(data => {
+    if (data.usesBus) {
+        return data.fees !== undefined && data.fees >= 0;
+    }
+    return true;
+}, {
+    message: "Fees must be a positive number when student uses the bus.",
+    path: ["fees"],
 });
 
 
@@ -74,7 +82,6 @@ export default function AddStudentForm() {
       village: "",
       parentContact: "",
       usesBus: false,
-      fees: 0,
     },
   });
 
@@ -86,6 +93,7 @@ export default function AddStudentForm() {
     const studentData = {
         ...values,
         busNumber: values.usesBus ? values.busNumber : undefined,
+        fees: values.usesBus ? values.fees : 0, // Set fees to 0 if not using bus
     }
 
     const result = await addStudent(studentData);
@@ -201,6 +209,7 @@ export default function AddStudentForm() {
         />
 
         {usesBus && (
+          <>
             <FormField
                 control={form.control}
                 name="busNumber"
@@ -223,21 +232,22 @@ export default function AddStudentForm() {
                 </FormItem>
                 )}
             />
+             <FormField
+                control={form.control}
+                name="fees"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Fees (₹)</FormLabel>
+                    <FormControl>
+                    <Input type="number" placeholder="e.g., 1200" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+          </>
         )}
 
-         <FormField
-            control={form.control}
-            name="fees"
-            render={({ field }) => (
-            <FormItem>
-                <FormLabel>Fees (₹)</FormLabel>
-                <FormControl>
-                <Input type="number" placeholder="e.g., 1200" {...field} />
-                </FormControl>
-                <FormMessage />
-            </FormItem>
-            )}
-        />
         <div className="flex justify-end pt-4">
           <Button type="submit" disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

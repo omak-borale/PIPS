@@ -50,7 +50,7 @@ export type Student = {
     class: string;
     section: string;
     busNumber?: string;
-    fees: number;
+    fees?: number;
     village: string;
     parentContact: string;
     usesBus: boolean;

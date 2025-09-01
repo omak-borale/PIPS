@@ -87,6 +87,12 @@ export type BusFeePayment = {
     notes?: string;
 }
 
+export type VillageFee = {
+    id: string;
+    villageName: string;
+    feeAmount: number;
+}
+
 export type RealTimeBusLocation = {
     busId: string;
     lat: number;

@@ -2,7 +2,7 @@
 'use server';
 import { analyzeBusDisruptions } from '@/ai/flows/analyze-bus-disruptions';
 import { hashPassword } from '@/lib/crypto';
-import type { Student, BusRoute, DieselEntry, DailyLog, Arrival, ServiceHistory, GeneralSettings, BusFeesSettings, ProfileSettings, BusFeePayment } from '@/lib/types';
+import type { Student, BusRoute, DieselEntry, DailyLog, Arrival, ServiceHistory, GeneralSettings, BusFeesSettings, ProfileSettings, BusFeePayment, VillageFee } from '@/lib/types';
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/firebase';
 import { ref, get, set, push, remove, update } from 'firebase/database';
@@ -73,6 +73,12 @@ export async function getArrivalsAction(): Promise<Arrival[]> {
     const arrivalsRef = ref(db, 'arrivals');
     const snapshot = await get(arrivalsRef);
     return snapshotToData<Arrival>(snapshot);
+}
+
+export async function getVillageFeesAction(): Promise<VillageFee[]> {
+    const feesRef = ref(db, 'villageFees');
+    const snapshot = await get(feesRef);
+    return snapshotToData<VillageFee>(snapshot);
 }
 
 
@@ -292,6 +298,24 @@ export async function addBusFeePayment(payment: Omit<BusFeePayment, 'id' | 'paym
             return { success: false, error: error.message };
         }
         return { success: false, error: 'Failed to log bus fee payment.' };
+    }
+}
+
+export async function addVillageFeeAction(fee: Omit<VillageFee, 'id'>) {
+    try {
+        const villageFeesRef = ref(db, 'villageFees');
+        const newVillageFeeRef = push(villageFeesRef);
+        await set(newVillageFeeRef, fee);
+        const newVillageFeeId = newVillageFeeRef.key;
+
+        revalidatePath('/dashboard/village-fees');
+        return { success: true, data: { id: newVillageFeeId!, ...fee } };
+    } catch (error) {
+        console.error('Error adding village fee:', error);
+        if (error instanceof Error) {
+            return { success: false, error: error.message };
+        }
+        return { success: false, error: 'Failed to add village fee.' };
     }
 }
 

@@ -5,8 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { Calendar as CalendarIcon, Loader2, IndianRupee, User, Bus, Map, NotebookText } from "lucide-react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -35,7 +35,9 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { addBusFeePayment } from "@/app/actions";
-import type { Student } from "@/lib/types";
+import type { Student, BusRoute, BusFeesSettings } from "@/lib/types";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Separator } from "../ui/separator";
 
 const formSchema = z.object({
   studentId: z.string().min(1, "Student is required."),
@@ -46,9 +48,11 @@ const formSchema = z.object({
 
 type BusFeesPaidFormProps = {
   students: Student[];
+  busRoutes: BusRoute[];
+  feeSettings: BusFeesSettings | null;
 };
 
-export default function BusFeesPaidForm({ students }: BusFeesPaidFormProps) {
+export default function BusFeesPaidForm({ students, busRoutes, feeSettings }: BusFeesPaidFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   
@@ -56,11 +60,25 @@ export default function BusFeesPaidForm({ students }: BusFeesPaidFormProps) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       studentId: "",
-      amountPaid: 0,
+      amountPaid: feeSettings?.monthlyFee || 0,
       paymentDate: new Date(),
       notes: "",
     },
   });
+
+  const selectedStudentId = form.watch("studentId");
+
+  const selectedStudentDetails = useMemo(() => {
+    const student = students.find(s => s.id === selectedStudentId);
+    if (!student) return null;
+    
+    const route = busRoutes.find(r => r.busNumber === student.busNumber);
+    return {
+      ...student,
+      route: route?.route || 'N/A',
+    };
+  }, [selectedStudentId, students, busRoutes]);
+
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
@@ -111,6 +129,38 @@ export default function BusFeesPaidForm({ students }: BusFeesPaidFormProps) {
             </FormItem>
             )}
         />
+
+        {selectedStudentDetails && (
+            <Card className="bg-muted/50">
+                <CardHeader className="pb-4">
+                    <CardTitle className="text-base">Student Information</CardTitle>
+                </CardHeader>
+                <CardContent className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+                   <div className="flex items-center gap-2">
+                        <User className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-muted-foreground">Class:</span>
+                        <span className="font-medium">{selectedStudentDetails.class} '{selectedStudentDetails.section}'</span>
+                   </div>
+                   <div className="flex items-center gap-2">
+                        <User className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-muted-foreground">Village:</span>
+                        <span className="font-medium">{selectedStudentDetails.village}</span>
+                   </div>
+                   <div className="flex items-center gap-2">
+                        <Bus className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-muted-foreground">Bus:</span>
+                        <span className="font-medium">{selectedStudentDetails.busNumber}</span>
+                   </div>
+                    <div className="flex items-center gap-2">
+                        <Map className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-muted-foreground">Route:</span>
+                        <span className="font-medium">{selectedStudentDetails.route}</span>
+                   </div>
+                </CardContent>
+            </Card>
+        )}
+        
+        <Separator />
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
@@ -118,10 +168,12 @@ export default function BusFeesPaidForm({ students }: BusFeesPaidFormProps) {
                 name="amountPaid"
                 render={({ field }) => (
                     <FormItem>
-                    <FormLabel>Amount Paid (₹)</FormLabel>
-                    <FormControl>
-                        <Input type="number" placeholder="e.g., 1200" {...field} />
-                    </FormControl>
+                    <FormLabel>Amount Paid</FormLabel>
+                     <div className="relative">
+                        <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input type="number" placeholder="e.g., 1200" className="pl-8" {...field} />
+                    </div>
+                    {feeSettings && <p className="text-xs text-muted-foreground pt-1">Standard monthly fee is ₹{feeSettings.monthlyFee.toLocaleString()}</p>}
                     <FormMessage />
                     </FormItem>
                 )}
@@ -175,9 +227,10 @@ export default function BusFeesPaidForm({ students }: BusFeesPaidFormProps) {
             render={({ field }) => (
                 <FormItem>
                 <FormLabel>Notes / Remarks</FormLabel>
-                <FormControl>
-                    <Input placeholder="e.g., Paid for month of July" {...field} />
-                </FormControl>
+                 <div className="relative">
+                    <NotebookText className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input placeholder="e.g., Paid for month of July" {...field} className="pl-8" />
+                </div>
                 <FormMessage />
                 </FormItem>
             )}

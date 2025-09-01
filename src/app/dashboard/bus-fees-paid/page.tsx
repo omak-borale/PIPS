@@ -7,10 +7,12 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import BusFeesPaidForm from '@/components/bus-watch/bus-fees-paid-form';
-import { getStudentsAction } from '@/app/actions';
+import { getStudentsAction, getBusRoutesAction, getBusFeesSettingsAction } from '@/app/actions';
 
 export default async function BusFeesPaidPage() {
   const students = await getStudentsAction();
+  const busRoutes = await getBusRoutesAction();
+  const feeSettings = await getBusFeesSettingsAction();
   const studentsWithBus = students.filter(s => s.usesBus);
 
   return (
@@ -24,7 +26,11 @@ export default async function BusFeesPaidPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <BusFeesPaidForm students={studentsWithBus} />
+            <BusFeesPaidForm 
+              students={studentsWithBus} 
+              busRoutes={busRoutes}
+              feeSettings={feeSettings}
+            />
           </CardContent>
         </Card>
       </div>

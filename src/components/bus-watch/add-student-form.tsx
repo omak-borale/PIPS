@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import { addStudent, getBusRoutesAction } from "@/app/actions";
-import type { BusRoute } from "@/lib/types";
+import type { BusRoute, VillageFee } from "@/lib/types";
 import { Switch } from "@/components/ui/switch";
 
 
@@ -60,8 +60,11 @@ const formSchema = z.object({
     path: ["fees"],
 });
 
+type AddStudentFormProps = {
+  villageFees: VillageFee[];
+};
 
-export default function AddStudentForm() {
+export default function AddStudentForm({ villageFees }: AddStudentFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [busRoutes, setBusRoutes] = useState<BusRoute[]>([]);
@@ -88,6 +91,17 @@ export default function AddStudentForm() {
   });
 
   const usesBus = form.watch("usesBus");
+  const village = form.watch("village");
+
+  useEffect(() => {
+    if (usesBus && village) {
+      const fee = villageFees.find(f => f.villageName.toLowerCase() === village.toLowerCase());
+      if (fee) {
+        form.setValue("fees", fee.feeAmount);
+      }
+    }
+  }, [usesBus, village, villageFees, form]);
+
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
@@ -258,6 +272,9 @@ export default function AddStudentForm() {
                     <FormControl>
                     <Input type="number" placeholder="e.g., 1200" {...field} />
                     </FormControl>
+                     <FormDescription>
+                        Fee is auto-filled if a fee is set for the student's village.
+                    </FormDescription>
                     <FormMessage />
                 </FormItem>
                 )}

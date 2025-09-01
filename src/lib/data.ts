@@ -1,17 +1,34 @@
 
-import type { Bus, BusStop, Arrival, BusRoute, Student, DieselEntry } from './types';
-import initialData from './data.json';
+import type { Bus, BusStop, Arrival, BusRoute, Student, DieselEntry, RealTimeBusLocation } from './types';
+import { get, ref } from 'firebase/database';
+import { db } from './firebase';
+
+// Helper to extract data from RTDB snapshot, converting objects to arrays
+function snapshotToData(snapshot: any) {
+    const data: any[] = [];
+    if (snapshot.exists()) {
+        const val = snapshot.val();
+        if (val && typeof val === 'object') {
+            Object.keys(val).forEach(key => {
+                data.push({ id: key, ...val[key] });
+            });
+        }
+    }
+    return data;
+}
+
 
 // These functions are for server components.
 // They can be used with await syntax.
 export async function getBuses(): Promise<Bus[]> {
-    // This is now fetched via actions.ts
+    // This is now fetched via actions.ts or directly from RTDB
     return [];
 }
 
 export async function getStops(): Promise<BusStop[]> {
-    // This could be migrated to Firestore as well
-    return initialData.stops;
+    const stopsRef = ref(db, 'stops');
+    const snapshot = await get(stopsRef);
+    return snapshotToData(snapshot);
 }
 
 export async function getArrivals(): Promise<Arrival[]> {
@@ -34,15 +51,20 @@ export async function getDieselEntries(): Promise<DieselEntry[]> {
     return [];
 }
 
-export async function getRealTimeBusLocations() {
-    // This could be migrated to Firestore as well
-    return initialData.realTimeBusLocations;
+export async function getRealTimeBusLocations(): Promise<RealTimeBusLocation[]> {
+    const locationsRef = ref(db, 'realTimeBusLocations');
+    const snapshot = await get(locationsRef);
+    return snapshotToData(snapshot);
 }
 
 export async function getHistoricalData(): Promise<string> {
-    return initialData.historicalData;
+    const dataRef = ref(db, 'historicalData');
+    const snapshot = await get(dataRef);
+    return snapshot.val() || '';
 }
 
 export async function getNewsFeed(): Promise<string> {
-    return initialData.newsFeed;
+     const dataRef = ref(db, 'newsFeed');
+    const snapshot = await get(dataRef);
+    return snapshot.val() || '';
 }

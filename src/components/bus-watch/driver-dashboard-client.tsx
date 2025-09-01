@@ -69,7 +69,7 @@ export default function DriverDashboardClient({ busRoutes, students }: DriverDas
               <SelectContent>
                 {busRoutes.map((route) => (
                   <SelectItem key={route.id} value={route.id}>
-                    {route.name} ({route.busNumber}) - {route.description}
+                    {route.driverName} ({route.busNumber}) - {route.route}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -85,7 +85,7 @@ export default function DriverDashboardClient({ busRoutes, students }: DriverDas
               <div className="flex items-center gap-4">
                 <User className="h-8 w-8 text-primary" />
                 <div>
-                  <CardTitle>Welcome, {selectedDriver.name}</CardTitle>
+                  <CardTitle>Welcome, {selectedDriver.driverName}</CardTitle>
                   <CardDescription>
                     Here is your dashboard for the selected route.
                   </CardDescription>
@@ -121,7 +121,7 @@ export default function DriverDashboardClient({ busRoutes, students }: DriverDas
                   <div>
                     <p className="text-sm text-muted-foreground">Route</p>
                     <p className="font-bold text-lg">
-                      {selectedDriver.description}
+                      {selectedDriver.route}
                     </p>
                   </div>
                 </div>

@@ -5,79 +5,34 @@ import { hashPassword } from '@/lib/crypto';
 import type { Student, BusRoute, DieselEntry, DailyLog, Arrival, ServiceHistory, GeneralSettings, BusFeesSettings, ProfileSettings } from '@/lib/types';
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/firebase';
-import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, query, where, writeBatch } from 'firebase/firestore';
+import { ref, get, set, push, remove, update } from 'firebase/database';
 import initialData from '@/lib/data.json';
 
-// Helper function to convert Firestore snapshot to array
+// Helper function to convert Realtime Database snapshot to array
 function snapshotToData<T>(snapshot: any): T[] {
     const data: T[] = [];
-    snapshot.forEach((doc: any) => {
-        data.push({ id: doc.id, ...doc.data() } as unknown as T);
-    });
+    if (snapshot.exists()) {
+        snapshot.forEach((childSnapshot: any) => {
+            data.push({ id: childSnapshot.key, ...childSnapshot.val() });
+        });
+    }
     return data;
 }
 
-// Helper function to convert single doc snapshot to data
-function docToData<T>(docSnap: any): T | null {
-    if (docSnap.exists()) {
-        return { id: docSnap.id, ...docSnap.data() } as unknown as T;
+// Helper function to convert single RTDB snapshot to data
+function singleSnapshotToData<T>(snapshot: any): T | null {
+    if (snapshot.exists()) {
+        return { id: snapshot.key, ...snapshot.val() };
     }
     return null;
 }
 
 export async function seedDatabaseAction() {
     try {
-        const batch = writeBatch(db);
+        // In RTDB, `set` at the root will overwrite everything.
+        // We will set the entire initialData structure.
+        await set(ref(db), initialData);
 
-        // Seed students
-        const studentsCollection = collection(db, 'students');
-        initialData.students.forEach(student => {
-            const { id, ...studentData } = student;
-            const docRef = doc(studentsCollection, id);
-            batch.set(docRef, { ...studentData, village: studentData.address });
-        });
-
-        // Seed bus routes
-        const busRoutesCollection = collection(db, 'busRoutes');
-        initialData.busRoutes.forEach(route => {
-            const { id, ...routeData } = route;
-            const docRef = doc(busRoutesCollection, id);
-            batch.set(docRef, routeData);
-        });
-
-        // Seed diesel entries
-        const dieselEntriesCollection = collection(db, 'dieselEntries');
-        initialData.dieselEntries.forEach(entry => {
-            const { id, ...entryData } = entry;
-            const docRef = doc(dieselEntriesCollection, id);
-            batch.set(docRef, entryData);
-        });
-
-        // Seed daily logs
-        const dailyLogsCollection = collection(db, 'dailyLogs');
-        initialData.dailyLogs.forEach(log => {
-            const { id, ...logData } = log;
-            const docRef = doc(dailyLogsCollection, id);
-            batch.set(docRef, logData);
-        });
-
-        // Seed arrivals
-        const arrivalsCollection = collection(db, 'arrivals');
-        initialData.arrivals.forEach(arrival => {
-            const { id, ...arrivalData } = arrival;
-            const docRef = doc(arrivalsCollection, id);
-            batch.set(docRef, arrivalData);
-        });
-
-        // Seed settings
-        const settingsCollection = collection(db, 'settings');
-        Object.entries(initialData.settings).forEach(([key, value]) => {
-            const docRef = doc(settingsCollection, key);
-            batch.set(docRef, value);
-        });
-
-
-        await batch.commit();
         revalidatePath('/'); // Revalidate all paths to be safe
         return { success: true, message: "Database seeded successfully!" };
     } catch (error) {
@@ -91,33 +46,33 @@ export async function seedDatabaseAction() {
 
 
 export async function getStudentsAction(): Promise<Student[]> {
-    const studentsCollection = collection(db, 'students');
-    const studentSnapshot = await getDocs(studentsCollection);
-    return snapshotToData<Student>(studentSnapshot);
+    const studentsRef = ref(db, 'students');
+    const snapshot = await get(studentsRef);
+    return snapshotToData<Student>(snapshot);
 }
 
 export async function getBusRoutesAction(): Promise<BusRoute[]> {
-    const routesCollection = collection(db, 'busRoutes');
-    const routeSnapshot = await getDocs(routesCollection);
-    return snapshotToData<BusRoute>(routeSnapshot);
+    const routesRef = ref(db, 'busRoutes');
+    const snapshot = await get(routesRef);
+    return snapshotToData<BusRoute>(snapshot);
 }
 
 export async function getDieselEntriesAction(): Promise<DieselEntry[]> {
-    const entriesCollection = collection(db, 'dieselEntries');
-    const entrySnapshot = await getDocs(entriesCollection);
-    return snapshotToData<DieselEntry>(entrySnapshot);
+    const entriesRef = ref(db, 'dieselEntries');
+    const snapshot = await get(entriesRef);
+    return snapshotToData<DieselEntry>(snapshot);
 }
 
 export async function getDailyLogsAction(): Promise<DailyLog[]> {
-    const logsCollection = collection(db, 'dailyLogs');
-    const logSnapshot = await getDocs(logsCollection);
-    return snapshotToData<DailyLog>(logSnapshot);
+    const logsRef = ref(db, 'dailyLogs');
+    const snapshot = await get(logsRef);
+    return snapshotToData<DailyLog>(snapshot);
 }
 
 export async function getArrivalsAction(): Promise<Arrival[]> {
-    const arrivalsCollection = collection(db, 'arrivals');
-    const arrivalSnapshot = await getDocs(arrivalsCollection);
-    return snapshotToData<Arrival>(arrivalSnapshot);
+    const arrivalsRef = ref(db, 'arrivals');
+    const snapshot = await get(arrivalsRef);
+    return snapshotToData<Arrival>(snapshot);
 }
 
 
@@ -142,10 +97,14 @@ export async function getHashedPassword(password: string) {
 
 export async function addStudent(student: Omit<Student, 'id'>) {
     try {
-        const docRef = await addDoc(collection(db, 'students'), student);
+        const studentsRef = ref(db, 'students');
+        const newStudentRef = push(studentsRef);
+        await set(newStudentRef, student);
+        const newStudentId = newStudentRef.key;
+        
         revalidatePath('/dashboard/bus-management');
         revalidatePath('/dashboard/student-entry');
-        return { success: true, data: {id: docRef.id, ...student} };
+        return { success: true, data: {id: newStudentId!, ...student} };
     } catch (error) {
         console.error(error);
         if (error instanceof Error) {
@@ -157,10 +116,14 @@ export async function addStudent(student: Omit<Student, 'id'>) {
 
 export async function addBusRoute(route: Omit<BusRoute, 'id'>) {
     try {
-        const docRef = await addDoc(collection(db, 'busRoutes'), route);
+        const busRoutesRef = ref(db, 'busRoutes');
+        const newBusRouteRef = push(busRoutesRef);
+        await set(newBusRouteRef, route);
+        const newBusRouteId = newBusRouteRef.key;
+
         revalidatePath('/dashboard/routes');
         revalidatePath('/dashboard/add-route');
-        return { success: true, data: {id: docRef.id, ...route } };
+        return { success: true, data: {id: newBusRouteId!, ...route } };
     } catch (error) {
         console.error(error);
         if (error instanceof Error) {
@@ -172,9 +135,9 @@ export async function addBusRoute(route: Omit<BusRoute, 'id'>) {
 
 export async function updateBusRoute(route: BusRoute) {
     try {
-        const routeRef = doc(db, 'busRoutes', route.id);
+        const routeRef = ref(db, `busRoutes/${route.id}`);
         const { id, ...routeData } = route;
-        await updateDoc(routeRef, routeData);
+        await update(routeRef, routeData);
 
         revalidatePath('/dashboard/settings');
         revalidatePath('/dashboard/routes');
@@ -188,7 +151,8 @@ export async function updateBusRoute(route: BusRoute) {
 
 export async function deleteBusRoute(routeId: string) {
     try {
-        await deleteDoc(doc(db, 'busRoutes', routeId));
+        const routeRef = ref(db, `busRoutes/${routeId}`);
+        await remove(routeRef);
 
         revalidatePath('/dashboard/settings');
         revalidatePath('/dashboard/routes');
@@ -205,9 +169,12 @@ export async function addDailyLog(log: Omit<DailyLog, 'id' | 'date'> & { date: D
             ...log,
             date: log.date.toISOString(),
         };
-        const docRef = await addDoc(collection(db, 'dailyLogs'), newLogData);
+        const dailyLogsRef = ref(db, 'dailyLogs');
+        const newDailyLogRef = push(dailyLogsRef);
+        await set(newDailyLogRef, newLogData);
+
         revalidatePath('/dashboard/daily-log-details');
-        return { success: true, data: { id: docRef.id, ...newLogData } };
+        return { success: true, data: { id: newDailyLogRef.key!, ...newLogData } };
     } catch (error) {
         console.error(error);
         return { success: false, error: 'Failed to add daily log.' };
@@ -220,9 +187,11 @@ export async function addDieselEntry(entry: Omit<DieselEntry, 'id' | 'date'> & {
             ...entry,
             date: entry.date.toISOString(),
         };
-        const docRef = await addDoc(collection(db, 'dieselEntries'), newEntryData);
+        const dieselEntriesRef = ref(db, 'dieselEntries');
+        const newDieselEntryRef = push(dieselEntriesRef);
+        await set(newDieselEntryRef, newEntryData);
         revalidatePath('/dashboard/diesel-details');
-        return { success: true, data: {id: docRef.id, ...newEntryData } };
+        return { success: true, data: {id: newDieselEntryRef.key!, ...newEntryData } };
     } catch (error) {
         console.error(error);
         return { success: false, error: 'Failed to add diesel entry.' };
@@ -231,13 +200,17 @@ export async function addDieselEntry(entry: Omit<DieselEntry, 'id' | 'date'> & {
 
 export async function addArrival(arrival: Omit<Arrival, 'id'>) {
     try {
-        const docRef = await addDoc(collection(db, 'arrivals'), arrival);
+        const arrivalsRef = ref(db, 'arrivals');
+        const newArrivalRef = push(arrivalsRef);
+        await set(newArrivalRef, arrival);
+
         revalidatePath('/dashboard/settings');
         revalidatePath('/dashboard');
         revalidatePath('/dashboard/arrival-times');
 
-        return { success: true, data: { id: docRef.id, ...arrival } };
-    } catch (error) {
+        return { success: true, data: { id: newArrivalRef.key!, ...arrival } };
+    } catch (error)
+        {
         console.error(error);
         return { success: false, error: 'Failed to add arrival.' };
     }
@@ -245,9 +218,9 @@ export async function addArrival(arrival: Omit<Arrival, 'id'>) {
 
 export async function updateArrival(arrival: Arrival) {
     try {
-        const arrivalRef = doc(db, 'arrivals', arrival.id);
+        const arrivalRef = ref(db, `arrivals/${arrival.id}`);
         const { id, ...arrivalData } = arrival;
-        await updateDoc(arrivalRef, arrivalData);
+        await update(arrivalRef, arrivalData);
 
         revalidatePath('/dashboard/settings');
         revalidatePath('/dashboard');
@@ -262,7 +235,8 @@ export async function updateArrival(arrival: Arrival) {
 
 export async function deleteArrival(arrivalId: string) {
     try {
-        await deleteDoc(doc(db, 'arrivals', arrivalId));
+        const arrivalRef = ref(db, `arrivals/${arrivalId}`);
+        await remove(arrivalRef);
         revalidatePath('/dashboard/settings');
         revalidatePath('/dashboard');
         revalidatePath('/dashboard/arrival-times');
@@ -275,21 +249,19 @@ export async function deleteArrival(arrivalId: string) {
 
 export async function addServiceHistory(busId: string, serviceHistory: ServiceHistory) {
     try {
-        const busRef = doc(db, 'busRoutes', busId);
-        const busDoc = await getDoc(busRef);
-        if (busDoc.exists()) {
-            // This is incorrect logic for the new model, but leaving for now to avoid breaking other parts.
-            // A proper implementation would update a sub-collection or a field in the bus document.
-            // For now, it will fail gracefully if serviceHistory is not on the new BusRoute model.
-            const busData = busDoc.data() as any;
-            if (busData.serviceHistory) {
-                const updatedHistory = [serviceHistory, ...(busData.serviceHistory || [])];
-                 await updateDoc(busRef, { serviceHistory: updatedHistory });
-                 revalidatePath('/dashboard/bus-repair');
-                return { success: true, data: updatedHistory };
-            }
-        }
-        return { success: false, error: 'Bus not found or does not support service history.' };
+        const serviceHistoryRef = ref(db, `busRoutes/${busId}/serviceHistory`);
+        const newServiceHistoryRef = push(serviceHistoryRef);
+        await set(newServiceHistoryRef, serviceHistory);
+
+        // This action should probably return the new list of histories.
+        // For now, let's refetch it to return the updated list.
+        const updatedBusSnapshot = await get(ref(db, `busRoutes/${busId}`));
+        const updatedBusData = singleSnapshotToData<BusRoute>(updatedBusSnapshot);
+        const updatedHistory = updatedBusData?.serviceHistory ? Object.values(updatedBusData.serviceHistory) : [];
+
+        revalidatePath('/dashboard/bus-repair');
+        return { success: true, data: updatedHistory };
+
     } catch (error) {
         console.error(error);
         return { success: false, error: 'Failed to add service history.' };
@@ -298,53 +270,28 @@ export async function addServiceHistory(busId: string, serviceHistory: ServiceHi
 
 
 export async function getGeneralSettingsAction(): Promise<GeneralSettings | null> {
-    const docRef = doc(db, 'settings', 'general');
-    const docSnap = await getDoc(docRef);
-    return docToData<GeneralSettings>(docSnap);
+    const settingsRef = ref(db, 'settings/general');
+    const snapshot = await get(settingsRef);
+    return singleSnapshotToData<GeneralSettings>(snapshot);
 }
 
 export async function getBusFeesSettingsAction(): Promise<BusFeesSettings | null> {
-    const docRef = doc(db, 'settings', 'busFees');
-    const docSnap = await getDoc(docRef);
-    return docToData<BusFeesSettings>(docSnap);
+     const settingsRef = ref(db, 'settings/busFees');
+    const snapshot = await get(settingsRef);
+    return singleSnapshotToData<BusFeesSettings>(snapshot);
 }
 
 export async function getProfileSettingsAction(): Promise<ProfileSettings | null> {
-    const docRef = doc(db, 'settings', 'profile');
-    const docSnap = await getDoc(docRef);
-    return docToData<ProfileSettings>(docSnap);
+    const settingsRef = ref(db, 'settings/profile');
+    const snapshot = await get(settingsRef);
+    return singleSnapshotToData<ProfileSettings>(snapshot);
 }
 
 export async function getAllDataAsJsonAction() {
     try {
-        const students = await getStudentsAction();
-        const busRoutes = await getBusRoutesAction();
-        const dieselEntries = await getDieselEntriesAction();
-        const dailyLogs = await getDailyLogsAction();
-        const arrivals = await getArrivalsAction();
-
-        const generalSettings = await getGeneralSettingsAction();
-        const busFeesSettings = await getBusFeesSettingsAction();
-        const profileSettings = await getProfileSettingsAction();
-        
-        const settings = {
-            general: generalSettings,
-            busFees: busFeesSettings,
-            profile: profileSettings,
-        }
-
-        const allData = {
-            students,
-            busRoutes,
-            dieselEntries,
-            dailyLogs,
-            arrivals,
-            settings,
-            // Include other data from the original data.json if needed
-            realTimeBusLocations: initialData.realTimeBusLocations,
-            stops: initialData.stops,
-
-        };
+        const dbRef = ref(db);
+        const snapshot = await get(dbRef);
+        const allData = snapshot.val();
 
         return { success: true, data: JSON.stringify(allData, null, 2) };
     } catch (error) {

@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp, getApp, getApps } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getDatabase } from "firebase/database";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -13,11 +13,12 @@ const firebaseConfig = {
   "apiKey": "AIzaSyBx_qH9_2wFEvX5JR9aQFDMDfRyp-cZRuU",
   "authDomain": "pips-app-vnphg.firebaseapp.com",
   "measurementId": "G-SDBGD9C24J",
-  "messagingSenderId": "844945116973"
+  "messagingSenderId": "844945116973",
+  "databaseURL": "https://pips-app-vnphg-default-rtdb.firebaseio.com"
 };
 
 // Initialize Firebase
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-const db = getFirestore(app);
+const db = getDatabase(app);
 
 export { app, db };

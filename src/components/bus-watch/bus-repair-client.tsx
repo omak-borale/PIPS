@@ -48,9 +48,16 @@ export default function BusRepairClient({ initialBusRoutes }: BusRepairClientPro
     setBusRoutes(initialBusRoutes);
   }, [initialBusRoutes]);
 
+  const getServiceHistoryArray = (route: BusRoute): ServiceHistory[] => {
+    if (!route.serviceHistory) return [];
+    // Convert the object of histories into an array
+    return Object.values(route.serviceHistory);
+  }
+
   const getRepairStatus = (route: BusRoute) => {
-    const lastServiceDate = route.serviceHistory && route.serviceHistory.length > 0
-      ? parseISO(route.serviceHistory[0].date)
+    const serviceHistoryArray = getServiceHistoryArray(route);
+    const lastServiceDate = serviceHistoryArray.length > 0
+      ? parseISO(serviceHistoryArray.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0].date)
       : subDays(new Date(), 91); // Mock old date if no history
 
     const daysSinceService =
@@ -75,7 +82,17 @@ export default function BusRepairClient({ initialBusRoutes }: BusRepairClientPro
         setBusRoutes(prevRoutes =>
             prevRoutes.map(route => {
                 if (route.id === busId) {
-                    return { ...route, serviceHistory: result.data };
+                    const updatedHistoryArray = result.data;
+                    // The result from action is an array, but RTDB stores as object.
+                    // Let's create an object for consistency if needed, or just update state.
+                    const serviceHistoryObject = updatedHistoryArray.reduce((acc: any, curr: any, index: number) => {
+                        // This key generation is arbitrary and might not match what RTDB does.
+                        // It's better if the action returns the bus object. For now, this is a patch.
+                        acc[`hist_${index}`] = curr; 
+                        return acc;
+                    }, {});
+
+                    return { ...route, serviceHistory: serviceHistoryObject };
                 }
                 return route;
             })
@@ -136,7 +153,8 @@ export default function BusRepairClient({ initialBusRoutes }: BusRepairClientPro
             <TableBody>
               {busRoutes.map((route) => {
                 const status = getRepairStatus(route);
-                const lastServiceHistory = route.serviceHistory?.[0];
+                const serviceHistoryArray = getServiceHistoryArray(route);
+                const lastServiceHistory = serviceHistoryArray.length > 0 ? serviceHistoryArray.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0] : null;
                  const lastServiceDate = lastServiceHistory
                   ? parseISO(lastServiceHistory.date)
                   : null;
@@ -146,7 +164,7 @@ export default function BusRepairClient({ initialBusRoutes }: BusRepairClientPro
                     <TableCell className="font-medium">
                       {route.busNumber}
                     </TableCell>
-                    <TableCell>{route.name}</TableCell>
+                    <TableCell>{route.driverName}</TableCell>
                     <TableCell>
                       {lastServiceHistory && lastServiceDate ? (
                          <Dialog>

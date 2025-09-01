@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -28,16 +29,26 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { addStudent, getBusRoutesAction } from "@/app/actions";
 import type { BusRoute } from "@/lib/types";
+import { Switch } from "@/components/ui/switch";
 
 
 const formSchema = z.object({
   name: z.string().min(1, "Student Name is required."),
   class: z.string().min(1, "Class is required."),
   section: z.string().min(1, "Section is required."),
-  busNumber: z.string().min(1, "Bus Number is required"),
   village: z.string().min(1, "Village is required."),
   parentContact: z.string().min(1, "Parent's contact is required."),
+  usesBus: z.boolean().default(false),
+  busNumber: z.string().optional(),
   fees: z.coerce.number().min(0, "Fees must be a positive number."),
+}).refine(data => {
+    if (data.usesBus) {
+        return !!data.busNumber;
+    }
+    return true;
+}, {
+    message: "Bus Number is required when student uses the bus.",
+    path: ["busNumber"],
 });
 
 
@@ -60,16 +71,24 @@ export default function AddStudentForm() {
       name: "",
       class: "",
       section: "",
-      busNumber: "",
       village: "",
       parentContact: "",
+      usesBus: false,
       fees: 0,
     },
   });
 
+  const usesBus = form.watch("usesBus");
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    const result = await addStudent(values);
+    
+    const studentData = {
+        ...values,
+        busNumber: values.usesBus ? values.busNumber : undefined,
+    }
+
+    const result = await addStudent(studentData);
     setIsLoading(false);
 
     if (result.success) {
@@ -132,29 +151,6 @@ export default function AddStudentForm() {
             )}
             />
         </div>
-        
-        <FormField
-            control={form.control}
-            name="busNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Bus Number</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a bus for the student" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {busRoutes.map(route => (
-                      <SelectItem key={route.id} value={route.busNumber}>{route.busNumber} ({route.driverName})</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
 
        <FormField
           control={form.control}
@@ -182,6 +178,53 @@ export default function AddStudentForm() {
             </FormItem>
           )}
         />
+        
+        <FormField
+          control={form.control}
+          name="usesBus"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+              <div className="space-y-0.5">
+                <FormLabel>Uses Bus Service</FormLabel>
+                <FormDescription>
+                  Enable if the student will be using the bus service.
+                </FormDescription>
+              </div>
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        {usesBus && (
+            <FormField
+                control={form.control}
+                name="busNumber"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Bus Number</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                        <SelectTrigger>
+                        <SelectValue placeholder="Select a bus for the student" />
+                        </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                        {busRoutes.map(route => (
+                        <SelectItem key={route.id} value={route.busNumber}>{route.busNumber} ({route.driverName})</SelectItem>
+                        ))}
+                    </SelectContent>
+                    </Select>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+        )}
+
          <FormField
             control={form.control}
             name="fees"

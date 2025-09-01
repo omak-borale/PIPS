@@ -49,13 +49,13 @@ export type Student = {
     name: string;
     class: string;
     section: string;
-    busNumber: string;
+    busNumber?: string;
     fees: number;
     village: string;
     parentContact: string;
+    usesBus: boolean;
     // Deprecated fields from old spec
     fatherName?: string;
-    usesBus?: boolean;
     lat?: number;
     lon?: number;
 }

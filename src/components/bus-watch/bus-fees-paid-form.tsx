@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Loader2, IndianRupee, User, Bus, Map, NotebookText } from "lucide-react";
+import { Calendar as CalendarIcon, Loader2, IndianRupee, User, Bus, Map, NotebookText, Home } from "lucide-react";
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 
@@ -142,14 +142,14 @@ export default function BusFeesPaidForm({ students, busRoutes, feeSettings }: Bu
                         <span className="font-medium">{selectedStudentDetails.class} '{selectedStudentDetails.section}'</span>
                    </div>
                    <div className="flex items-center gap-2">
-                        <User className="h-4 w-4 text-muted-foreground" />
+                        <Home className="h-4 w-4 text-muted-foreground" />
                         <span className="text-muted-foreground">Village:</span>
                         <span className="font-medium">{selectedStudentDetails.village}</span>
                    </div>
                    <div className="flex items-center gap-2">
                         <Bus className="h-4 w-4 text-muted-foreground" />
                         <span className="text-muted-foreground">Bus:</span>
-                        <span className="font-medium">{selectedStudentDetails.busNumber}</span>
+                        <span className="font-medium">{selectedStudentDetails.busNumber || "N/A"}</span>
                    </div>
                     <div className="flex items-center gap-2">
                         <Map className="h-4 w-4 text-muted-foreground" />

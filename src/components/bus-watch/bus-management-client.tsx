@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState } from 'react';
@@ -27,6 +28,7 @@ import {
 } from '@/components/ui/select';
 import type { StudentWithPaidFees } from '@/app/dashboard/bus-management/page';
 import { Input } from '../ui/input';
+import { cn } from '@/lib/utils';
 
 type BusManagementClientProps = {
   students: StudentWithPaidFees[];
@@ -88,6 +90,7 @@ export default function BusManagementClient({ students }: BusManagementClientPro
               <TableHead>Bus Number</TableHead>
               <TableHead>Fees (₹)</TableHead>
               <TableHead>Total Paid (₹)</TableHead>
+              <TableHead>Balance (₹)</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -100,15 +103,18 @@ export default function BusManagementClient({ students }: BusManagementClientPro
                 </TableCell>
                 <TableCell>{student.class} '{student.section}'</TableCell>
                 <TableCell>{student.busNumber || 'N/A'}</TableCell>
-                <TableCell>{student.fees?.toLocaleString()}</TableCell>
-                 <TableCell className="font-semibold">
+                <TableCell>{student.fees?.toLocaleString() || 'N/A'}</TableCell>
+                 <TableCell className="font-semibold text-green-600">
                   {student.totalPaid.toLocaleString()}
+                </TableCell>
+                 <TableCell className={cn("font-semibold", student.balance > 0 ? "text-destructive" : "text-muted-foreground")}>
+                  {student.balance.toLocaleString()}
                 </TableCell>
               </TableRow>
             ))}
              {filteredStudents.length === 0 && (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                   No students found matching your criteria.
                 </TableCell>
               </TableRow>

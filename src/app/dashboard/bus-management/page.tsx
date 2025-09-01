@@ -12,7 +12,7 @@ import { getStudentsAction, getBusFeePaymentsAction } from '@/app/actions';
 import BusManagementClient from '@/components/bus-watch/bus-management-client';
 import type { Student } from '@/lib/types';
 
-export type StudentWithPaidFees = Student & { totalPaid: number };
+export type StudentWithPaidFees = Student & { totalPaid: number; balance: number };
 
 
 export default async function BusManagementPage() {
@@ -24,7 +24,8 @@ export default async function BusManagementPage() {
   const studentsWithPaidFees: StudentWithPaidFees[] = students.map(student => {
     const studentPayments = payments.filter(p => p.studentId === student.id);
     const totalPaid = studentPayments.reduce((acc, p) => acc + p.amountPaid, 0);
-    return { ...student, totalPaid };
+    const balance = (student.fees || 0) - totalPaid;
+    return { ...student, totalPaid, balance };
   });
 
   return (
